@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "ctrl-a/build/index.html",
+            "use": "@now/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "ctrl-a/build/index.html"
+        }
+    ]
+}
