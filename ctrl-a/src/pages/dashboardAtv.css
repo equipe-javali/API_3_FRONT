@@ -1,0 +1,12 @@
+.dashboard, .tabela, .linha {
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    background-color: #191723;
+}
+
+.tabela .linha{
+    flex-direction: row;
+    justify-content: space-between;
+}
+
