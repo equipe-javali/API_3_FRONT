@@ -1,0 +1,58 @@
+#primeira-parte{
+    margin: 10px;
+    background-color: #2F3D54;
+    border-radius: 4px;
+  }
+  
+  .primeira-parte {
+    background-color: #2F3D54;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 2vh;
+  }
+  
+  .primeira-parte label {
+    display: block;
+    margin-bottom: 10px;
+    color: white; /* Cor do texto dos labels */
+  }
+  
+  .primeira-parte input,
+  .primeira-parte select {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .primeira-parte button {
+    padding: 10px 20px;
+    background-color: #8764B8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 3vh;
+    cursor: pointer;
+  }
+  
+  .primeira-parte input, select {
+    width: 90%; 
+    padding: 8px;
+    margin-left: 10px;
+    border-radius: 4px; 
+    background-color: rgb(28, 33, 59);
+    color: #fff;
+  }
+  
+  
+  .primeira-parte button:hover {
+    background-color: #1d2b3a;
+  }
+  
+  .primeira-parte .checkbox-container {
+    display: flex;
+    align-items: left;
+    margin-bottom: 10px;
+  }
