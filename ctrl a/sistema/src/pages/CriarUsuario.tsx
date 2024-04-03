@@ -34,12 +34,14 @@ function CriarUsuario() {
     setTelefone(event.target.value);
   };
 
-  const handleUsuarioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsuario(event.target.checked);
+  const handleUsuarioChange = () => {
+    setUsuario(true);
+    setAdministrador(false);
   };
 
-  const handleAdministradorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAdministrador(event.target.checked);
+  const handleAdministradorChange = () => {
+    setAdministrador(true);
+    setUsuario(false);
   };
 
   const handleSubmit = (event: FormEvent<HTMLButtonElement>) => {
@@ -53,7 +55,7 @@ function CriarUsuario() {
         <h3>Ctrl A</h3>
       </header>
       <div>
-      <h2>Cadastrar usuário</h2>
+        <h2>Cadastrar usuário</h2>
       </div>
       <div className="primeira-parte">
         <div>
@@ -87,12 +89,12 @@ function CriarUsuario() {
         <div>
           <label>Permissão:</label>
           <div>
-            <input type="checkbox" checked={usuario} onChange={handleUsuarioChange} />
-            <span>Usuário</span>
+            <input type="checkbox" checked={usuario} onChange={handleUsuarioChange} className="checkbox-personalizado" id="checkbox-usuario" />
+            <label htmlFor="checkbox-usuario"><span>Usuário</span></label>
           </div>
           <div>
-            <input type="checkbox" checked={administrador} onChange={handleAdministradorChange} />
-            <span>Administrador</span>
+            <input type="checkbox" checked={administrador} onChange={handleAdministradorChange} className="checkbox-personalizado" id="checkbox-administrador" />
+            <label htmlFor="checkbox-administrador"><span>Administrador</span></label>
           </div>
         </div>
         <button onClick={handleSubmit}>Cadastrar</button>
@@ -102,4 +104,3 @@ function CriarUsuario() {
 }
 
 export default CriarUsuario;
-
