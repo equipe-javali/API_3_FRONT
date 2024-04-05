@@ -7,14 +7,14 @@ export default function CadastroAtivos() {
     const [pagina, setPagina] = useState(1)
     return (
         <>
-            <div>
+            <div className='divFormsAtivo'>
                 <div>
                     <h1> Cadastrar {tipoAtivo === 1 ? <>Ativo Tangível</> : tipoAtivo === 2 ? <> Ativo Intangível</> : <> Ativo</>}</h1>
                 </div>
                 <form>
                     {tipoAtivo === 1 ? <>
                         {pagina === 1 && <>
-                            <div>
+                            <div className='divBotaoForms'>
                                 <button
                                     onClick={() => setTipoAtivo(0)}
                                 >
@@ -28,7 +28,7 @@ export default function CadastroAtivos() {
                             </div>
                         </>}
                         {pagina === 2 && <>
-                            <div>
+                            <div className='divBotaoForms'>
                                 <button
                                     onClick={() => setPagina(1)}
 
@@ -38,7 +38,7 @@ export default function CadastroAtivos() {
                             </div>
                         </>}
                     </> : tipoAtivo === 2 ? <>
-                        <div>
+                        <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
                             >
@@ -60,7 +60,7 @@ export default function CadastroAtivos() {
                             />
                             <label> InTangível</label>
                         </div>
-                        <div>
+                        <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(proximo)}
                             >
