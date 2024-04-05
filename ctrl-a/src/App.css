@@ -1,9 +1,13 @@
 :root{
-  --azul1: #191723;
-  --azul2: #2F3D54;
+  --cor1: #40587E;
+  --cor2: #0178D4;
+  --cor3: #4152AC;
+  --cor4: #853F85;
+  --cor5: #8764B8;
+  --cor6: #3C3A48;
+  --cor7: #191723;
+  --cor8: #2F3D54;
   --branco: #DDD8D8;
-  --roxo: #8764B8;
-  --vermelho: #DB0B0B;
 }
 
 .App {
