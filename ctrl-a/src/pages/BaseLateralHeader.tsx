@@ -11,16 +11,16 @@ import home_png from "../assets/icons/home.png";
 export default class BaseLateralHeader extends Component<RouteProps> {
     render() {
         return (
-            <>
-                <Header />
-                <div id="app-content">
-                    <SideMenu links={[
-                        [home_png, "/"],
-                        [user_png, "/funcionario"]
-                    ]}/>
+            <div id="app-content-lr">
+                <SideMenu links={[
+                    [home_png, "/"],
+                    [user_png, "/funcionario"]
+                ]} />
+                <div id="app-content-tb">
+                    <Header />
                     <Outlet />
                 </div>
-            </>
+            </div>
         );
     }
 }

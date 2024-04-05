@@ -17,7 +17,6 @@ export default class SideMenu extends Component<Props> {
                 <>
                     <Link to={link[1]} className="sidemenu-link">
                         <img src={link[0]} className="sidemenu-link-icon" />
-                        {/* {link[0]} */}
                     </Link>
                     {
                         index < this.props.links.length - 1 ?
