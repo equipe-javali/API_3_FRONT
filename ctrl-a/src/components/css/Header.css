@@ -1,20 +1,34 @@
 #header-component{
-    background-color: #25293E;
+    background-color: var(--cor20);
 
     height: 60px;
     padding: 10px 15px;
 
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
+
+    gap: 20px;
 }
 
 #header-app-title{
-    color: white;
+    color: var(--branco);
+
+    text-wrap: nowrap;
+}
+
+#header-right-side{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    width: 100%;
 }
 
 #user-icon-holder{
-    background-color: white;
+    background-color: var(--cor3);
 
     width: 30px;
     height: 30px;
