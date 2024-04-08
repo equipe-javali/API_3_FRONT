@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './css/dashboardAtivos.css'
 
 type AtivoProps = {
@@ -11,8 +11,9 @@ type AtivoProps = {
 }
 
 function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps) {
+    const [isHovered, setIsHovered] = useState(false);
     const respAtivo = responsavel === '' ? 'Não definido' : responsavel
-    const localAtivo = local === '' ? <button>Atribuir</button> : local
+    const localAtivo = local === '' ? (isHovered ? <button>Excluir</button> : <button>Atribuir</button>) : local
 
     let statusA = status
     
@@ -27,13 +28,16 @@ function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps)
 
 
     return (
-        <div className="linhaAtv">
+        <div className="linhaAtv" 
+             onMouseEnter={() => setIsHovered(true)} 
+             onMouseLeave={() => setIsHovered(false)}>
             <p className="id">{id}</p>
             <p className="nome">{nome}</p>
             <p className="responsavel">{respAtivo}</p>
             <p className="tipo">{tipo}</p>
             <p className="status">{statusA}</p>
             <p className="local">{localAtivo}</p>
+            
         </div>
     )
 }

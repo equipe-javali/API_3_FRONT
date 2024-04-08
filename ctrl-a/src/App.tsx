@@ -5,6 +5,7 @@ import CadastroAtivos from './pages/cadastroAtivos';
 import DashboardAtivos from './pages/dashboardAtivos';
 import VisualizarUsuario from './pages/visualizarUsuario';
 import BaseLateralHeader from './pages/BaseLateralHeader';
+import CriarUsuario from './pages/criarUsuario';
 
 
 function App(): JSX.Element {
@@ -17,7 +18,7 @@ function App(): JSX.Element {
           <Route path="/ListaAtivos" element={ < DashboardAtivos /> } />
           <Route path="/ListaUsuarios" element={ < VisualizarUsuario /> } />   
           <Route path="/CadastroAtivo" element={ < CadastroAtivos/> } />   
-               
+          <Route path="/CadastroUsuario" element={ < CriarUsuario /> } />     
         </Route>
         
         {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}

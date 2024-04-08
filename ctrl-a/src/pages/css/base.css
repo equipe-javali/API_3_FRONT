@@ -1,0 +1,123 @@
+/* Geral */
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+    padding-top: 3%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #191723;
+    color: #fff;
+    height: 100%;
+  }
+  
+header {
+  background-color: #25293E; 
+  color: #fff; 
+  position: fixed;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  width: 100%;
+  top: 0;
+}
+
+footer {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  background-color: #25293E; 
+  color: #fff; 
+  width: 100%;
+  top: 0;
+}
+
+h1{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 20px;
+  text-align: center;
+}
+
+h2{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 5vh;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  text-align: left;
+  padding-left: 2%;
+}
+
+h3{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 4vh;
+  text-align: left;
+  padding-left: 3%;
+  font-family: 'Arial Narrow Bold', sans-serif;
+}
+
+/* Visualizar Usuario */
+  
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+button {
+  display: block;
+  margin: auto;
+}
+
+tr{
+  background-color: #25293E;
+}
+
+tr:hover {
+  background-color: #6b4eb9;
+}
+
+thead tr {
+  background-color: #0178D4; 
+}
+
+input[type="text"] {
+  width: 78%; 
+  padding: 8px;
+  margin-left: 10px;
+  border-radius: 4px; 
+  background-color: #4152AC;
+  color: #fff;
+
+}
+
+select {
+  width: 20%;
+  padding: 8px;
+  border-radius: 4px; 
+  background-color: #853F85;
+  color: #fff;
+}
+
+
+ div, footer, h2, input, select {
+  margin: 20px 0; 
+}
+
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+
+
