@@ -16,7 +16,8 @@ function App(): JSX.Element {
           <Route index element={<CadastroAtivos/>} />
           <Route path="/ListaAtivos" element={ < DashboardAtivos /> } />
           <Route path="/ListaUsuarios" element={ < VisualizarUsuario /> } />   
-          <Route path="/CadsatroAtivo" element={ < CadastroAtivos/> } />        
+          <Route path="/CadastroAtivo" element={ < CadastroAtivos/> } />   
+               
         </Route>
         
         {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
