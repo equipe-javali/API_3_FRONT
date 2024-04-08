@@ -1,0 +1,36 @@
+#sidemenu-component{
+    background-color: var(--cor22);
+
+    width: 175px;
+
+    padding: 50px 5px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+.sidemenu-link{
+    background-color: var(--cor5);
+
+    width: 50px;
+    height: 50px;
+
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.sidemenu-link-icon{
+    width: 100%;
+    height: 100%;
+}
+
+.sidemenu-divisor{
+    background-color: var(--cor21);
+
+    height: 10px;
+    width: 80%;
+
+    border-radius: 5px;
+}

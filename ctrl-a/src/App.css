@@ -8,6 +8,10 @@
   --cor7: #191723;
   --cor8: #2F3D54;
   --branco: #DDD8D8;
+  --cor20: #25293E;
+  --cor21: #121212;
+  --cor22: #171717;
+  --branco: #DDD8D8;
 }
 
 .App {
@@ -48,3 +52,8 @@
     transform: rotate(360deg);
   }
 }
+
+  
+
+
+
