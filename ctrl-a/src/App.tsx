@@ -1,19 +1,14 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import DashboardAtivos from './pages/dashboardAtivos';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={ } />
-        <Route path="/example/com" element={ } />
-        <Route path="/example/com" element={ } />
-        <Route path="/funcionario" element={ }>
-          <Route index element={ } />
-          <Route path="example" element={ } />
-        </Route>
+        <Route path="/ativos" element={ < DashboardAtivos /> } />
         {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
-        <Route path="*" element={ } />
+        {/* <Route path="*" element={ < DashboardAtv /> } /> */}
       </Routes>
     </BrowserRouter>
   );
