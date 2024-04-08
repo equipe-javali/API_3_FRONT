@@ -1,0 +1,81 @@
+/*
+===================
+= Base Formulário = 
+===================
+*/
+.divFormsAtivo {
+    background-color: var(--cor7);
+    color: var(--branco);
+    display: flex;
+    flex-direction: column;
+    height: var(--minHeightDivFormsAtivo);
+    padding-left: var(--paddingLeftDivFormsAtivo);
+    padding-top: var(--paddingTopDivFormsAtivo);
+    min-width: var(--minWidthDivFormsAtivo);
+}
+
+/*
+=====================
+= Título Formulário = 
+=====================
+*/
+.divFormsAtivo>div:first-child {
+    align-items: center;
+}
+
+.divFormsAtivo>form {
+    margin: auto;
+    background-color: var(--cor1);
+    width: var(--widthFormsAtivo);
+    height: var(--heightFormsAtivo);
+}
+
+/* 
+=====================
+= Botões Formumário =
+=====================
+*/
+
+.divBotaoForms {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.divBotaoForms>button {
+    background-color: inherit;
+    border: 0;
+    color: var(--branco);
+    font-size: var(--fontSizeBotaoForms);
+}
+
+.divBotaoForms>button:hover {
+    background-color: var(--cor6);
+}
+
+.botaoVoltarForms {
+    left: 0;
+}
+
+.botaoProximoForms {
+    right: 0;
+}
+
+:root {
+    /* Div Forms */
+    --minWidthDivFormsAtivo: calc(100vw - var(--paddingDivFormsAtivo));
+    --minHeightDivFormsAtivo: calc(100vh - var(--paddingTopDivFormsAtivo));
+    --paddingLeftDivFormsAtivo: 40px;
+    --paddingTopDivFormsAtivo: 40px;
+
+    /* Forms */
+    --widthFormsAtivo: calc(90% - 2 * var(--paddingHorizontalFormsAtivo));
+    --heightFormsAtivo: calc(80% - 2 * var(--paddingVerticalFormsAtivo));
+    --paddingHorizontalFormsAtivo: 40px;
+    --paddingVerticalFormsAtivo: 40px;
+
+    /* Botão Forms */
+    --fontSizeBotaoForms: 20px;
+}
