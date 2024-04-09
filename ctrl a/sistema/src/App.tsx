@@ -1,6 +1,6 @@
 import React from 'react';
 import './css/criarUsuario.css';
-import CriarUsuario from './pages/CriarUsuario';
+import CriarUsuario from './pages/criarUsuario/CriarUsuario';
 
 function App(): JSX.Element {
   return (

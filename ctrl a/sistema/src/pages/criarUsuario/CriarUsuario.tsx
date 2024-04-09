@@ -88,13 +88,13 @@ function CriarUsuario() {
         </div>
         <div>
           <label>Permissão:</label>
-          <div>
+          <div className="nome">
+            <label><span>Usuário</span></label>
             <input type="checkbox" checked={usuario} onChange={handleUsuarioChange} className="checkbox-personalizado" id="checkbox-usuario" />
-            <label htmlFor="checkbox-usuario"><span>Usuário</span></label>
           </div>
-          <div>
+          <div className="nome">
+          <label><span>Administrador</span></label>
             <input type="checkbox" checked={administrador} onChange={handleAdministradorChange} className="checkbox-personalizado" id="checkbox-administrador" />
-            <label htmlFor="checkbox-administrador"><span>Administrador</span></label>
           </div>
         </div>
         <button onClick={handleSubmit}>Cadastrar</button>
