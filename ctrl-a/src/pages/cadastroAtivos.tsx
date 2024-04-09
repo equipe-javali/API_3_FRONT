@@ -78,6 +78,11 @@ export default function CadastroAtivos() {
                 >
                     {tipoAtivo === 1 ? <>
                         {paginaAtivosTangiveis.código}
+                        <input
+                            type='submit'
+                            className='BotaoCadastrarAtivo'
+                            value='Cadastrar'
+                        />
                         <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
@@ -85,8 +90,14 @@ export default function CadastroAtivos() {
                                 <span>◀</span> Voltar
                             </button>
                         </div>
+
                     </> : tipoAtivo === 2 ? <>
                         {paginaAtivosIntangiveis.código}
+                        <input
+                            type='submit'
+                            value='Cadastrar'
+                            className='BotaoCadastrarAtivo'
+                        />
                         <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
@@ -94,6 +105,7 @@ export default function CadastroAtivos() {
                                 <span>◀</span> Voltar
                             </button>
                         </div>
+
                     </> : <>
                         <div className='colunaFormsAtivo'>
                             {nome.codigo}
@@ -149,9 +161,7 @@ export default function CadastroAtivos() {
                                 Proximo <span>▶</span>
                             </button>
                         </div>
-                    </>
-                    }
-
+                    </>}
                 </form>
 
             </div >

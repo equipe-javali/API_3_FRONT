@@ -17,6 +17,7 @@
 
     /* Botão Forms */
     --fontSizeBotaoForms: 20px;
+    --fontSizeBotaoCadastrarForms:35px;
 
     /* Descrição Forms */
     --paddingVerticalDescricaoForms: 5px;
@@ -106,6 +107,7 @@
 }
 
 .divBotaoForms>button {
+    cursor: pointer;
     background-color: inherit;
     border: 0;
     color: var(--branco);
@@ -124,4 +126,21 @@
 
 .botaoProximoForms {
     right: 0;
+}
+
+/*
+===================
+= Botão Cadastrar =
+===================
+*/
+
+.BotaoCadastrarAtivo {
+    cursor: pointer;
+    background-color: var(--cor5);
+    color: var(--branco);
+    width: min-content;
+    padding: 10px 50px;
+    font-size: var(--fontSizeBotaoCadastrarForms);
+    margin: auto;
+    border-radius: 5px;
 }
