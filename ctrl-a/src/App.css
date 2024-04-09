@@ -12,6 +12,12 @@
   --branco1: #DDD8D8;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 .App {
   text-align: center;
 }
