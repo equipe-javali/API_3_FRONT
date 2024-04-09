@@ -7,8 +7,8 @@ function CriarUsuario() {
   const [departamento, setDepartamento] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const [usuario, setUsuario] = useState(false); // Estado para armazenar se é usuário comum
-  const [administrador, setAdministrador] = useState(false); // Estado para armazenar se é administrador
+  const [usuario, setUsuario] = useState(false);
+  const [administrador, setAdministrador] = useState(false);
 
   const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNome(event.target.value);
@@ -44,9 +44,37 @@ function CriarUsuario() {
     setUsuario(false);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log('Dados do usuário:', { nome, cpf, dataNascimento, departamento, email, telefone, usuario, administrador });
+    const data = {
+      nome,
+      cpf,
+      dataNascimento,
+      departamento,
+      email,
+      telefone,
+      usuario,
+      administrador
+    };
+
+    try {
+      const response = await fetch('https://javali.supabase.co/usuario', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': '<sua-api-key>' 
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        console.log('Usuário cadastrado com sucesso!');
+      } else {
+        console.error('Falha ao cadastrar usuário.');
+      }
+    } catch (error) {
+      console.error('Erro ao processar requisição:', error);
+    }
   };
 
   return (

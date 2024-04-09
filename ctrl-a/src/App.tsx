@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/criarUsuario.css';
+import './pages/css/criarUsuario.css';
 import CriarUsuario from './pages/CriarUsuario';
 
 function App(): JSX.Element {
