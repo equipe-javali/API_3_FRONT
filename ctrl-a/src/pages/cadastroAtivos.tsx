@@ -13,7 +13,7 @@ export default function CadastroAtivos() {
     const [tipoAtivo, setTipoAtivo] = useState(0)
     const marca = CampoAtivoPadrao("Marca", "text", "Digite a marca...")
     const identificador = CampoAtivoPadrao("Número identificador:", "text", "###")
-    const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "text", "dd/mm/aaaa")
+    const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
     const descricao = CampoAtivoPadrao("Descricao", "textarea", "Digite a descricao")
     const [proximo, setProximo] = useState(1)
     const tipo = CampoAtivoPadrao("Tipo", "text", "Exemplo: automóvel, mobília...")
