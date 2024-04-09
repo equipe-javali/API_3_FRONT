@@ -64,7 +64,16 @@
     width: 20%;
 }
 
-.linhaAtv .local button {
+.linhaAtv .local .btnAtribuir {
+    all: unset;
+    width: 50%;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
     background-color: var(--cor4);
     color: var(--branco);
+}
+
+.linhaAtv:nth-child(even) .btnAtribuir:hover, .linhaAtv .btnAtribuir:hover {
+    opacity: 0.9;
 }

@@ -12,12 +12,13 @@ type AtivoProps = {
 
 function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps) {
     const respAtivo = responsavel === '' ? 'Não definido' : responsavel
-    const localAtivo = local === '' ? <button>Atribuir</button> : local
+    const localAtivo = local === '' ? <button type='button' className='btnAtribuir'>Atribuir</button> : local
 
     let statusA = status
     
-    if (local == '') {
+    if (local == '' && responsavel == '') {
         statusA = 'Não alocado'
+        
     }
     if (local == 'TI') {
         statusA = 'Em manutenção'
