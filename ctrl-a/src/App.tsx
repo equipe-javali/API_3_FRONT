@@ -1,12 +1,20 @@
 import React from 'react';
-import './css/visualizarUsuario.css';
-import CriarUsuario from './pages/VisualizarUsuario';
+import { BrowserRouter,   Route, Routes } from 'react-router-dom';
+import BaseLateralHeader from './pages/BaseLateralHeader';
+import VisualizarUsuario from './pages/VisualizarUsuario';
+import './App.css';
 
-function App(): JSX.Element {
+
+
+function App() {
   return (
-    <div className="App">
-      <CriarUsuario />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<BaseLateralHeader />}>
+          <Route index element={<VisualizarUsuario />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>      
   );
 }
 
