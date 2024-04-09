@@ -1,124 +1,112 @@
+
 :root {
-    /* Campos */
-    --fontCampoCadastroAtivos: 20px;
-    --gapCampoCadastroAtivos: 5px;
-    --proporcaoCampoAtivos: 30%;
-    --heightCampoAtivos: 50px;
+    --minWidthDivCampoAtivo: 250px;
+    --maxWidthDivCampoAtivo: 300px;
+    --gapDivCampoAtivo: 5px;
+    --minHeightInputCampoAtivo: calc(35px - 10px);
+    --paddingInputVerticalCampoAtivo: 10px;
+    --paddingInputHorizontalCampoAtivo: 5px;
 
-    /* Checkbox */
-    --borderCheckmarkAtivos: 3px;
-    --widthCheckmarkAtivos: calc(25px - 2 * var(--borderCheckmarkAtivos));
-    --marginTopCheckmarkAtivos: calc(var(--borderCheckmarkAtivos)/ 3);
-    --marginCheckmarkAtivos: calc(var(--widthCheckmarkAtivos) + 2 * var(--borderCheckmarkAtivos) + 5px);
-
-    /* Checkmarker */
-    --checkmarkerWidth: 5px;
-    --checkmarkerHeigth: 12px;
-    --checkmarkerBorder: 0 3px 2px 0;
+    /* Radiobutton */
+    ---widthRadiobutton: 20px;
 }
-
 /* 
-==========
-= Campos =
-==========
+=================
+= CAMPOS GERAIS =
+=================
 */
 
-.DescriçõesCampoAtivo,
-.DescriçõesCampoAtivo>*::placeholder,
-.DescriçõesCampoAtivo>*[type="date"],
-.DescriçõesCampoAtivo>*[type="number"],
-.DescriçõesCampoAtivo>*[type="url"],
-.DescriçõesCampoAtivo>*[type="datetime-local"],
-.DescriçõesCampoAtivo>select {
-    align-items: center;
-    color: var(--branco);
-    font-size: var(--fontCampoCadastroAtivos);
+.DivCampoAtivo,
+.divInputRadioFormsAtivo,
+.descricaoFormsAtivo {
+    font-size: 25px;
 }
 
-.DescriçõesCampoAtivo {
-    align-items: center;
+.DivCampoAtivo *::placeholder,
+.descricaoFormsAtivo *::placeholder {
+    font-size: 20px;
+}
+
+.DivCampoAtivo,
+.divInputRadioFormsAtivo {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--gapCampoCadastroAtivos);
+    flex-direction: column;
+    gap: 5px;
+    min-width: var(--minWidthDivCampoAtivo);
+    max-width: var(--maxWidthDivCampoAtivo);
+}
+
+.DivCampoAtivo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     justify-content: space-between;
-    min-height: min-content;
-    height: var(--heightCampoAtivos);
+    min-width: var(--minWidthDivCampoAtivo);
+    width: 100%;
 }
 
-.DescriçõesCampoAtivo>* {
-    min-width: max-content;
-    flex: 1;
-}
 
-.DescriçõesCampoAtivo>span,
-.DescriçõesCampoAtivo>div {
-    max-width: var(--proporcaoCampoAtivos);
-}
-
-.DescriçõesCampoAtivo>p,
-.DescriçõesCampoAtivo>input,
-.DescriçõesCampoAtivo>select {
-    width: calc(100% - var(--proporcaoCampoAtivos) * 2);
-}
-
-.DescriçõesCampoAtivo>input::placeholder,
-.DescriçõesCampoAtivo>input,
-.DescriçõesCampoAtivo>select {
-    display: flex;
-    min-height: calc(var(--heightCampoAtivos) - 2px);
-    align-items: center;
-    text-align: center;
-}
-.DescriçõesCampoAtivo>select{
-    background-color: inherit;
-    min-height: calc(var(--heightCampoAtivos) - 20px);
+.DivCampoAtivo>input {
+    min-height: var(--minHeightInputCampoAtivo);
+    padding: var(--paddingInputHorizontalCampoAtivo) var(--paddingInputVerticalCampoAtivo);
 }
 
 /* 
-============
-= Checkbox =
-============
+====================
+= Radio Formulário =
+====================
 */
-
-.containerCheckboxFormsAtivos {
-    margin-right: var(--marginCheckmarkAtivos);
+.divInputRadioFormsAtivo {
+    width: calc(100% - 5px);
+    max-width: calc(300px);
+    display: flex;
 }
 
-.containerCheckboxFormsAtivos>input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+.divInputRadioFormsAtivo>div {
+    display: flex;
+    gap: 20px;
 }
 
-.containerCheckboxFormsAtivos>span,
-.DescriçõesCampoAtivo>select{
-    border-width: var(--borderCheckmarkAtivos);
-    border-style: solid;
+.inputRadioFormsAtivo>span {
+    margin-left: 30px;
 }
 
-.containerCheckboxFormsAtivos>span {
-    cursor: pointer;
-    height: var(--widthCheckmarkAtivos);
-    position: absolute;
-    width: var(--widthCheckmarkAtivos);
-    margin-top: var(--marginTopCheckmarkAtivos);
-}
-
-.containerCheckboxFormsAtivos>span::after {
+.inputRadioFormsAtivo>input {
     display: none;
-    content: '';
-    margin: auto;
 }
 
-.containerCheckboxFormsAtivos>input:checked~span::after {
-    display: block;
+.controleInputRadioFormsAtivo {
+    position: absolute;
+    cursor: pointer;
+    background-color: var(--branco1);
+    margin-top: 5px;
+    width: var(---widthRadiobutton);
+    height: var(---widthRadiobutton);
+    border: 2px solid var(--cor2);
+    border-radius: 100%;
 }
 
-.containerCheckboxFormsAtivos>span::after {
-    width: var(--checkmarkerWidth);
-    height: var(--checkmarkerHeigth);
-    transform: rotate(45deg);
-    border-style: solid;
-    border-color: var(--branco);
-    border-width: var(--checkmarkerBorder);
+.inputRadioFormsAtivo>input:checked~.controleInputRadioFormsAtivo {
+    background-color: var(--cor2);
+}
+
+.divInputRadioFormsAtivo input[type="radio"] {
+    appearance: none;
+}
+
+.divInputRadioFormsAtivo input[type="radio"]:hover,
+.divInputRadioFormsAtivo input[type="radio"]::selection {
+    background-color: var(--cor2);
+}
+
+
+
+/*
+=========
+= CORES = 
+=========
+*/
+.DivCampoAtivo>input,
+.descricaoFormsAtivo>textarea {
+    background-color: var(--branco1);
 }
