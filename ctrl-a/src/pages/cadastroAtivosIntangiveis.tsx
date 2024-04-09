@@ -1,5 +1,4 @@
 import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
-import './css/cadastroAtivosTangíveis.css'
 
 
 export default function CadastroAtivosIntangiveis() {
