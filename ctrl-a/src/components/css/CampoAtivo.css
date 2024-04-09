@@ -18,8 +18,16 @@
 
 .DivCampoAtivo,
 .divInputRadioFormsAtivo,
+.DivCampoAtivo input[type="date"],
 .descricaoFormsAtivo {
     font-size: 25px;
+}
+
+.DivCampoAtivo input[type="date"],
+.DivCampoAtivo input[type="number"],
+.DivCampoAtivo input[type="url"],
+.DivCampoAtivo input[type="datetime-local"]{
+    color: gray;
 }
 
 .DivCampoAtivo *::placeholder,
