@@ -35,9 +35,10 @@ interface Usuario {
 // ];
 
 function VisualizarUsuario(): JSX.Element {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]); 
   const [Pesquisa, setFilterValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  
 
   useEffect(() => {
     fetch('http://localhost:8080/usuarios')
@@ -75,6 +76,22 @@ function VisualizarUsuario(): JSX.Element {
     setFilterValue(event.target.value);
   };
 
+  const handleDelete = (id: number) => {
+    fetch(`http://localhost:8080/usuario/${id}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Usuário excluído com sucesso!', id);
+      
+      setUsuarios(usuarios.filter(usuario => usuario.id !== id));
+    })
+    .catch(error => console.error('Error:', error));
+  };
+
   return (
     <div className='App'>
       <header>
@@ -103,19 +120,23 @@ function VisualizarUsuario(): JSX.Element {
             <th className="myHeaderCell">Email</th>
             <th className="myHeaderCell">Departamento</th>
             <th className="myHeaderCell">Ativos</th>
+            <th className="myHeaderCell">Ações</th>
         </tr>
 </thead>
           <tbody>
-            {Pesquisando.map((usuario, index) => (
-              <tr key={index}>
-                <td>{usuario.id}</td>
-                <td>{usuario.nome}</td>
-                <td>{usuario.telefone}</td>
-                <td>{usuario.email}</td>
-                <td>{usuario.departamento}</td>
-                <td>{usuario.ativos.map(ativo => <p key={ativo.id}>{ativo.nome}</p>)}</td>
-              </tr>
-            ))}
+          {usuarios.map((usuario) => (
+            <tr key={usuario.id}>
+              <td>{usuario.id}</td>
+              <td>{usuario.nome}</td>
+              <td>{usuario.telefone}</td>
+              <td>{usuario.email}</td>
+              <td>{usuario.departamento}</td>
+              <td>{usuario.ativos.map(ativo => <p key={ativo.id}>{ativo.nome}</p>)}</td>
+              <td>
+                <button onClick={() => handleDelete(usuario.id)}>Excluir</button>
+              </td>
+            </tr>
+          ))}
           </tbody>
         </table>
       </div>
