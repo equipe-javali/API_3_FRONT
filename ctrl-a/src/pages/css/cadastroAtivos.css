@@ -29,8 +29,6 @@
 ===================
 */
 .divFormsAtivo {
-    background-color: var(--cor7);
-    color: var(--branco);
     display: flex;
     flex-direction: column;
     min-height: var(--HeightDivFormsAtivo);
