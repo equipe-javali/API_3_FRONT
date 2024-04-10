@@ -1,6 +1,5 @@
 import { FormEvent, useState } from "react";
 import './css/criarUsuario.css';
-import './css/base.css';
 
 function CriarUsuario() {
   const [nome, setNome] = useState('');
@@ -64,7 +63,7 @@ function CriarUsuario() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': '<sua-api-key>' 
+          'apikey': '<sua-api-key>'
         },
         body: JSON.stringify(data)
       });
@@ -80,7 +79,7 @@ function CriarUsuario() {
   };
 
   return (
-    <div className="App">
+    <div className="cadastroUsuário">
       <div>
         <h2>Cadastrar usuário</h2>
       </div>
@@ -120,7 +119,7 @@ function CriarUsuario() {
             <input type="checkbox" checked={usuario} onChange={handleUsuarioChange} className="checkbox-personalizado" id="checkbox-usuario" />
           </div>
           <div className="nome">
-          <label><span>Administrador</span></label>
+            <label><span>Administrador</span></label>
             <input type="checkbox" checked={administrador} onChange={handleAdministradorChange} className="checkbox-personalizado" id="checkbox-administrador" />
           </div>
         </div>
