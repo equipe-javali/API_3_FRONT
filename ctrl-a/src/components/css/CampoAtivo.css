@@ -1,4 +1,3 @@
-
 :root {
     --minWidthDivCampoAtivo: 250px;
     --maxWidthDivCampoAtivo: 300px;
@@ -8,56 +7,60 @@
     --paddingInputHorizontalCampoAtivo: 5px;
 
     /* Radiobutton */
+    --borderRadioButton: 2px;
+    --marginTopRadioButton: 8px;
     ---widthRadiobutton: 20px;
+    --gapDivRadioButton: 20px;
+    --marginLeftSpanRadioButton: calc(var(---widthRadiobutton) + 5px);
+
+    /* Campos */
+    --fontSizeCampoAtivo: 25px;
+    --fontSizeInputCampoAtivo: 25px;
+    --gapDivInput: 5px;
 }
+
 /* 
 =================
 = CAMPOS GERAIS =
 =================
 */
-
-.DivCampoAtivo,
+.divCampoAtivo,
 .divInputRadioFormsAtivo,
-.DivCampoAtivo input[type="date"],
 .descricaoFormsAtivo {
-    font-size: 25px;
+    font-size: var(--fontSizeCampoAtivo)
 }
 
-.DivCampoAtivo input[type="date"],
-.DivCampoAtivo input[type="number"],
-.DivCampoAtivo input[type="url"],
-.DivCampoAtivo input[type="datetime-local"]{
-    color: gray;
+.divCampoAtivo > input,
+.divCampoAtivo > input::placeholder,
+.descricaoFormsAtivo > textarea,
+.descricaoFormsAtivo > textarea::placeholder {
+    color: var(--cor10);
+    font-size: var(--fontSizeInputCampoAtivo);
 }
 
-.DivCampoAtivo *::placeholder,
-.descricaoFormsAtivo *::placeholder {
-    font-size: 20px;
-}
-
-.DivCampoAtivo,
+.divCampoAtivo,
 .divInputRadioFormsAtivo {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: var(--gapDivInput);
     min-width: var(--minWidthDivCampoAtivo);
     max-width: var(--maxWidthDivCampoAtivo);
 }
 
-.DivCampoAtivo {
+.divCampoAtivo {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: var(--gapDivInput);
     justify-content: space-between;
     min-width: var(--minWidthDivCampoAtivo);
     width: 100%;
 }
 
-
-.DivCampoAtivo>input {
+.divCampoAtivo>input {
     min-height: var(--minHeightInputCampoAtivo);
     padding: var(--paddingInputHorizontalCampoAtivo) var(--paddingInputVerticalCampoAtivo);
 }
+
 
 /* 
 ====================
@@ -65,18 +68,19 @@
 ====================
 */
 .divInputRadioFormsAtivo {
-    width: calc(100% - 5px);
-    max-width: calc(300px);
+    width: 100%;
     display: flex;
 }
 
 .divInputRadioFormsAtivo>div {
     display: flex;
-    gap: 20px;
+    gap: var(--gapDivRadioButton);
 }
 
+
+
 .inputRadioFormsAtivo>span {
-    margin-left: 30px;
+    margin-left: var(--marginLeftSpanRadioButton)
 }
 
 .inputRadioFormsAtivo>input {
@@ -87,10 +91,10 @@
     position: absolute;
     cursor: pointer;
     background-color: var(--branco1);
-    margin-top: 5px;
+    margin-top: var(--marginTopRadioButton);
     width: var(---widthRadiobutton);
     height: var(---widthRadiobutton);
-    border: 2px solid var(--cor2);
+    border: var(--borderRadioButton) solid var(--cor2);
     border-radius: 100%;
 }
 
@@ -114,7 +118,7 @@
 = CORES = 
 =========
 */
-.DivCampoAtivo>input,
+.divCampoAtivo>input,
 .descricaoFormsAtivo>textarea {
     background-color: var(--branco1);
 }
