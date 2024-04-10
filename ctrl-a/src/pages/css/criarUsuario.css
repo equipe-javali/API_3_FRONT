@@ -1,0 +1,142 @@
+/* Geral */
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+    padding-top: 5%;
+    padding-bottom: 5%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #191723;
+    color: #fff;
+    height: 100%;
+  }
+    
+  header {
+    background-color: #25293E; 
+    color: #fff; 
+    position: fixed;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    width: 100%;
+    top: 0;
+  }
+
+  footer {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #25293E; 
+    color: #fff; 
+    width: 100%;
+    top: 0;
+  }
+
+
+h1{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 20px;
+  text-align: center;
+}
+
+h2{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 5vh;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  text-align: left;
+  padding-left: 2%;
+}
+
+h3{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 4vh;
+  text-align: left;
+  padding-left: 3%;
+  font-family: 'Arial Narrow Bold', sans-serif;
+}
+
+
+/* personalização especifica da página */
+
+#primeira-parte{
+    margin: 10px;
+    background-color: #2F3D54;
+    border-radius: 4px;
+  }
+  
+  .primeira-parte {
+    margin: 20px;
+    background-color: #2F3D54;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 2vh;
+  }
+  
+  
+  .primeira-parte label {
+    display: block;
+    margin-bottom: 10px;
+    color: white; 
+  }
+
+  .nome label {
+    display: block;
+    margin-left: 10%;
+    margin-bottom: 5px;
+    font-size: 2vh;
+    color: #d3d3d3; 
+  }
+  
+  .primeira-parte input,
+  .primeira-parte select {
+    width: 98%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .primeira-parte button {
+    padding: 10px 20px;
+    background-color: #8764B8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 3vh;
+    cursor: pointer;
+  }
+
+  .primeira-parte button {
+    display: block; 
+    margin: 20px auto 0; 
+  }
+  
+  
+  .primeira-parte input, select {
+    width: 98%; 
+    padding: 8px;
+    margin-left: 10px;
+    border-radius: 4px; 
+    background-color: rgb(28, 33, 59);
+    color: #fff;
+  }
+  
+  
+  .primeira-parte button:hover {
+    background-color: rgb(19, 23, 41);
+  }
+  
+  .primeira-parte .checkbox-container {
+    display: flex;
+    align-items: left;
+    margin-bottom: 10px;
+  }
+  

@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import CadastroAtivos from './pages/cadastroAtivos';
 import DashboardAtivos from './pages/dashboardAtivos';
+import CriarUsuario from './pages/CriarUsuario';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<CadastroAtivos/>} />
         <Route path="/CadastroAtivos" element={<CadastroAtivos/>} />
+        <Route path="/CadastroUsuario" element={<CriarUsuario/>} />
         <Route path="/funcionario" element={<CadastroAtivos/>}>
           <Route index element={<CadastroAtivos/>} />
           <Route path="example" element={<CadastroAtivos/>} />
@@ -20,5 +22,6 @@ function App() {
     </BrowserRouter>
   );
 }
+
 
 export default App;
