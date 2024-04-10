@@ -9,7 +9,7 @@ export default function CampoAtivoPadrao(
     return {
         "dados": descAtivo,
         "codigo": (
-            <div className='DivCampoAtivo'>
+            <div className='divCampoAtivo'>
                 <span>{tituloAtivo}</span>
                 <input
                     placeholder={placeholder}
