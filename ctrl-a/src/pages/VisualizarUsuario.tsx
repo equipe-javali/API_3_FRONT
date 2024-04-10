@@ -49,7 +49,7 @@ function VisualizarUsuario(): JSX.Element {
   };
 
   return (
-    <div className='App'>
+    <div className='VisualizarUsuario'>
       <div>
         <h2>Usuários</h2>
         <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
