@@ -13,7 +13,7 @@ type AtivoProps = {
 function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps) {
     const [isHovered, setIsHovered] = useState(false);
     const respAtivo = responsavel === '' ? 'Não definido' : responsavel
-    const localAtivo = local === '' ? (isHovered ? <button>Excluir</button> : <button>Atribuir</button>) : local
+    const localAtivo = local === '' ? (isHovered ? <><button>Atribuir</button><button>Excluir</button></> : <button>Atribuir</button>) : (isHovered ? <button>Excluir</button> : local);
 
     let statusA = status
     
