@@ -1,0 +1,120 @@
+
+:root {
+    --minWidthDivCampoAtivo: 250px;
+    --maxWidthDivCampoAtivo: 300px;
+    --gapDivCampoAtivo: 5px;
+    --minHeightInputCampoAtivo: calc(35px - 10px);
+    --paddingInputVerticalCampoAtivo: 10px;
+    --paddingInputHorizontalCampoAtivo: 5px;
+
+    /* Radiobutton */
+    ---widthRadiobutton: 20px;
+}
+/* 
+=================
+= CAMPOS GERAIS =
+=================
+*/
+
+.DivCampoAtivo,
+.divInputRadioFormsAtivo,
+.DivCampoAtivo input[type="date"],
+.descricaoFormsAtivo {
+    font-size: 25px;
+}
+
+.DivCampoAtivo input[type="date"],
+.DivCampoAtivo input[type="number"],
+.DivCampoAtivo input[type="url"],
+.DivCampoAtivo input[type="datetime-local"]{
+    color: gray;
+}
+
+.DivCampoAtivo *::placeholder,
+.descricaoFormsAtivo *::placeholder {
+    font-size: 20px;
+}
+
+.DivCampoAtivo,
+.divInputRadioFormsAtivo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: var(--minWidthDivCampoAtivo);
+    max-width: var(--maxWidthDivCampoAtivo);
+}
+
+.DivCampoAtivo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: space-between;
+    min-width: var(--minWidthDivCampoAtivo);
+    width: 100%;
+}
+
+
+.DivCampoAtivo>input {
+    min-height: var(--minHeightInputCampoAtivo);
+    padding: var(--paddingInputHorizontalCampoAtivo) var(--paddingInputVerticalCampoAtivo);
+}
+
+/* 
+====================
+= Radio Formulário =
+====================
+*/
+.divInputRadioFormsAtivo {
+    width: calc(100% - 5px);
+    max-width: calc(300px);
+    display: flex;
+}
+
+.divInputRadioFormsAtivo>div {
+    display: flex;
+    gap: 20px;
+}
+
+.inputRadioFormsAtivo>span {
+    margin-left: 30px;
+}
+
+.inputRadioFormsAtivo>input {
+    display: none;
+}
+
+.controleInputRadioFormsAtivo {
+    position: absolute;
+    cursor: pointer;
+    background-color: var(--branco1);
+    margin-top: 5px;
+    width: var(---widthRadiobutton);
+    height: var(---widthRadiobutton);
+    border: 2px solid var(--cor2);
+    border-radius: 100%;
+}
+
+.inputRadioFormsAtivo>input:checked~.controleInputRadioFormsAtivo {
+    background-color: var(--cor2);
+}
+
+.divInputRadioFormsAtivo input[type="radio"] {
+    appearance: none;
+}
+
+.divInputRadioFormsAtivo input[type="radio"]:hover,
+.divInputRadioFormsAtivo input[type="radio"]::selection {
+    background-color: var(--cor2);
+}
+
+
+
+/*
+=========
+= CORES = 
+=========
+*/
+.DivCampoAtivo>input,
+.descricaoFormsAtivo>textarea {
+    background-color: var(--branco1);
+}
