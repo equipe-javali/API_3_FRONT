@@ -1,0 +1,20 @@
+/* #app-content{
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+} */
+
+#app-content-lr{
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+}
+
+#app-content-tb{
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}

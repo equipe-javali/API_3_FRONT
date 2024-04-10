@@ -1,0 +1,43 @@
+#header-component{
+    background-color: var(--cor20);
+
+    height: 60px;
+    padding: 10px 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 20px;
+}
+
+#header-app-title{
+    color: var(--branco);
+    text-wrap: nowrap;
+}
+
+#header-right-side{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    width: 100%;
+}
+
+#user-icon-holder{
+    background-color: var(--cor3);
+
+    width: 30px;
+    height: 30px;
+
+    padding: 10px;
+    border-radius: 100%;
+}
+#user-icon-holder img{
+    width: 100%;
+    height: 100%;
+
+    margin: auto;
+}
