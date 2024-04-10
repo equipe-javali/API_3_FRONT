@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../css/visualizarUsuario.css';
+import './css/visualizarUsuario.css';
 
 
 interface Usuario {
