@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import DashboardAtivos from './pages/dashboardAtivo/dashboardAtivos';
+import DashboardAtivos from './pages/dashboardAtivos';
 
 function App() {
   return (

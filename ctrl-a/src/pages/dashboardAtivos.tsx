@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './css/dashboardAtivos.css'
 
 type AtivoProps = {
@@ -20,12 +20,12 @@ function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps)
         statusA = 'Não alocado'
         
     }
-    if (local == 'TI') {
+    else if (local == 'TI') {
         statusA = 'Em manutenção'
     } else {
         statusA = 'Em uso'
     }
-
+    
 
     return (
         <div className="linhaAtv">
@@ -80,6 +80,24 @@ const DashboardAtivos: React.FC = () => {
         { id: 2, nome: 'Carro', responsavel: 'Rosana', tipo: 'Automóvel', status: '', local: 'Desenvolvimento, SJC - SP' },
         { id: 3, nome: 'Impressora', responsavel: 'Herman', tipo: 'Eletrônico', status: '', local: 'TI' }
     ];
+
+    const [database, setDatabase] = useState([])
+
+    useEffect(() => {
+        fetch('/ativos', {
+            method: 'GET',
+            body: JSON.stringify({
+                idAtivo: localStorage.getItem('id_ativo')
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {setDatabase(data)})
+        .catch((err) => console.log(err));
+    })
 
     return (
         <div className="dasboardAtv">
