@@ -10,22 +10,20 @@ type AtivoProps = {
     local: string;
 }
 
-function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps) {
+function LinhaAtivo({ id, nome, responsavel, tipo, status, local }: AtivoProps) {
     const respAtivo = responsavel === '' ? 'Não definido' : responsavel
     const localAtivo = local === '' ? <button type='button' className='btnAtribuir'>Atribuir</button> : local
 
     let statusA = status
-    
-    if (local == '' && responsavel == '') {
+
+    if (local === '' && responsavel === '') {
         statusA = 'Não alocado'
-        
     }
-    else if (local == 'TI') {
+    else if (local === 'TI') {
         statusA = 'Em manutenção'
     } else {
         statusA = 'Em uso'
     }
-    
 
     return (
         <div className="linhaAtv">
@@ -43,9 +41,9 @@ type TabelaAtivosProps<T extends AtivoProps> = {
     ativos: T[];
 }
 
-function TabelaAtivos({ ativos } : TabelaAtivosProps<AtivoProps>) {
-    const linhas : any = []
-    ativos.map((atv) => {
+function TabelaAtivos({ ativos }: TabelaAtivosProps<AtivoProps>) {
+    const linhas: any = []
+    ativos.forEach((atv) => {
         linhas.push(
             <LinhaAtivo
                 key={atv.id}
@@ -55,8 +53,7 @@ function TabelaAtivos({ ativos } : TabelaAtivosProps<AtivoProps>) {
                 tipo={atv.tipo}
                 status={atv.status}
                 local={atv.local} />
-
-        );
+        )
     });
 
     return (
@@ -94,9 +91,9 @@ const DashboardAtivos: React.FC = () => {
                 'Content-Type': 'application/json'
             }
         })
-        .then((response) => response.json())
-        .then((data) => {setDatabase(data)})
-        .catch((err) => console.log(err));
+            .then((response) => response.json())
+            .then((data) => { setDatabase(data) })
+            .catch((err) => console.log(err));
     })
 
     return (
@@ -109,7 +106,7 @@ const DashboardAtivos: React.FC = () => {
                     <option>Nome</option>
                     <option>Responsável</option>
                 </select>
-                <input/>
+                <input />
             </div>
             <TabelaAtivos ativos={ATIVOS} />
         </div>
