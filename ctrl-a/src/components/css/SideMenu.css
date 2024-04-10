@@ -1,36 +1,48 @@
-#sidemenu-component{
+:root {
+    /* Sizemenu */
+    --widthSideMenu: 175px;
+    --minHeightSideMenu: 100vh;
+    --paddingSideMenu: 50px 5px;
+    --gapSideMenu: 25px;
+
+    /* Links Sizemenu */
+    --widthSideMenuLink: 50px;
+    --paddingSideMenuLink: 5px;
+    --borderRadiusSideMenuLink: 5px;
+
+    /* Sizemenu-divisor */
+    --widthSideMenuDivisor: 80%;
+    --heightSideMenuDivisor: 10px;
+    --borderRadiusSideMenuDivisor: 5px;
+}
+
+#sidemenu-component {
     background-color: var(--cor22);
-
-    width: 175px;
-
-    padding: 50px 5px;
-
+    width: var(--widthSideMenu);
+    min-height: var(--minHeightSideMenu);
+    padding: var(--paddingSideMenu);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 25px;
+    gap: var(--gapSideMenu);
 }
 
-.sidemenu-link{
+.sidemenu-link {
     background-color: var(--cor5);
-
-    width: 50px;
-    height: 50px;
-
-    padding: 5px;
-    border-radius: 5px;
+    width: var(--widthSideMenuLink);
+    height: var(--widthSideMenuLink);
+    padding: var(--paddingSideMenuLink);
+    border-radius: var(--borderRadiusSideMenuLink);
 }
 
-.sidemenu-link-icon{
+.sidemenu-link-icon {
     width: 100%;
     height: 100%;
 }
 
-.sidemenu-divisor{
+.sidemenu- {
     background-color: var(--cor21);
-
-    height: 10px;
-    width: 80%;
-
-    border-radius: 5px;
+    height: var(--heightSideMenuDivisor);
+    width: var(--widthSideMenuDivisor);
+    border-radius: var(--borderRadiusSideMenuDivisor);
 }

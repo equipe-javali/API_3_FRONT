@@ -1,43 +1,50 @@
-#header-component{
+:root {
+    /* Header */
+    --heightHeader: 60px;
+    --paddingHorizontalHeader: 10px;
+    --paddingVerticalHeader: 15px;
+    --gapHeader: 20px;
+    --gapHeaderRight: 10px;
+
+    /* Ícone */
+    --widthHeaderIcon: 30px;
+    --paddingHeaderIcon: 5px;
+}
+
+#header-component {
     background-color: var(--cor20);
-
-    height: 60px;
-    padding: 10px 15px;
-
+    height: var(--heightHeader);
+    padding: var(--paddingVerticalHeader) var(--paddingHorizontalHeader);
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
-    gap: 20px;
+    gap: var(--gapHeader);
 }
 
-#header-app-title{
+#header-app-title {
     color: var(--branco);
     text-wrap: nowrap;
 }
 
-#header-right-side{
+#header-right-side {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
-    gap: 10px;
-
+    gap: var(--gapHeaderRight);
     width: 100%;
 }
 
-#user-icon-holder{
+#user-icon-holder {
     background-color: var(--cor3);
-
-    width: 30px;
-    height: 30px;
-
-    padding: 10px;
+    width: var(--widthHeaderIcon);
+    height: var(--widthHeaderIcon);
+    ;
+    padding: var(--paddingHeaderIcon);
     border-radius: 100%;
 }
-#user-icon-holder img{
+
+#user-icon-holder img {
     width: 100%;
     height: 100%;
-
     margin: auto;
 }
