@@ -1,32 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './css/visualizarUsuario.css'
 
+interface Ativo {
+  id: number;
+  nome: string;
+  
+}
+
+interface UsuarioLogin {
+  id: number;
+  senha: string;
+  
+}
 
 interface Usuario {
   id: number;
   nome: string;
   email: string;
-  telefone: string;
-  ativos: string;
+  cpf: string;
+  nascimento: string;
   departamento: string;
+  telefone: string;  
+  ativos: Ativo[];
+  usuariologin: UsuarioLogin;
 }
 
-const usuarios: Usuario[] = [
-  { id: 1, nome: 'Usuário 1', email: 'usuario1@example.com', telefone: '123456789', ativos: 'Computador 3', departamento: 'Departamento 1' },
-  { id: 2, nome: 'Usuário 2', email: 'usuario2@example.com', telefone: '987654321', ativos: 'Computador 2', departamento: 'Departamento 2' },
-  { id: 3, nome: 'Usuário 3', email: 'usuario3@example.com', telefone: '987654321', ativos: 'Computador 1', departamento: 'Departamento 1' },
-  { id: 4, nome: 'Usuário 4', email: 'usuario4@example.com', telefone: '987654321', ativos: 'Computador 4', departamento: 'Departamento 2' },
-  { id: 5, nome: 'Usuário 5', email: 'usuario5@example.com', telefone: '987654321', ativos: 'Computador 2', departamento: 'Departamento 1' },
-  { id: 6, nome: 'Usuário 6', email: 'usuario6@example.com', telefone: '987654321', ativos: 'Computador 1', departamento: 'Departamento 2' },
-];
+// const usuarios: Usuario[] = [
+//   { id: 1, nome: 'Usuário 1', email: 'usuario1@example.com', telefone: '123456789', ativos: 'Computador 3', departamento: 'Departamento 1' },
+//   { id: 2, nome: 'Usuário 2', email: 'usuario2@example.com', telefone: '987654321', ativos: 'Computador 2', departamento: 'Departamento 2' },
+//   { id: 3, nome: 'Usuário 3', email: 'usuario3@example.com', telefone: '987654321', ativos: 'Computador 1', departamento: 'Departamento 1' },
+//   { id: 4, nome: 'Usuário 4', email: 'usuario4@example.com', telefone: '987654321', ativos: 'Computador 4', departamento: 'Departamento 2' },
+//   { id: 5, nome: 'Usuário 5', email: 'usuario5@example.com', telefone: '987654321', ativos: 'Computador 2', departamento: 'Departamento 1' },
+//   { id: 6, nome: 'Usuário 6', email: 'usuario6@example.com', telefone: '987654321', ativos: 'Computador 1', departamento: 'Departamento 2' },
+// ];
 
 function VisualizarUsuario(): JSX.Element {
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [Pesquisa, setFilterValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  
-  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilterValue(event.target.value);
-  };
+
+  useEffect(() => {
+    fetch('http://localhost:8080/usuarios')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => setUsuarios(data))
+      .catch(error => console.error('Error:', error));
+  }, []);
 
   const Pesquisando = usuarios.filter(usuario => {
     const searchTermLower = searchTerm.toLowerCase();
@@ -46,6 +69,10 @@ function VisualizarUsuario(): JSX.Element {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilterValue(event.target.value);
   };
 
   return (
@@ -86,7 +113,7 @@ function VisualizarUsuario(): JSX.Element {
                 <td>{usuario.telefone}</td>
                 <td>{usuario.email}</td>
                 <td>{usuario.departamento}</td>
-                <td>{usuario.ativos}</td>
+                <td>{usuario.ativos.map(ativo => <p key={ativo.id}>{ativo.nome}</p>)}</td>
               </tr>
             ))}
           </tbody>

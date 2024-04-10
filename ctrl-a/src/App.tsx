@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import CadastroAtivos from './pages/cadastroAtivos';
 import DashboardAtivos from './pages/dashboardAtivos';
-import VisualizarUsuario from './pages/visualizarUsuario';
+import VisualizarUsuario from './pages/VisualizarUsuario';
 import BaseLateralHeader from './pages/BaseLateralHeader';
 import CriarUsuario from './pages/criarUsuario';
 
