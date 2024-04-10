@@ -1,0 +1,79 @@
+.dasboardAtv,
+.tabelaAtv,
+.linhaAtv {
+    display: flex;
+    flex-direction: column;
+    color: var(--branco1);
+    background-color: var(--cor7);
+}
+
+.dasboardAtv {
+    padding: 20px;
+}
+
+.buscaFiltro {
+    visibility: hidden;
+}
+
+.tabelaAtv {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+}
+
+.tabelaAtv #cabecalho {
+    background-color: var(--cor2);
+    text-align: center;
+    padding: 5px;
+}
+
+.tabelaAtv .linhaAtv {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.tabelaAtv .linhaAtv:nth-child(even) {
+    background-color: var(--cor6);
+}
+
+.linhaAtv .id, .nome, .responsavel, .tipo, .status, .local {
+    text-align: center;
+}
+
+.linhaAtv .id {
+    width: 5%;
+}
+
+.linhaAtv .nome {
+    width: 20%;
+}
+
+.linhaAtv .responsavel {
+    width: 15%;
+}
+
+.linhaAtv .tipo {
+    width: 15%;
+}
+
+.linhaAtv .status {
+    width: 15%;
+}
+
+.linhaAtv .local {
+    width: 20%;
+}
+
+.linhaAtv .local .btnAtribuir {
+    all: unset;
+    width: 50%;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: var(--cor4);
+    color: var(--branco1);
+}
+
+.linhaAtv:nth-child(even) .btnAtribuir:hover, .linhaAtv .btnAtribuir:hover {
+    opacity: 0.9;
+}
