@@ -1,3 +1,18 @@
+:root{
+    --paddingDasboardAtv:20px;
+    --paddingTabelaCabecalho: 5px;
+    --widthLinhaAtvId:5%;
+    --widthLinhaAtvNome:20%;
+    --widthLinhaAtvResposavel:15%;
+    --widthLinhaAtvTipo:15%;
+    --widthLinhaAtvStatus:15%;
+    --widthLinhaAtvLocal:20%;
+    --widthLinhaAtvLocalBtnAtribuir:50%;
+    --paddingLinhaAtvLocalBtnAtribuir:5px;
+    --borderRadiusLinhaAtvLocalBtnAtribuir:5px;
+    --opacityAtributosDashboard: 0.9
+}
+
 .dasboardAtv,
 .tabelaAtv,
 .linhaAtv {
@@ -7,7 +22,7 @@
 }
 
 .dasboardAtv {
-    padding: 20px;
+    padding: var(--paddingDasboardAtv);
 }
 
 .buscaFiltro {
@@ -23,7 +38,7 @@
 .tabelaAtv #cabecalho {
     background-color: var(--cor2);
     text-align: center;
-    padding: 5px;
+    padding: var(--paddingTabelaCabecalho);
 }
 
 .tabelaAtv .linhaAtv {
@@ -40,39 +55,39 @@
 }
 
 .linhaAtv .id {
-    width: 5%;
+    width: var(--widthLinhaAtvId);
 }
 
 .linhaAtv .nome {
-    width: 20%;
+    width: var(--widthLinhaAtvNome);
 }
 
 .linhaAtv .responsavel {
-    width: 15%;
+    width: var(--widthLinhaAtvResposavel);
 }
 
 .linhaAtv .tipo {
-    width: 15%;
+    width: var(--widthLinhaAtvTipo);
 }
 
 .linhaAtv .status {
-    width: 15%;
+    width: var(--widthLinhaAtvStatus);
 }
 
 .linhaAtv .local {
-    width: 20%;
+    width: var(--widthLinhaAtvLocal);
 }
 
 .linhaAtv .local .btnAtribuir {
     all: unset;
-    width: 50%;
-    padding: 5px;
+    width: var(--widthLinhaAtvLocalBtnAtribuir);
+    padding: var(--paddingLinhaAtvLocalBtnAtribuir);
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: var(--borderRadiusLinhaAtvLocalBtnAtribuir);
     background-color: var(--cor4);
     color: var(--branco1);
 }
 
 .linhaAtv:nth-child(even) .btnAtribuir:hover, .linhaAtv .btnAtribuir:hover {
-    opacity: 0.9;
+    opacity: var(--opacityAtributosDashboard);
 }

@@ -14,13 +14,19 @@
     /* COLUNA */
     --paddingColunaFormsAtivo: 20px;
 
-    /* Botão Forms */
+    /* Botões Forms */
     --fontSizeBotaoForms: 20px;
+    --paddingBotaoForms: 10px;
+    --borderRadiusBotaoForms: 15px;
     --fontSizeBotaoCadastrarForms:35px;
+    --paddingBotaoCadastrarForms: 10px 50px;
+    --borderRadiusCadastrarBotaoForms: 5px;
 
     /* Descrição Forms */
     --paddingVerticalDescricaoForms: 5px;
     --paddingHorizontalDescricaoForms: 10px;
+    --heigthDescricaoForms: 150px;
+
 }
 
 /*
@@ -85,7 +91,7 @@
 .descricaoFormsAtivo>textarea {
     padding: var(--paddingVerticalDescricaoForms) var(--paddingHorizontalDescricaoForms);
     width: 100%;
-    height: 150px;
+    height: var(--heigthDescricaoForms);
     resize: none;
 }
 
@@ -108,8 +114,8 @@
     background-color: inherit;
     border: 0;
     color: var(--branco);
-    padding: 10px;
-    border-radius: 15px;
+    padding: var(--paddingBotaoForms);
+    border-radius: var(--borderRadiusBotaoForms);
     font-size: var(--fontSizeBotaoForms);
 }
 
@@ -136,8 +142,8 @@
     background-color: var(--cor5);
     color: var(--branco);
     width: min-content;
-    padding: 10px 50px;
+    padding: var(--paddingBotaoCadastrarForms);
     font-size: var(--fontSizeBotaoCadastrarForms);
     margin: auto;
-    border-radius: 5px;
+    border-radius: var(--borderRadiusCadastrarBotaoForms);
 }
