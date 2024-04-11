@@ -1,3 +1,30 @@
+:root {
+    /* Div Forms */
+    --minWidthDivFormsAtivo: calc(100vw - var(--paddingDivFormsAtivo));
+    --minHeightDivFormsAtivo: calc(100vh - var(--paddingTopDivFormsAtivo));
+    --paddingLeftDivFormsAtivo: 40px;
+    --paddingTopDivFormsAtivo: 40px;
+
+    /* Forms */
+    --widthFormsAtivo: calc(95% - 2 * var(--paddingHorizontalFormsAtivo));
+    --heightFormsAtivo: calc(80% - 2 * var(--paddingVerticalFormsAtivo));
+    --paddingHorizontalFormsAtivo: 40px;
+    --paddingVerticalFormsAtivo: 40px;
+
+    /* COLUNA */
+    --witdhColunaFormsAtivo: calc(100% - 2 * var(--paddingColunaFormsAtivo));
+    --paddingColunaFormsAtivo: 20px;
+
+    /* Botão Forms */
+    --fontSizeBotaoForms: 20px;
+    --fontSizeBotaoCadastrarForms:35px;
+
+    /* Descrição Forms */
+    --paddingVerticalDescricaoForms: 5px;
+    --paddingHorizontalDescricaoForms: 10px;
+    --widthDescricaoForms: calc(100% - 2 * var(--paddingHorizontalDescricaoForms))
+}
+
 /*
 ===================
 = Base Formulário = 
@@ -14,6 +41,18 @@
     min-width: var(--minWidthDivFormsAtivo);
 }
 
+.colunaFormsAtivo {
+    display: flex;
+    flex-wrap: wrap;
+    width: var(--witdhColunaFormsAtivo);
+    padding: 0 var(--paddingColunaFormsAtivo);
+    justify-content: space-between;
+}
+
+.colunaFormsAtivo>* {
+    flex: 1;
+}
+
 /*
 =====================
 = Título Formulário = 
@@ -25,9 +64,32 @@
 
 .divFormsAtivo>form {
     margin: auto;
-    background-color: var(--cor1);
+    background-color: var(--cor8);
+    display: flex;
+    flex-direction: column;
     width: var(--widthFormsAtivo);
     height: var(--heightFormsAtivo);
+}
+
+.divFormsAtivo>form>* {
+    margin-top: auto;
+    gap: 10px;
+    margin-bottom: auto;
+}
+
+
+
+/* 
+=========================
+= Descrições Formulário =
+==========================
+*/
+
+.descricaoFormsAtivo>textarea {
+    padding: var(--paddingVerticalDescricaoForms) var(--paddingHorizontalDescricaoForms);
+    width: var(--widthDescricaoForms);
+    height: 150px;
+    resize: none;
 }
 
 /* 
@@ -39,20 +101,23 @@
 .divBotaoForms {
     display: flex;
     justify-content: space-between;
-    margin-top: auto;
     margin-bottom: 0;
+    margin-top: auto;
     width: 100%;
 }
 
 .divBotaoForms>button {
+    cursor: pointer;
     background-color: inherit;
     border: 0;
     color: var(--branco);
+    padding: 10px;
+    border-radius: 15px;
     font-size: var(--fontSizeBotaoForms);
 }
 
 .divBotaoForms>button:hover {
-    background-color: var(--cor6);
+    background-color: var(--cor9);
 }
 
 .botaoVoltarForms {
@@ -63,19 +128,19 @@
     right: 0;
 }
 
-:root {
-    /* Div Forms */
-    --minWidthDivFormsAtivo: calc(100vw - var(--paddingDivFormsAtivo));
-    --minHeightDivFormsAtivo: calc(100vh - var(--paddingTopDivFormsAtivo));
-    --paddingLeftDivFormsAtivo: 40px;
-    --paddingTopDivFormsAtivo: 40px;
+/*
+===================
+= Botão Cadastrar =
+===================
+*/
 
-    /* Forms */
-    --widthFormsAtivo: calc(90% - 2 * var(--paddingHorizontalFormsAtivo));
-    --heightFormsAtivo: calc(80% - 2 * var(--paddingVerticalFormsAtivo));
-    --paddingHorizontalFormsAtivo: 40px;
-    --paddingVerticalFormsAtivo: 40px;
-
-    /* Botão Forms */
-    --fontSizeBotaoForms: 20px;
+.BotaoCadastrarAtivo {
+    cursor: pointer;
+    background-color: var(--cor5);
+    color: var(--branco);
+    width: min-content;
+    padding: 10px 50px;
+    font-size: var(--fontSizeBotaoCadastrarForms);
+    margin: auto;
+    border-radius: 5px;
 }

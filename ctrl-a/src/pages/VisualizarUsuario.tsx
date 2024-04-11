@@ -94,9 +94,6 @@ function VisualizarUsuario(): JSX.Element {
 
   return (
     <div className='App'>
-      <header>
-        <h3>Ctrl A</h3>
-      </header>
       <div>
         <h2>Usuários</h2>
         <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
@@ -124,7 +121,7 @@ function VisualizarUsuario(): JSX.Element {
         </tr>
 </thead>
           <tbody>
-          {usuarios.map((usuario) => (
+          {Pesquisando.map((usuario) => (
             <tr key={usuario.id}>
               <td>{usuario.id}</td>
               <td>{usuario.nome}</td>
@@ -133,16 +130,16 @@ function VisualizarUsuario(): JSX.Element {
               <td>{usuario.departamento}</td>
               <td>{usuario.ativos.map(ativo => <p key={ativo.id}>{ativo.nome}</p>)}</td>
               <td>
-                <button onClick={() => handleDelete(usuario.id)}>Excluir</button>
+                <button type ='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
               </td>
             </tr>
           ))}
           </tbody>
         </table>
       </div>
-      <footer>
+      {/* <footer>
         <h1 className="footerText">Todos os direitos reservados à Ctrl A</h1>
-      </footer>
+      </footer> */}
     </div>
   );
 }

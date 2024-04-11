@@ -1,14 +1,14 @@
 import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import BaseLateralHeader from './pages/BaseLateralHeader';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import CadastroAtivos from './pages/cadastroAtivos';
 import DashboardAtivos from './pages/dashboardAtivos';
+import CriarUsuario from './pages/CriarUsuario';
 import VisualizarUsuario from './pages/VisualizarUsuario';
-import BaseLateralHeader from './pages/BaseLateralHeader';
-import CriarUsuario from './pages/criarUsuario';
 
 
-function App(): JSX.Element {
+export default function App() {
   return (
 
     <BrowserRouter>
@@ -26,10 +26,6 @@ function App(): JSX.Element {
         {/* <Route path="*" element={ < DashboardAtv /> } /> */}
       </Routes>
     </BrowserRouter>
-
     
   );
 }
-
-
-export default App;

@@ -3,7 +3,7 @@
 .linhaAtv {
     display: flex;
     flex-direction: column;
-    color: var(--branco);
+    color: var(--branco1);
     background-color: var(--cor7);
 }
 
@@ -34,6 +34,8 @@
 
 .tabelaAtv .linhaAtv:nth-child(even) {
     background-color: var(--cor6);
+    
+    
 }
 
 .linhaAtv .id, .nome, .responsavel, .tipo, .status, .local {
@@ -41,7 +43,7 @@
 }
 
 .linhaAtv .id {
-    width: 5%;
+    width: 6%;
 }
 
 .linhaAtv .nome {
@@ -64,8 +66,23 @@
     width: 20%;
 }
 
-.linhaAtv .local button {
+
+.linhaAtv .local .btnAtribuir {
+    all: unset;
+    width: auto;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
     background-color: var(--cor4);
-    color: var(--branco);
-    margin-right: 10px;
+    color: var(--branco1);
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 10px;
+    cursor: pointer;
 }
+
+.linhaAtv:nth-child(even) .btnAtribuir:hover, .linhaAtv .btnAtribuir:hover {
+    opacity: 0.9;
+
+}
+

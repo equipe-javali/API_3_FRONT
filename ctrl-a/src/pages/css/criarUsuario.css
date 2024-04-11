@@ -7,33 +7,35 @@
 }
 
 body {
-    padding-top: 4%;
-    padding-bottom: 3%;
+
+    padding-top: 5%;
+    padding-bottom: 5%;
     margin: 0;
     font-family: Arial, sans-serif;
     background: #191723;
     color: #fff;
     height: 100%;
   }
-  
-header {
-  background-color: #25293E; 
-  color: #fff; 
-  position: fixed;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  width: 100%;
-  top: 0;
-}
+    
+  header {
+    background-color: #25293E; 
+    color: #fff; 
+    position: fixed;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    width: 100%;
+    top: 0;
+  }
 
-footer {
-  padding-top: 3px;
-  padding-bottom: 3px;
-  background-color: #25293E; 
-  color: #fff; 
-  width: 100%;
-  top: 0;
-}
+  footer {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #25293E; 
+    color: #fff; 
+    width: 100%;
+    top: 0;
+  }
+
 
 
 h1{
@@ -84,7 +86,17 @@ h3{
   .primeira-parte label {
     display: block;
     margin-bottom: 10px;
-    color: white; /* Cor do texto dos labels */
+
+    color: white; 
+  }
+
+  .nome label {
+    display: block;
+    margin-left: 10%;
+    margin-bottom: 5px;
+    font-size: 2vh;
+    color: #d3d3d3; 
+
   }
   
   .primeira-parte input,
@@ -107,8 +119,10 @@ h3{
   }
 
   .primeira-parte button {
-    display: block; /* Para ocupar toda a largura do contêiner */
-    margin: 20px auto 0; /* Define margem superior, centraliza horizontalmente e remove margem inferior */
+
+    display: block; 
+    margin: 20px auto 0; 
+
   }
   
   
@@ -123,7 +137,10 @@ h3{
   
   
   .primeira-parte button:hover {
+
     background-color: #1d2b3a;
+    background-color: rgb(19, 23, 41);
+
   }
   
   .primeira-parte .checkbox-container {
@@ -131,7 +148,22 @@ h3{
     align-items: left;
     margin-bottom: 10px;
   }
+
+  .btnExcluir {
+    all: unset;
+    width: auto;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: var(--cor4);
+    color: var(--branco1);
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 10px;
+    cursor: pointer;
+}
   
+
 
 
 .checkbox-personalizado {
@@ -174,3 +206,4 @@ h3{
   transform: translateY(-50%);
   color: #fff; 
 }
+

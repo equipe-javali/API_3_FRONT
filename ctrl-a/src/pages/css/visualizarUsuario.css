@@ -89,12 +89,6 @@ h3{
   padding: 10px; /* Espaçamento interno */
 }
 
-.footerText {
-  color: #fff; 
-  background-color: #4152AC; 
-  padding: 10px; 
-  font-size: 20px;
-}
 
 footer {
   position: fixed;
@@ -104,15 +98,41 @@ footer {
   text-align: center;
 }
 
-.userTable {
-  width: 98.3%;
-  border-collapse: collapse;
-  margin-top: 20px; /* espaço entre o pesquisar e a tabela*/
-  margin-left: 20px;
+/* Para telas com largura de 600px ou menos */
+@media (max-width: 600px) {
+  header {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
 }
 
+/* Para telas com largura de 768px ou menos */
+@media (max-width: 768px) {
+  header {
+    padding-top: 2.5px;
+    padding-bottom: 2.5px;
+  }
+}
+
+/* Para telas com largura de 992px ou menos */
+@media (max-width: 992px) {
+  header {
+    padding-top: 2.75px;
+    padding-bottom: 2.75px;
+  }
+}
+
+/* Para telas com largura de 1200px ou menos */
+@media (max-width: 1200px) {
+  header {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+}
+
+
 .userTable th, .userTable td {
-  border: 1px solid #ddd;
+  border: 1px solid #25293E;
   padding: 8px;
   background-color: #25293E
 }
