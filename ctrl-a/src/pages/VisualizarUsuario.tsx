@@ -41,7 +41,7 @@ function VisualizarUsuario(): JSX.Element {
   
 
   useEffect(() => {
-    fetch('http://localhost:8080/usuarios')
+    fetch('http://localhost:8080/usuario/listagemTodos')
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -77,7 +77,7 @@ function VisualizarUsuario(): JSX.Element {
   };
 
   const handleDelete = (id: number) => {
-    fetch(`http://localhost:8080/usuario/${id}`, {
+    fetch(`http://localhost:8080/usuario/exclusao/${id}`, {
       method: 'DELETE',
     })
     .then(response => {
