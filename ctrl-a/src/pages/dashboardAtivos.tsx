@@ -71,7 +71,7 @@ function TabelaAtivos({ ativos }: TabelaAtivosProps<AtivoProps>) {
     )
 }
 
-const DashboardAtivos: React.FC = () => {
+export default function DashboardAtivos() {
     const ATIVOS: AtivoProps[] = [
         { id: 1, nome: 'Fusca', responsavel: '', tipo: 'Automóvel', status: '', local: '' },
         { id: 2, nome: 'Carro', responsavel: 'Rosana', tipo: 'Automóvel', status: '', local: 'Desenvolvimento, SJC - SP' },
@@ -112,5 +112,3 @@ const DashboardAtivos: React.FC = () => {
         </div>
     );
 };
-
-export default DashboardAtivos;

@@ -6,7 +6,7 @@ import CadastroAtivos from './pages/cadastroAtivos';
 import DashboardAtivos from './pages/dashboardAtivos';
 import CriarUsuario from './pages/CriarUsuario';
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
@@ -22,5 +22,3 @@ function App() {
     </BrowserRouter >
   );
 }
-
-export default App;
