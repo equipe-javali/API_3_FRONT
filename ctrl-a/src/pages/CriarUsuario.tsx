@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import './css/criarUsuario.css';
 import './css/base.css';
 
-function CriarUsuario() {
+export default function CriarUsuario() {
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
@@ -129,5 +129,3 @@ function CriarUsuario() {
     </div>
   );
 }
-
-export default CriarUsuario;

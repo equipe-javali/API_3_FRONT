@@ -20,7 +20,7 @@ const usuarios: Usuario[] = [
   { id: 6, nome: 'Usuário 6', email: 'usuario6@example.com', telefone: '987654321', ativos: 'Computador 1', departamento: 'Departamento 2' },
 ];
 
-function VisualizarUsuario(): JSX.Element {
+export default function VisualizarUsuario() {
   const [Pesquisa, setFilterValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -95,5 +95,3 @@ function VisualizarUsuario(): JSX.Element {
     </div>
   );
 }
-
-export default VisualizarUsuario;
