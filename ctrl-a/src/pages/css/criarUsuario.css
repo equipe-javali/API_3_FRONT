@@ -37,23 +37,23 @@
 
 .cadastroUsuário #primeira-parte {
   margin: 10px;
-  background-color: #2F3D54;
+  background-color: var(--cor8);
   border-radius: 4px;
 }
 
 .cadastroUsuário .primeira-parte {
   margin: 20px;
-  background-color: #2F3D54;
+  background-color: var(--cor8);
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px #0000001a;
   font-size: 2vh;
 }
 
 .cadastroUsuário .primeira-parte label {
   display: block;
   margin-bottom: 10px;
-  color: white;
+  color: var(--branco);
 }
 
 .cadastroUsuário .nome label {
@@ -61,7 +61,7 @@
   margin-left: 10%;
   margin-bottom: 5px;
   font-size: 2vh;
-  color: #d3d3d3;
+  color: var(--branco1);
 }
 
 .cadastroUsuário .primeira-parte input,
@@ -69,14 +69,14 @@
   width: 98%;
   padding: 10px;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--cor10);
   border-radius: 5px;
 }
 
 .cadastroUsuário .primeira-parte button {
   padding: 10px 20px;
-  background-color: #8764B8;
-  color: white;
+  background-color: var(--cor5);
+  color: var(--branco);
   border: none;
   border-radius: 5px;
   font-size: 3vh;
@@ -95,13 +95,13 @@
   padding: 8px;
   margin-left: 10px;
   border-radius: 4px;
-  background-color: rgb(28, 33, 59);
-  color: #fff;
+  background-color: var(--cor20);
+  color: var(--branco);
 }
 
 
 .cadastroUsuário .primeira-parte button:hover {
-  background-color: rgb(19, 23, 41);
+  background-color: var(--cor20);
 }
 
 .cadastroUsuário .primeira-parte .checkbox-container {

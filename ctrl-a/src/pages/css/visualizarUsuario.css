@@ -1,26 +1,25 @@
-
 .VisualizarUsuario {
-    padding-top: 4%;
-    padding-bottom: 3%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    height: 100vh;
-  }
-  
+  padding-top: 4%;
+  padding-bottom: 3%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--branco);
+  height: 100vh;
+}
+
 /* Usuarios */
-.VisualizarUsuario h2{
+.VisualizarUsuario h2 {
   margin-top: 5px;
   margin-bottom: 20px;
   font-size: 4vh;
   font-family: Arial, sans-serif;
-  color: #fff;
+  color: var(--branco);
   text-align: left;
   padding-left: 2%;
 }
 
 /* CTRL A */
-.VisualizarUsuario h3{
+.VisualizarUsuario h3 {
   margin-top: 5px;
   margin-bottom: 5px;
   font-size: 4vh;
@@ -31,33 +30,36 @@
 
 
 /* CSS da página Visualizar usuário */
-  
+
 .VisualizarUsuario .mySelect {
-  width: 18%; 
+  width: 18%;
   padding: 8px;
-  border-radius: 4px; 
-  background-color: #853F85; 
-  color: #fff; /* Cor do texto */
-  margin-right: 20px; 
+  border-radius: 4px;
+  background-color: var(--cor4);
+  color: var(--branco);
+  /* Cor do texto */
+  margin-right: 20px;
   margin-left: 20px;
 }
 
 .VisualizarUsuario .myInput {
-  width: 79%; 
+  width: 79%;
   padding: 8px;
-  border-radius: 4px; 
-  background-color: #4152AC;
+  border-radius: 4px;
+  background-color: var(--cor3);
 }
 
 .VisualizarUsuario .myInput::placeholder {
-  color: #fff; /* Cor do texto do placeholder */
+  color: var(--branco);
+  /* Cor do texto do placeholder */
 }
 
 .VisualizarUsuario .myHeaderCell {
   width: 4%;
-  color: #fff; 
-  background-color: #0178D4; 
-  padding: 10px; /* Espaçamento interno */
+  color: var(--branco);;
+  background-color: var(--cor2);
+  padding: 10px;
+  /* Espaçamento interno */
 }
 
 /* Para telas com largura de 600px ou menos */
@@ -68,13 +70,14 @@
   }
 }
 
-.VisualizarUsuario .userTable th, .userTable td {
-  border: 1px solid #25293E;
+.VisualizarUsuario .userTable th,
+.userTable td {
+  border: 1px solid var(--cor20);
   padding: 8px;
-  background-color: #25293E
+  background-color: var(--cor20)
 }
 
 .VisualizarUsuario .userTable th {
-  background-color: #0178D4;
-  color: white;
+  background-color: var(--cor2);
+  color: var(--branco);
 }
