@@ -9,7 +9,8 @@ type AtivoProps = {
     tipo: string;
     status: string;
     local: string;
-    atribuirResponsavel: (usuarioId: number, ativoId: number) => void; // Adicione esta linha
+    atribuirResponsavel: (usuarioId: number, ativoId: number) => void; 
+    excluirAtivo: (ativoId: number) => void; 
 }
 
 type UsuarioLoginProps = {
@@ -35,8 +36,9 @@ type UsuarioProps = {
 type TabelaAtivosProps<T extends AtivoProps> = {
     ativos: T[];
     atribuirResponsavel: (usuarioId: number, ativoId: number) => void;
+    excluirAtivo: (ativoId: number) => void;
 }
-function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps) {
+function LinhaAtivo({ id, nome, responsavel, tipo, status, local, excluirAtivo } : AtivoProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
 
@@ -56,10 +58,13 @@ function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps)
         setShowModal(!showModal);    }
     const [isHovered, setIsHovered] = useState(false);
     const respAtivo = responsavel === '' ? 'Não definido' : responsavel
+    function handleExcluir() {
+        excluirAtivo(id);
+    }
     const localAtivo = (
         <>
             <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button>
-            {isHovered && <button type='button' className='btnAtribuir'>Excluir</button>}
+            {isHovered && <button type='button' className='btnAtribuir' onClick={handleExcluir}>Excluir</button>}
         </>
     );
     
@@ -73,6 +78,7 @@ function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps)
     } else {
         statusA = 'Em uso'
     }
+
     
     
 
@@ -109,18 +115,19 @@ function LinhaAtivo({ id, nome, responsavel, tipo, status, local } : AtivoProps)
 }
 
 
-function TabelaAtivos({ ativos, atribuirResponsavel } : TabelaAtivosProps<AtivoProps>) {
+function TabelaAtivos({ ativos, atribuirResponsavel, excluirAtivo } : TabelaAtivosProps<AtivoProps>) {
     const linhas = ativos.map((atv) => {
         return (
             <LinhaAtivo
                 key={atv.id}
                 id={atv.id}
                 nome={atv.nome}
-                responsavel={atv.responsavel} // Aqui está o respAtivo
+                responsavel={atv.responsavel}
                 tipo={atv.tipo}
                 status={atv.status}
                 local={atv.local}
-                atribuirResponsavel={atribuirResponsavel} />
+                atribuirResponsavel={atribuirResponsavel}
+                excluirAtivo={excluirAtivo} /> // Adicione esta linha
         );
     });
 
@@ -198,19 +205,24 @@ export default function DashboardAtivos() {
         });
     }
 
-    const [responsavel, setResponsavel] = useState('');
-
-    useEffect(() => {
-        fetch(`http://localhost:8080/usuario/${responsavel}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => setResponsavel(data.nome))
-            .catch(error => console.error('Error:', error));
-    }, [responsavel]);
+    function excluirAtivo(ativoId: number) {
+        fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, { 
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const updatedAtivos = ativos.filter(ativo => ativo.id !== ativoId);
+            setAtivos(updatedAtivos);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
 
     return (
         <div className="dasboardAtv">
@@ -224,7 +236,7 @@ export default function DashboardAtivos() {
                 </select>
                 <input/>
             </div>
-            <TabelaAtivos ativos={ativos} atribuirResponsavel={atribuirResponsavel} />
+            <TabelaAtivos ativos={ativos} atribuirResponsavel={atribuirResponsavel} excluirAtivo={excluirAtivo} />
         </div>
     );
 };
