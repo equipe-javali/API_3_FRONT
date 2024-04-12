@@ -9,8 +9,6 @@ export default function CriarUsuario() {
   const [departamento, setDepartamento] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const [usuario, setUsuario] = useState(false);
-  const [administrador, setAdministrador] = useState(false);
 
   const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNome(event.target.value);
@@ -36,15 +34,6 @@ export default function CriarUsuario() {
     setTelefone(event.target.value);
   };
 
-  const handleUsuarioChange = () => {
-    setUsuario(true);
-    setAdministrador(false);
-  };
-
-  const handleAdministradorChange = () => {
-    setAdministrador(true);
-    setUsuario(false);
-  };
 
   const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -54,9 +43,7 @@ export default function CriarUsuario() {
       dataNascimento,
       departamento,
       email,
-      telefone,
-      usuario,
-      administrador
+      telefone
     };
 
     try {
@@ -112,17 +99,6 @@ export default function CriarUsuario() {
         <div>
           <label>Email:</label>
           <input type="email" value={email} onChange={handleEmailChange} />
-        </div>
-        <div>
-          <label>Permissão:</label>
-          <div className="nome">
-            <label><span>Usuário</span></label>
-            <input type="checkbox" checked={usuario} onChange={handleUsuarioChange} className="checkbox-personalizado" id="checkbox-usuario" />
-          </div>
-          <div className="nome">
-          <label><span>Administrador</span></label>
-            <input type="checkbox" checked={administrador} onChange={handleAdministradorChange} className="checkbox-personalizado" id="checkbox-administrador" />
-          </div>
         </div>
         <button onClick={handleSubmit}>Cadastrar</button>
       </div>
