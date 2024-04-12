@@ -60,7 +60,7 @@ export default function CriarUsuario() {
     };
 
     try {
-      const response = await fetch('https://javali.supabase.co/usuario', {
+      const response = await fetch('http://localhost:8080/usuario/cadastro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

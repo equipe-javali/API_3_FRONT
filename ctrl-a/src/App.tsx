@@ -4,7 +4,7 @@ import BaseLateralHeader from './pages/BaseLateralHeader';
 import './App.css';
 import CadastroAtivos from './pages/cadastroAtivos';
 import DashboardAtivos from './pages/dashboardAtivos';
-import CriarUsuario from './pages/CriarUsuario';
+import CriarUsuario from './pages/criarUsuario';
 import VisualizarUsuario from './pages/VisualizarUsuario';
 
 
