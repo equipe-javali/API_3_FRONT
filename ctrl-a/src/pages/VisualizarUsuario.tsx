@@ -16,9 +16,9 @@ interface UsuarioLogin {
 interface Usuario {
   id: number;
   nome: string;
-  email: string;
   cpf: string;
   nascimento: string;
+  email: string;
   departamento: string;
   telefone: string;  
   ativos: Ativo[];
@@ -113,10 +113,11 @@ function VisualizarUsuario(): JSX.Element {
           <tr>
             <th className="myHeaderCell">ID</th>
             <th className="myHeaderCell">Nome</th>
+            <th className="myHeaderCell">CPF</th>
+            <th className="myHeaderCell">Nascimento</th>
             <th className="myHeaderCell">Telefone</th>
             <th className="myHeaderCell">Email</th>
             <th className="myHeaderCell">Departamento</th>
-            <th className="myHeaderCell">Ativos</th>
             <th className="myHeaderCell">Ações</th>
         </tr>
 </thead>
@@ -125,10 +126,12 @@ function VisualizarUsuario(): JSX.Element {
             <tr key={usuario.id}>
               <td>{usuario.id}</td>
               <td>{usuario.nome}</td>
+              <td>{usuario.cpf}</td>
+              <td>{usuario.nascimento}</td>
               <td>{usuario.telefone}</td>
               <td>{usuario.email}</td>
               <td>{usuario.departamento}</td>
-              <td>{usuario.ativos.map(ativo => <p key={ativo.id}>{ativo.nome}</p>)}</td>
+              {/* <td>{usuario.ativos.map(ativo => <p key={ativo.id}>{ativo.nome}</p>)}</td> */}
               <td>
                 <button type ='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
               </td>
