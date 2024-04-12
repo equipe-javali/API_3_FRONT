@@ -20,8 +20,7 @@ interface Usuario {
   cpf: string;
   nascimento: string;
   departamento: string;
-  telefone: string;  
-  ativos: Ativo[];
+  telefone: string;    
   usuariologin: UsuarioLogin;
 }
 
@@ -115,8 +114,7 @@ function VisualizarUsuario(): JSX.Element {
             <th className="myHeaderCell">Nome</th>
             <th className="myHeaderCell">Telefone</th>
             <th className="myHeaderCell">Email</th>
-            <th className="myHeaderCell">Departamento</th>
-            <th className="myHeaderCell">Ativos</th>
+            <th className="myHeaderCell">Departamento</th>            
             <th className="myHeaderCell">Ações</th>
         </tr>
 </thead>
@@ -128,7 +126,7 @@ function VisualizarUsuario(): JSX.Element {
               <td>{usuario.telefone}</td>
               <td>{usuario.email}</td>
               <td>{usuario.departamento}</td>
-              <td>{usuario.ativos.map(ativo => <p key={ativo.id}>{ativo.nome}</p>)}</td>
+              
               <td>
                 <button type ='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
               </td>

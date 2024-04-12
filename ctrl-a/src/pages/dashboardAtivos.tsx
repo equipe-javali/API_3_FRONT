@@ -34,23 +34,24 @@ type TabelaAtivosProps<T extends AtivoProps> = {
     excluirAtivo: (ativoId: number) => void;
 }
 
-
 function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo } : AtivoProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
     const [isHovered, setIsHovered] = useState(false);
-    // const respAtivo 
-    const localAtivo = (
-        idResponsavel.departamento === '' ? <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button> : idResponsavel.departamento
-        
-    )     //(
-    //     <>
-    //         <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button>
-    //         {isHovered && <button type='button' className='btnAtribuir' onClick={handleExcluir}>Excluir</button>}
-    //     </>
-    // );
+    const [showDeleteButton, setShowDeleteButton] = useState(false);
     
 
+    const localAtivo = (
+        <div>
+            {idResponsavel?.departamento && !isHovered && idResponsavel.departamento}
+            {!idResponsavel?.departamento || isHovered ? (
+                <>
+                    {!idResponsavel?.departamento && <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button>}
+                    <button type='button' className='btnAtribuir' onClick={handleExcluir}>Excluir</button>
+                </>
+            ) : null}
+        </div>
+    )
     useEffect(() => {
         fetch('http://localhost:8080/usuario/listagemTodos')
             .then(response => {
@@ -68,29 +69,24 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     function handleExcluir() {
         excluirAtivo(id);
     }
-    
-    
+
     let statusA = status
-    if (idResponsavel.departamento == '') {
+    if (idResponsavel && idResponsavel.departamento == '') {
         statusA = 'Não alocado'
-        
     }
-    else if (idResponsavel.departamento == 'TI') {
+    else if (idResponsavel && idResponsavel.departamento == 'TI') {
         statusA = 'Em manutenção'
     } else {
         statusA = 'Em uso'
     }
 
-    
-    
-
     return (
         <div className="linhaAtv" 
-             onMouseEnter={() => setIsHovered(true)} 
-             onMouseLeave={() => setIsHovered(false)}>
+             onMouseEnter={() => {setIsHovered(true); setShowDeleteButton(true);}} 
+             onMouseLeave={() => {setIsHovered(false); setShowDeleteButton(false);}}>
             <p className="id">{id}</p>
             <p className="nome">{nome}</p>
-            <p className="responsavel">{idResponsavel.nome}</p>
+            <p className="responsavel">{idResponsavel ? idResponsavel.nome : 'N/A'}</p>
             <p className="tipo">{tipo}</p>
             <p className="status">{statusA}</p>
             <p className="local">{localAtivo}</p>
@@ -111,11 +107,9 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                 </>
 
             </Modal>
-            
         </div>
     )
 }
-
 
 function TabelaAtivos({ ativos, excluirAtivo } : TabelaAtivosProps<AtivoProps>) {
     const linhas = ativos.map((atv) => {
@@ -150,9 +144,26 @@ function TabelaAtivos({ ativos, excluirAtivo } : TabelaAtivosProps<AtivoProps>) 
 
 export default function DashboardAtivos() {
 
-
     const [ativos, setAtivos] = useState<AtivoProps[]>([]); 
-
+    const [update, setUpdate] = useState(false);
+    
+    const excluirAtivo = (ativoId: number) => {
+        fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, { 
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            console.log('Ativo excluído com sucesso!', ativoId);
+                
+            setAtivos(ativos.filter(ativo => ativo.id !== ativoId));
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+    
     useEffect(() => {
         fetch('http://localhost:8080/ativo/listagemTodos')
           .then(response => {
@@ -163,29 +174,7 @@ export default function DashboardAtivos() {
           })
           .then(data => setAtivos(data))
           .catch(error => console.error('Error:', error));
-      }, []);
-
-
-      
-
-    function excluirAtivo(ativoId: number) {
-        fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, { 
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            const updatedAtivos = ativos.filter(ativo => ativo.id !== ativoId);
-            setAtivos(updatedAtivos);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
+      }, [update]);
 
     return (
         <div className="dasboardAtv">

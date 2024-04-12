@@ -14,10 +14,10 @@ export default class BaseLateralHeader extends Component<RouteProps> {
             <div id="app-content-lr">
                 <SideMenu links={[
                     [home_png, "/"],
-                    [user_png, "Usuario"],
+                    [user_png, "ListaUsuarios"],
                     [user_png, "CadastroAtivo"],
                     [user_png, "CadastroUsuario"],
-                    [user_png, "Ativos"]
+                    [user_png, "ListaAtivos"]
                 ]} />
                 <div id="app-content-tb">
                     <Header />
