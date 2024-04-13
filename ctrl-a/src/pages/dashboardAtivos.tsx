@@ -69,7 +69,7 @@ function LinhaAtivo({ id, nome, responsavel, tipo, status, local, excluirAtivo }
     );
     
     let statusA = status
-    if (local == '' && responsavel == '') {
+    if (local === '' && responsavel === '') {
         statusA = 'Não alocado'
     }
     else if (local === 'TI') {
