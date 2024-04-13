@@ -152,11 +152,3 @@ export default function VisualizarUsuario() {
     </div>
   );
 }
-
-function useState(arg0: string): [any, any] {
-  throw new Error('Function not implemented.');
-}
-function useEffect(arg0: () => void, arg1: never[]) {
-  throw new Error('Function not implemented.');
-}
-
