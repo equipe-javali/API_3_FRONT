@@ -48,6 +48,8 @@
 
 .tabelaAtv .linhaAtv:nth-child(even) {
     background-color: var(--cor6);
+    
+    
 }
 
 .linhaAtv .id, .nome, .responsavel, .tipo, .status, .local {
@@ -78,6 +80,7 @@
     width: var(--widthLinhaAtvLocal);
 }
 
+
 .linhaAtv .local .btnAtribuir {
     all: unset;
     width: var(--widthLinhaAtvLocalBtnAtribuir);
@@ -86,6 +89,10 @@
     border-radius: var(--borderRadiusLinhaAtvLocalBtnAtribuir);
     background-color: var(--cor4);
     color: var(--branco1);
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 10px;
+    cursor: pointer;
 }
 
 .linhaAtv:nth-child(even) .btnAtribuir:hover, .linhaAtv .btnAtribuir:hover {

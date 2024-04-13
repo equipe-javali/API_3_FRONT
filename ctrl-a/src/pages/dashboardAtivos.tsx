@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './css/dashboardAtivos.css'
+import Modal from '../components/modal/modal';
 
 type AtivoProps = {
     id: number;
@@ -8,15 +9,67 @@ type AtivoProps = {
     tipo: string;
     status: string;
     local: string;
+    atribuirResponsavel: (usuarioId: number, ativoId: number) => void; 
+    excluirAtivo: (ativoId: number) => void; 
 }
 
-function LinhaAtivo({ id, nome, responsavel, tipo, status, local }: AtivoProps) {
+type UsuarioLoginProps = {
+    id: number;
+    senha: string;
+    
+  }
+
+  
+
+type UsuarioProps = {
+    id: number;
+  nome: string;
+  email: string;
+  cpf: string;
+  nascimento: string;
+  departamento: string;
+  telefone: string;  
+  ativos: AtivoProps[];
+  usuariologin: UsuarioLoginProps[];
+}
+
+type TabelaAtivosProps<T extends AtivoProps> = {
+    ativos: T[];
+    atribuirResponsavel: (usuarioId: number, ativoId: number) => void;
+    excluirAtivo: (ativoId: number) => void;
+}
+function LinhaAtivo({ id, nome, responsavel, tipo, status, local, excluirAtivo } : AtivoProps) {
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/usuario/listagemTodos')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => setUsuarios(data))
+            .catch(error => console.error('Error:', error));
+    }, []);
+    
+    function toggleModal() {
+        setShowModal(!showModal);    }
+    const [isHovered, setIsHovered] = useState(false);
     const respAtivo = responsavel === '' ? 'Não definido' : responsavel
-    const localAtivo = local === '' ? <button type='button' className='btnAtribuir'>Atribuir</button> : local
-
+    function handleExcluir() {
+        excluirAtivo(id);
+    }
+    const localAtivo = (
+        <>
+            <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button>
+            {isHovered && <button type='button' className='btnAtribuir' onClick={handleExcluir}>Excluir</button>}
+        </>
+    );
+    
     let statusA = status
-
-    if (local === '' && responsavel === '') {
+    if (local == '' && responsavel == '') {
         statusA = 'Não alocado'
     }
     else if (local === 'TI') {
@@ -25,26 +78,45 @@ function LinhaAtivo({ id, nome, responsavel, tipo, status, local }: AtivoProps) 
         statusA = 'Em uso'
     }
 
+    
+    
+
     return (
-        <div className="linhaAtv">
+        <div className="linhaAtv" 
+             onMouseEnter={() => setIsHovered(true)} 
+             onMouseLeave={() => setIsHovered(false)}>
             <p className="id">{id}</p>
             <p className="nome">{nome}</p>
             <p className="responsavel">{respAtivo}</p>
             <p className="tipo">{tipo}</p>
             <p className="status">{statusA}</p>
             <p className="local">{localAtivo}</p>
+            <Modal open={showModal} onClose={toggleModal}>
+                <>
+                    <div className='modal-responsavel'>
+                        <h3>Responsável</h3>
+                        <select>
+                        {usuarios.map(usuario => (
+                            <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
+                        ))}
+                        </select>
+                    </div>
+                    <div className='modal-local'>
+                        <h3>Departamento</h3>
+                        <input placeholder='Onde se encontra o ativo...' />
+                    </div>
+                </>
+
+            </Modal>
+            
         </div>
     )
 }
 
-type TabelaAtivosProps<T extends AtivoProps> = {
-    ativos: T[];
-}
 
-function TabelaAtivos({ ativos }: TabelaAtivosProps<AtivoProps>) {
-    const linhas: any = []
-    ativos.forEach((atv) => {
-        linhas.push(
+function TabelaAtivos({ ativos, atribuirResponsavel, excluirAtivo } : TabelaAtivosProps<AtivoProps>) {
+    const linhas = ativos.map((atv) => {
+        return (
             <LinhaAtivo
                 key={atv.id}
                 id={atv.id}
@@ -52,8 +124,10 @@ function TabelaAtivos({ ativos }: TabelaAtivosProps<AtivoProps>) {
                 responsavel={atv.responsavel}
                 tipo={atv.tipo}
                 status={atv.status}
-                local={atv.local} />
-        )
+                local={atv.local}
+                atribuirResponsavel={atribuirResponsavel}
+                excluirAtivo={excluirAtivo} /> // Adicione esta linha
+        );
     });
 
     return (
@@ -61,7 +135,7 @@ function TabelaAtivos({ ativos }: TabelaAtivosProps<AtivoProps>) {
             <div className="linhaAtv" id="cabecalho">
                 <h3 className="id">ID</h3>
                 <h3 className="nome">Nome</h3>
-                <h3 className="responsavel">Responsável</h3>
+                <h3 className="responsavel">Responsavel</h3>
                 <h3 className="tipo">Tipo</h3>
                 <h3 className="status">Status</h3>
                 <h3 className="local">Local</h3>
@@ -69,32 +143,85 @@ function TabelaAtivos({ ativos }: TabelaAtivosProps<AtivoProps>) {
             {linhas}
         </div>
     )
+
 }
 
 export default function DashboardAtivos() {
-    const ATIVOS: AtivoProps[] = [
-        { id: 1, nome: 'Fusca', responsavel: '', tipo: 'Automóvel', status: '', local: '' },
-        { id: 2, nome: 'Carro', responsavel: 'Rosana', tipo: 'Automóvel', status: '', local: 'Desenvolvimento, SJC - SP' },
-        { id: 3, nome: 'Impressora', responsavel: 'Herman', tipo: 'Eletrônico', status: '', local: 'TI' }
-    ];
 
-    const [database, setDatabase] = useState([])
+
+    const [ativos, setAtivos] = useState<AtivoProps[]>([]); 
 
     useEffect(() => {
-        fetch('/ativos', {
-            method: 'GET',
-            body: JSON.stringify({
-                idAtivo: localStorage.getItem('id_ativo')
-            }),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+        fetch('http://localhost:8080/ativo/listagemTodos')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
+            return response.json();
+          })
+          .then(data => setAtivos(data))
+          .catch(error => console.error('Error:', error));
+      }, []);
+
+
+      function atribuirResponsavel(usuarioId: number, ativoId: number) {
+        fetch(`http://localhost:8080/ativo/associarAtivo/${ativoId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(usuarioId),
         })
-            .then((response) => response.json())
-            .then((data) => { setDatabase(data) })
-            .catch((err) => console.log(err));
-    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return fetch(`http://localhost:8080/usuario/${usuarioId}`)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(usuario => {
+            const updatedAtivos = ativos.map(ativo => {
+                if (ativo.id === ativoId) {
+                    return {
+                        ...ativo,
+                        responsavel: usuario.nome
+                    };
+                }
+                return ativo;
+            });
+            setAtivos(updatedAtivos);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    function excluirAtivo(ativoId: number) {
+        fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, { 
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const updatedAtivos = ativos.filter(ativo => ativo.id !== ativoId);
+            setAtivos(updatedAtivos);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
 
     return (
         <div className="dasboardAtv">
@@ -108,7 +235,7 @@ export default function DashboardAtivos() {
                 </select>
                 <input />
             </div>
-            <TabelaAtivos ativos={ATIVOS} />
+            <TabelaAtivos ativos={ativos} atribuirResponsavel={atribuirResponsavel} excluirAtivo={excluirAtivo} />
         </div>
     );
 }
