@@ -44,22 +44,26 @@ export default function CriarUsuario() {
       departamento,
       email,
       telefone
+      
     };
-
+  
     try {
-      const response = await fetch('http://localhost:8080/usuario/cadastro', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': '<sua-api-key>' 
-        },
-        body: JSON.stringify(data)
-      });
 
+      console.log(data);
+      const response = await fetch('http://localhost:8080/usuario/cadastro', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  
       if (response.ok) {
         console.log('Usuário cadastrado com sucesso!');
       } else {
         console.error('Falha ao cadastrar usuário.');
+        const responseData = await response.json(); 
+        console.log(responseData); 
       }
     } catch (error) {
       console.error('Erro ao processar requisição:', error);

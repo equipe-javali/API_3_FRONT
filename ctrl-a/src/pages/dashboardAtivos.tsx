@@ -29,6 +29,7 @@ id: number;
   usuariologin: UsuarioLoginProps[];
 }
 
+
 type TabelaAtivosProps<T extends AtivoProps> = {
     ativos: T[];
     excluirAtivo: (ativoId: number) => void;
@@ -38,8 +39,8 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     const [showModal, setShowModal] = useState<boolean>(false);
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
     const [isHovered, setIsHovered] = useState(false);
-    const [showDeleteButton, setShowDeleteButton] = useState(false);
-    
+    const [showDeleteButton, setShowDeleteButton] = useState(false);   
+    const [selectedUser, setSelectedUser] = useState<UsuarioProps | null>(null);
 
     const localAtivo = (
         <div>
@@ -64,11 +65,27 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             .catch(error => console.error('Error:', error));
     }, []);
 
-    function toggleModal() {setShowModal(!showModal);}
-
-    function handleExcluir() {
-        excluirAtivo(id);
+    function toggleModal() {
+    if (showModal && selectedUser) {
+        fetch(`http://localhost:8080/ativo/associarAtivo/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(selectedUser.id),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            console.log('Responsável atualizado com sucesso!');
+        })
+        .catch(error => console.error('Error:', error));
     }
+    setShowModal(!showModal);
+}
+
+    
 
     let statusA = status
     if (idResponsavel && idResponsavel.departamento == '') {
@@ -79,7 +96,19 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     } else {
         statusA = 'Em uso'
     }
+    function handleExcluir() {
+            excluirAtivo(id);
+        }
 
+    function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
+        const userId = Number(event.target.value);
+        const user = usuarios.find(u => u.id === userId);
+        setSelectedUser(user || null);
+    }
+
+    
+    
+    
     return (
         <div className="linhaAtv" 
              onMouseEnter={() => {setIsHovered(true); setShowDeleteButton(true);}} 
@@ -94,11 +123,11 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                 <>
                     <div className='modal-responsavel'>
                         <h3>Responsável</h3>
-                        <select>
-                        {usuarios.map(usuario => (
-                            <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
-                        ))}
-                        </select>
+                        <select onChange={handleUserChange}>
+                            {usuarios.map(usuario => (
+                                <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
+                            ))}
+                        </select>                    
                     </div>
                     <div className='modal-local'>
                         <h3>Departamento</h3>
@@ -122,7 +151,7 @@ function TabelaAtivos({ ativos, excluirAtivo } : TabelaAtivosProps<AtivoProps>) 
                 tipo={atv.tipo}
                 status={atv.status}
                 local={atv.local}
-                excluirAtivo={excluirAtivo} /> // Adicione esta linha
+                excluirAtivo={excluirAtivo} /> 
         );
     });
 
