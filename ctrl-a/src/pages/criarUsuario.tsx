@@ -46,11 +46,11 @@ export default function CriarUsuario() {
     };
 
     try {
-      const response = await fetch('https://javali.supabase.co/usuario', {
+      console.log(data);
+      const response = await fetch('http://localhost:8080/usuario/cadastro', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'apikey': '<sua-api-key>'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       });
@@ -59,6 +59,8 @@ export default function CriarUsuario() {
         console.log('Usuário cadastrado com sucesso!');
       } else {
         console.error('Falha ao cadastrar usuário.');
+        const responseData = await response.json();
+        console.log(responseData);
       }
     } catch (error) {
       console.error('Erro ao processar requisição:', error);
