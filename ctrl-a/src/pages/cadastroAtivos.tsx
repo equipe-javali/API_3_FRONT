@@ -16,68 +16,80 @@ export default function CadastroAtivos() {
     const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
     const [descricao, setDescricao] = useState('')
     const [proximo, setProximo] = useState(1)
+    const [aviso, setAviso] = useState("")
     const tipo = CampoAtivoPadrao("Tipo", "text", "Exemplo: automóvel, mobília...")
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        if (tipoAtivo === 1) {
-            fetch("http://localhost:8080/ativoTangivel/cadastro", {
-                method: 'POST',
-                body: JSON.stringify({
-                    "ativo": {
-                        "nome": nome.dados,
-                        "custoAquisicao": Number(custoAquisicao.dados),
-                        "tipo": tipo.dados,
-                        "tag": paginaAtivosTangiveis.dados.tag,
-                        "grauImportancia": Number(paginaAtivosTangiveis.dados.importancia),
-                        "descricao": descricao,
-                        "numeroIdentificacao": identificador.dados,
-                        "marca": marca.dados,
-                        "dataAquisicao": dataAquisicao.dados
+        try {
+            if (tipoAtivo === 1) {
+                fetch("http://localhost:8080/ativoTangivel/cadastro", {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "ativo": {
+                            "nome": nome.dados,
+                            "custoAquisicao": Number(custoAquisicao.dados),
+                            "tipo": tipo.dados,
+                            "tag": paginaAtivosTangiveis.dados.tag,
+                            "grauImportancia": Number(paginaAtivosTangiveis.dados.importancia),
+                            "descricao": descricao,
+                            "numeroIdentificacao": identificador.dados,
+                            "marca": marca.dados,
+                            "dataAquisicao": dataAquisicao.dados
+                        },
+                        "garantia": paginaAtivosTangiveis.dados.garantia,
+                        "taxaDepreciacao": Number(paginaAtivosTangiveis.dados.taxaDepreciacao),
+                        "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
-                    "garantia": paginaAtivosTangiveis.dados.garantia,
-                    "taxaDepreciacao": Number(paginaAtivosTangiveis.dados.taxaDepreciacao),
-                    "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                mode: 'cors'
-            })
-                .then((response) => console.log(response.status))
-        } else {
-            fetch("http://localhost:8080/ativoIntangivel/cadastro", {
-                method: 'POST',
-                body: JSON.stringify({
-                    "ativo": {
-                        "nome": nome.dados,
-                        "custoAquisicao": Number(custoAquisicao.dados),
-                        "tipo": tipo.dados,
-                        "tag": paginaAtivosIntangiveis.dados.tag,
-                        "grauImportancia": Number(paginaAtivosIntangiveis.dados.importancia),
-                        "descricao": descricao,
-                        "numeroIdentificacao": identificador.dados,
-                        "marca": marca.dados,
-                        "dataAquisicao": dataAquisicao.dados
+                    mode: 'cors'
+                })
+                    .then((response) => {
+                        if (response.status === 201) {
+                            setAviso("Ativo cadastrado com sucesso!")
+                        }
+                    })
+            } else {
+                fetch("http://localhost:8080/ativoIntangivel/cadastro", {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "ativo": {
+                            "nome": nome.dados,
+                            "custoAquisicao": Number(custoAquisicao.dados),
+                            "tipo": tipo.dados,
+                            "tag": paginaAtivosIntangiveis.dados.tag,
+                            "grauImportancia": Number(paginaAtivosIntangiveis.dados.importancia),
+                            "descricao": descricao,
+                            "numeroIdentificacao": identificador.dados,
+                            "marca": marca.dados,
+                            "dataAquisicao": dataAquisicao.dados
+                        },
+                        "dataExpiracao": paginaAtivosIntangiveis.dados.expiracao,
+                        "taxaAmortizacao": Number(paginaAtivosIntangiveis.dados.taxaAmortizacao),
+                        "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
-                    "dataExpiracao": paginaAtivosIntangiveis.dados.expiracao,
-                    "taxaAmortizacao": Number(paginaAtivosIntangiveis.dados.taxaAmortizacao),
-                    "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                mode: 'cors'
-            })
-                .then((response) => console.log(response.status))
-        }
+                    mode: 'cors'
+                })
+                    .then((response) => {
+                        if (response.status === 201) {
+                            setAviso("Ativo cadastrado com sucesso!")
+                        }
+                    })
+            }
+        } catch (error) {
+            console.error('Erro ao processar requisição:', error);
+          }
     }
     return (
         <>
             <div className='divFormsAtivo'>
                 <div>
-                    {descricao}
                     <h1> Cadastrar {tipoAtivo === 1 ? <>Ativo Tangível</> : tipoAtivo === 2 ? <> Ativo Intangível</> : <> Ativo</>}</h1>
                 </div>
                 <form
@@ -90,6 +102,9 @@ export default function CadastroAtivos() {
                             className='BotaoCadastrarAtivo'
                             value='Cadastrar'
                         />
+                        {aviso !== '' &&
+                            <span>{aviso}</span>
+                        }
                         <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
@@ -105,6 +120,9 @@ export default function CadastroAtivos() {
                             value='Cadastrar'
                             className='BotaoCadastrarAtivo'
                         />
+                        {aviso !== '' &&
+                            <span>{aviso}</span>
+                        }
                         <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
@@ -157,7 +175,7 @@ export default function CadastroAtivos() {
                         <div className='colunaFormsAtivo'>
                             <div className='descricaoFormsAtivo'>
                                 <span>Descrição</span>
-                                <textarea placeholder='Digite a descrição...' value={descricao} onChange={(e) => setDescricao(e.target.value)}/>
+                                <textarea placeholder='Digite a descrição...' value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                             </div>
                         </div>
                         <div className='divBotaoForms'>
