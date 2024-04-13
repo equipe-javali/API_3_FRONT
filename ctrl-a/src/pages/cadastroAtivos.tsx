@@ -9,63 +9,82 @@ export default function CadastroAtivos() {
     const paginaAtivosIntangiveis = CadastroAtivosIntangiveis()
 
     const nome = CampoAtivoPadrao("Nome do ativo", "text", "Digite o nome...")
-    const custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "text", "R$00,00")
+    const custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "number", "R$00,00")
     const [tipoAtivo, setTipoAtivo] = useState(0)
     const marca = CampoAtivoPadrao("Marca", "text", "Digite a marca...")
     const identificador = CampoAtivoPadrao("Número identificador:", "text", "###")
     const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
-    const descricao = CampoAtivoPadrao("Descricao", "textarea", "Digite a descricao")
+    const [descricao, setDescricao] = useState('')
     const [proximo, setProximo] = useState(1)
+    const [aviso, setAviso] = useState("")
     const tipo = CampoAtivoPadrao("Tipo", "text", "Exemplo: automóvel, mobília...")
-
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        if (tipoAtivo === 1) {
-            fetch(`LINK_CONEXÃO_BACK_ATIVO_TANGÍVEIS`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    "nome": nome.dados,
-                    "custoAquisicao": custoAquisicao.dados,
-                    "marca": marca.dados,
-                    "identificador": identificador.dados,
-                    "dataAquisicao": dataAquisicao.dados,
-                    "tipo": tipo.dados,
-                    "descricao": descricao.dados,
-                    "tag": paginaAtivosTangiveis.dados.tag,
-                    "garantia": paginaAtivosTangiveis.dados.garantia,
-                    "importancia": paginaAtivosTangiveis.dados.importancia,
-                    "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao,
-                    "taxaDepreciacao": paginaAtivosTangiveis.dados.taxaDepreciacao
-                }),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors'
-            })
-        } else {
-            fetch(`LINK_CONEXÃO_BACK_ATIVO_INTANGÍVEIS`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    "nome": nome.dados,
-                    "custoAquisicao": custoAquisicao.dados,
-                    "marca": marca.dados,
-                    "identificador": identificador.dados,
-                    "dataAquisicao": dataAquisicao.dados,
-                    "descricao": descricao.dados,
-                    "expiracao": paginaAtivosIntangiveis.dados.expiracao,
-                    "importancia": paginaAtivosIntangiveis.dados.importancia,
-                    "tag": paginaAtivosIntangiveis.dados.tag,
-                    "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao,
-                    "taxaAmortizacao": paginaAtivosIntangiveis.dados.taxaAmortizacao
-                }),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors'
-            })
-        }
+        try {
+            if (tipoAtivo === 1) {
+                fetch("http://localhost:8080/ativoTangivel/cadastro", {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "ativo": {
+                            "nome": nome.dados,
+                            "custoAquisicao": Number(custoAquisicao.dados),
+                            "tipo": tipo.dados,
+                            "tag": paginaAtivosTangiveis.dados.tag,
+                            "grauImportancia": Number(paginaAtivosTangiveis.dados.importancia),
+                            "descricao": descricao,
+                            "numeroIdentificacao": identificador.dados,
+                            "marca": marca.dados,
+                            "dataAquisicao": dataAquisicao.dados
+                        },
+                        "garantia": paginaAtivosTangiveis.dados.garantia,
+                        "taxaDepreciacao": Number(paginaAtivosTangiveis.dados.taxaDepreciacao),
+                        "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    mode: 'cors'
+                })
+                    .then((response) => {
+                        if (response.status === 201) {
+                            setAviso("Ativo cadastrado com sucesso!")
+                        }
+                    })
+            } else {
+                fetch("http://localhost:8080/ativoIntangivel/cadastro", {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "ativo": {
+                            "nome": nome.dados,
+                            "custoAquisicao": Number(custoAquisicao.dados),
+                            "tipo": tipo.dados,
+                            "tag": paginaAtivosIntangiveis.dados.tag,
+                            "grauImportancia": Number(paginaAtivosIntangiveis.dados.importancia),
+                            "descricao": descricao,
+                            "numeroIdentificacao": identificador.dados,
+                            "marca": marca.dados,
+                            "dataAquisicao": dataAquisicao.dados
+                        },
+                        "dataExpiracao": paginaAtivosIntangiveis.dados.expiracao,
+                        "taxaAmortizacao": Number(paginaAtivosIntangiveis.dados.taxaAmortizacao),
+                        "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    mode: 'cors'
+                })
+                    .then((response) => {
+                        if (response.status === 201) {
+                            setAviso("Ativo cadastrado com sucesso!")
+                        }
+                    })
+            }
+        } catch (error) {
+            console.error('Erro ao processar requisição:', error);
+          }
     }
     return (
         <>
@@ -83,6 +102,9 @@ export default function CadastroAtivos() {
                             className='BotaoCadastrarAtivo'
                             value='Cadastrar'
                         />
+                        {aviso !== '' &&
+                            <span>{aviso}</span>
+                        }
                         <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
@@ -98,6 +120,9 @@ export default function CadastroAtivos() {
                             value='Cadastrar'
                             className='BotaoCadastrarAtivo'
                         />
+                        {aviso !== '' &&
+                            <span>{aviso}</span>
+                        }
                         <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
@@ -150,7 +175,7 @@ export default function CadastroAtivos() {
                         <div className='colunaFormsAtivo'>
                             <div className='descricaoFormsAtivo'>
                                 <span>Descrição</span>
-                                <textarea placeholder='Digite a descrição...' />
+                                <textarea placeholder='Digite a descrição...' value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                             </div>
                         </div>
                         <div className='divBotaoForms'>
@@ -163,7 +188,6 @@ export default function CadastroAtivos() {
                         </div>
                     </>}
                 </form>
-
             </div >
         </>
     )
