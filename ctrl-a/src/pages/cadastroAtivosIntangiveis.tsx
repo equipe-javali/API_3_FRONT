@@ -10,12 +10,12 @@ export default function CadastroAtivosIntangiveis() {
     const taxaAmortizacao = CampoAtivoPadrao("Taxa de amortização", "number", "00%")
     return {
         'dados': {
-            "tag": tag,
-            "importancia": importancia,
+            "tag": tag.dados,
+            "importancia": importancia.dados,
             // "anexo": anexo,
-            "expiracao": expiracao,
-            "periodoAmortizacao": periodoAmortizacao,
-            "taxaAmortizacao": taxaAmortizacao,
+            "expiracao": expiracao.dados,
+            "periodoAmortizacao": periodoAmortizacao.dados,
+            "taxaAmortizacao": taxaAmortizacao.dados,
         },
         'código': (
             <>

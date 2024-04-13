@@ -46,27 +46,31 @@ export default function CadastroAtivos() {
             })
                 .then((response) => console.log(response.status))
         } else {
-            fetch(`LINK_CONEXÃO_BACK_ATIVO_INTANGÍVEIS`, {
+            fetch("http://localhost:8080/ativoIntangivel/cadastro", {
                 method: 'POST',
                 body: JSON.stringify({
-                    "nome": nome.dados,
-                    "custoAquisicao": custoAquisicao.dados,
-                    "marca": marca.dados,
-                    "identificador": identificador.dados,
-                    "dataAquisicao": dataAquisicao.dados,
-                    "descricao": descricao.dados,
-                    "expiracao": paginaAtivosIntangiveis.dados.expiracao,
-                    "importancia": paginaAtivosIntangiveis.dados.importancia,
-                    "tag": paginaAtivosIntangiveis.dados.tag,
-                    "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao,
-                    "taxaAmortizacao": paginaAtivosIntangiveis.dados.taxaAmortizacao
+                    "ativo": {
+                        "nome": nome.dados,
+                        "custoAquisicao": Number(custoAquisicao.dados),
+                        "tipo": tipo.dados,
+                        "tag": paginaAtivosIntangiveis.dados.tag,
+                        "grauImportancia": Number(paginaAtivosIntangiveis.dados.importancia),
+                        "descricao": descricao,
+                        "numeroIdentificacao": identificador.dados,
+                        "marca": marca.dados,
+                        "dataAquisicao": dataAquisicao.dados
+                    },
+                    "dataExpiracao": paginaAtivosIntangiveis.dados.expiracao,
+                    "taxaAmortizacao": Number(paginaAtivosIntangiveis.dados.taxaAmortizacao),
+                    "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao
                 }),
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 mode: 'cors'
             })
+                .then((response) => console.log(response.status))
         }
     }
     return (
