@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
-import './css/visualizarUsuario.css';
+import { useState, useEffect } from 'react';
+import './css/visualizarUsuario.css'
 
 interface Ativo {
   id: number;
   nome: string;
-  
+
 }
 
 interface UsuarioLogin {
   id: number;
   senha: string;
-  
+
 }
 
 interface Usuario {
@@ -20,26 +20,17 @@ interface Usuario {
   cpf: string;
   nascimento: string;
   departamento: string;
-  telefone: string;  
+  telefone: string;
   ativos: Ativo[];
   usuariologin: UsuarioLogin;
 }
 
-// const usuarios: Usuario[] = [
-//   { id: 1, nome: 'Usuário 1', email: 'usuario1@example.com', telefone: '123456789', ativos: 'Computador 3', departamento: 'Departamento 1' },
-//   { id: 2, nome: 'Usuário 2', email: 'usuario2@example.com', telefone: '987654321', ativos: 'Computador 2', departamento: 'Departamento 2' },
-//   { id: 3, nome: 'Usuário 3', email: 'usuario3@example.com', telefone: '987654321', ativos: 'Computador 1', departamento: 'Departamento 1' },
-//   { id: 4, nome: 'Usuário 4', email: 'usuario4@example.com', telefone: '987654321', ativos: 'Computador 4', departamento: 'Departamento 2' },
-//   { id: 5, nome: 'Usuário 5', email: 'usuario5@example.com', telefone: '987654321', ativos: 'Computador 2', departamento: 'Departamento 1' },
-//   { id: 6, nome: 'Usuário 6', email: 'usuario6@example.com', telefone: '987654321', ativos: 'Computador 1', departamento: 'Departamento 2' },
-// ];
-
-function VisualizarUsuario(): JSX.Element {
+export default function VisualizarUsuario() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [departamentos, setDepartamentos] = useState<string[]>([]); 
+  const [departamentos, setDepartamentos] = useState<string[]>([]);
   const [Pesquisa, setFilterValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
 
   useEffect(() => {
     fetch('http://localhost:8080/usuario/listagemTodos')
@@ -66,19 +57,19 @@ function VisualizarUsuario(): JSX.Element {
 
   const Pesquisando = usuarios.filter(usuario => {
     const searchTermLower = searchTerm.toLowerCase();
-    
+
     if (Pesquisa === '' || Pesquisa === 'Todos') {
-      return Object.values(usuario).some(value => 
+      return Object.values(usuario).some(value =>
         typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
       );
     } else {
-      return usuario.departamento === Pesquisa && 
-             Object.values(usuario).some(value => 
-               typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
-             );
+      return usuario.departamento === Pesquisa &&
+        Object.values(usuario).some(value =>
+          typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
+        );
     }
   });
-  
+
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -92,16 +83,16 @@ function VisualizarUsuario(): JSX.Element {
     fetch(`http://localhost:8080/usuario/exclusao/${id}`, {
       method: 'DELETE',
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-      console.log('Usuário excluído com sucesso!', id);
-      
-      setUsuarios(usuarios.filter(usuario => usuario.id !== id));
-    })
-    .catch(error => console.error('Error:', error));
+        console.log('Usuário excluído com sucesso!', id);
+
+        setUsuarios(usuarios.filter(usuario => usuario.id !== id));
+      })
+      .catch(error => console.error('Error:', error));
   };
 
   return (
@@ -124,34 +115,34 @@ function VisualizarUsuario(): JSX.Element {
           className='myInput'
         />
         <table className="userTable">
-        <thead>
-          <tr></tr>
-          <tr>
-            <th className="myHeaderCell">ID</th>
-            <th className="myHeaderCell">Nome</th>
-            <th className="myHeaderCell">CPF</th>
-            <th className="myHeaderCell">Nascimento</th>
-            <th className="myHeaderCell">Departamento</th>
-            <th className="myHeaderCell">Telefone</th>
-            <th className="myHeaderCell">Email</th>
-            <th className="myHeaderCell">Ações</th>
-        </tr>
-</thead>
-          <tbody>
-          {Pesquisando.map((usuario) => (
-            <tr key={usuario.id}>
-              <td>{usuario.id}</td>
-              <td>{usuario.nome}</td>
-              <td>{usuario.cpf}</td>
-              <td>{usuario.nascimento}</td>
-              <td>{usuario.departamento}</td>
-              <td>{usuario.telefone}</td>
-              <td>{usuario.email}</td>
-              <td>
-                <button type ='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
-              </td>
+          <thead>
+            <tr></tr>
+            <tr>
+              <th className="myHeaderCell">ID</th>
+              <th className="myHeaderCell">Nome</th>
+              <th className="myHeaderCell">CPF</th>
+              <th className="myHeaderCell">Nascimento</th>
+              <th className="myHeaderCell">Departamento</th>
+              <th className="myHeaderCell">Telefone</th>
+              <th className="myHeaderCell">Email</th>
+              <th className="myHeaderCell">Ações</th>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {Pesquisando.map((usuario) => (
+              <tr key={usuario.id}>
+                <td>{usuario.id}</td>
+                <td>{usuario.nome}</td>
+                <td>{usuario.cpf}</td>
+                <td>{usuario.nascimento}</td>
+                <td>{usuario.departamento}</td>
+                <td>{usuario.telefone}</td>
+                <td>{usuario.email}</td>
+                <td>
+                  <button type='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -162,4 +153,10 @@ function VisualizarUsuario(): JSX.Element {
   );
 }
 
-export default VisualizarUsuario;
+function useState(arg0: string): [any, any] {
+  throw new Error('Function not implemented.');
+}
+function useEffect(arg0: () => void, arg1: never[]) {
+  throw new Error('Function not implemented.');
+}
+
