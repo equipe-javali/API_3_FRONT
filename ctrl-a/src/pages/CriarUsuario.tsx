@@ -1,6 +1,5 @@
 import { FormEvent, useState } from "react";
 import './css/criarUsuario.css';
-import './css/base.css';
 
 export default function CriarUsuario() {
   const [nome, setNome] = useState('');
@@ -51,7 +50,7 @@ export default function CriarUsuario() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': '<sua-api-key>' 
+          'apikey': '<sua-api-key>'
         },
         body: JSON.stringify(data)
       });
@@ -67,7 +66,7 @@ export default function CriarUsuario() {
   };
 
   return (
-    <div className="App">
+    <div className="cadastroUsuário">
       <div>
         <h2>Cadastrar usuário</h2>
       </div>

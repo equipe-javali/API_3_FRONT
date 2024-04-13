@@ -1,0 +1,83 @@
+.VisualizarUsuario {
+  padding-top: 4%;
+  padding-bottom: 3%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--branco);
+  height: 100vh;
+}
+
+/* Usuarios */
+.VisualizarUsuario h2 {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 4vh;
+  font-family: Arial, sans-serif;
+  color: var(--branco);
+  text-align: left;
+  padding-left: 2%;
+}
+
+/* CTRL A */
+.VisualizarUsuario h3 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 4vh;
+  text-align: left;
+  padding-left: 3%;
+  font-family: 'Arial Narrow Bold', sans-serif;
+}
+
+
+/* CSS da página Visualizar usuário */
+
+.VisualizarUsuario .mySelect {
+  width: 18%;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--cor4);
+  color: var(--branco);
+  /* Cor do texto */
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+.VisualizarUsuario .myInput {
+  width: 79%;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--cor3);
+}
+
+.VisualizarUsuario .myInput::placeholder {
+  color: var(--branco);
+  /* Cor do texto do placeholder */
+}
+
+.VisualizarUsuario .myHeaderCell {
+  width: 4%;
+  color: var(--branco);;
+  background-color: var(--cor2);
+  padding: 10px;
+  /* Espaçamento interno */
+}
+
+/* Para telas com largura de 600px ou menos */
+@media (max-width: 600px) {
+  header {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+}
+
+.VisualizarUsuario .userTable th,
+.userTable td {
+  border: 1px solid var(--cor20);
+  padding: 8px;
+  background-color: var(--cor20)
+}
+
+.VisualizarUsuario .userTable th {
+  background-color: var(--cor2);
+  color: var(--branco);
+}

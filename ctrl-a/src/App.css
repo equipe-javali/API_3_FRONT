@@ -8,6 +8,7 @@
   --cor7: #191723;
   --cor8: #2F3D54;
   --cor9: #d9d9d94a;
+  --cor10: #808080;;
   --cor20: #25293E;
   --cor21: #121212;
   --cor22: #171717;
@@ -19,11 +20,9 @@
   margin: 0;
   padding: 0;
   border: 0;
+  box-sizing: border-box;
 }
 
-.App {
-  text-align: center;
-}
 
 .App-logo {
   height: 40vmin;
@@ -44,7 +43,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: var(--branco);
 }
 
 .App-link {

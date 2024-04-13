@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../css/visualizarUsuario.css';
+import './css/visualizarUsuario.css';
 
 
 interface Usuario {
@@ -49,7 +49,7 @@ export default function VisualizarUsuario() {
   };
 
   return (
-    <div className='App'>
+    <div className='VisualizarUsuario'>
       <div>
         <h2>Usuários</h2>
         <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">

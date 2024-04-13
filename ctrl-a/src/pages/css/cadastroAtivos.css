@@ -1,28 +1,32 @@
 :root {
     /* Div Forms */
     --minWidthDivFormsAtivo: calc(100vw - var(--paddingDivFormsAtivo));
-    --minHeightDivFormsAtivo: calc(100vh - var(--paddingTopDivFormsAtivo));
+    --HeightDivFormsAtivo: calc(100vh - var(--heightHeader));
     --paddingLeftDivFormsAtivo: 40px;
     --paddingTopDivFormsAtivo: 40px;
 
     /* Forms */
-    --widthFormsAtivo: calc(95% - 2 * var(--paddingHorizontalFormsAtivo));
-    --heightFormsAtivo: calc(80% - 2 * var(--paddingVerticalFormsAtivo));
+    --widthFormsAtivo: 97%;
+    --heightFormsAtivo: 80%;
     --paddingHorizontalFormsAtivo: 40px;
     --paddingVerticalFormsAtivo: 40px;
 
     /* COLUNA */
-    --witdhColunaFormsAtivo: calc(100% - 2 * var(--paddingColunaFormsAtivo));
     --paddingColunaFormsAtivo: 20px;
 
-    /* Botão Forms */
+    /* Botões Forms */
     --fontSizeBotaoForms: 20px;
+    --paddingBotaoForms: 10px;
+    --borderRadiusBotaoForms: 15px;
     --fontSizeBotaoCadastrarForms:35px;
+    --paddingBotaoCadastrarForms: 10px 50px;
+    --borderRadiusCadastrarBotaoForms: 5px;
 
     /* Descrição Forms */
     --paddingVerticalDescricaoForms: 5px;
     --paddingHorizontalDescricaoForms: 10px;
-    --widthDescricaoForms: calc(100% - 2 * var(--paddingHorizontalDescricaoForms))
+    --heigthDescricaoForms: 150px;
+
 }
 
 /*
@@ -31,11 +35,9 @@
 ===================
 */
 .divFormsAtivo {
-    background-color: var(--cor7);
-    color: var(--branco);
     display: flex;
     flex-direction: column;
-    height: var(--minHeightDivFormsAtivo);
+    min-height: var(--HeightDivFormsAtivo);
     padding-left: var(--paddingLeftDivFormsAtivo);
     padding-top: var(--paddingTopDivFormsAtivo);
     min-width: var(--minWidthDivFormsAtivo);
@@ -44,7 +46,7 @@
 .colunaFormsAtivo {
     display: flex;
     flex-wrap: wrap;
-    width: var(--witdhColunaFormsAtivo);
+    width: 100%;
     padding: 0 var(--paddingColunaFormsAtivo);
     justify-content: space-between;
 }
@@ -68,7 +70,8 @@
     display: flex;
     flex-direction: column;
     width: var(--widthFormsAtivo);
-    height: var(--heightFormsAtivo);
+    min-height: var(--heightFormsAtivo);
+    height: 100%;
 }
 
 .divFormsAtivo>form>* {
@@ -87,8 +90,8 @@
 
 .descricaoFormsAtivo>textarea {
     padding: var(--paddingVerticalDescricaoForms) var(--paddingHorizontalDescricaoForms);
-    width: var(--widthDescricaoForms);
-    height: 150px;
+    width: 100%;
+    height: var(--heigthDescricaoForms);
     resize: none;
 }
 
@@ -111,8 +114,8 @@
     background-color: inherit;
     border: 0;
     color: var(--branco);
-    padding: 10px;
-    border-radius: 15px;
+    padding: var(--paddingBotaoForms);
+    border-radius: var(--borderRadiusBotaoForms);
     font-size: var(--fontSizeBotaoForms);
 }
 
@@ -139,8 +142,8 @@
     background-color: var(--cor5);
     color: var(--branco);
     width: min-content;
-    padding: 10px 50px;
+    padding: var(--paddingBotaoCadastrarForms);
     font-size: var(--fontSizeBotaoCadastrarForms);
     margin: auto;
-    border-radius: 5px;
+    border-radius: var(--borderRadiusCadastrarBotaoForms);
 }
