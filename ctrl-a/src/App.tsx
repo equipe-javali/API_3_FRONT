@@ -11,20 +11,17 @@ export default function App() {
   return (
 
     <BrowserRouter>
-      <Routes>        
-        <Route element={<BaseLateralHeader/>}>
-          <Route index element={<CadastroAtivos/>} />
-          <Route path="/ListaAtivos" element={ < DashboardAtivos /> } />
-          <Route path="/ListaUsuarios" element={ < VisualizarUsuario /> } />   
-          <Route path="/CadastroAtivo" element={ < CadastroAtivos/> } />   
-          <Route path="/CadastroUsuario" element={ < CriarUsuario /> } />     
+      <Routes>
+        <Route element={<BaseLateralHeader />}>
+          <Route index element={<CadastroAtivos />} />
+          <Route path="/ListaAtivos" element={< DashboardAtivos />} />
+          <Route path="/ListaUsuarios" element={< VisualizarUsuario />} />
+          <Route path="/CadastroAtivo" element={< CadastroAtivos />} />
+          <Route path="/CadastroUsuario" element={< CriarUsuario />} />
+          {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
+          <Route path="*" element={<CadastroAtivos />} />
         </Route>
-        
-        {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
-        <Route path="*" element={<CadastroAtivos/>} />
-        {/* <Route path="*" element={ < DashboardAtv /> } /> */}
       </Routes>
     </BrowserRouter>
-    
   );
 }
