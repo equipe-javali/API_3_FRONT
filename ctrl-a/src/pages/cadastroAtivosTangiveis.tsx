@@ -12,7 +12,7 @@ export default function CadastroAtivosTangiveis() {
             "tag": tag.dados,
             "garantia": garantia.dados,
             //"anexo": anexo.dados,
-            "importancia": importancia,
+            "importancia": importancia.dados,
             "periodoDepreciacao": periodoDepreciacao.dados,
             "taxaDepreciacao": taxaDepreciacao.dados,
         },

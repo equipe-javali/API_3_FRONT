@@ -9,40 +9,42 @@ export default function CadastroAtivos() {
     const paginaAtivosIntangiveis = CadastroAtivosIntangiveis()
 
     const nome = CampoAtivoPadrao("Nome do ativo", "text", "Digite o nome...")
-    const custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "text", "R$00,00")
+    const custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "number", "R$00,00")
     const [tipoAtivo, setTipoAtivo] = useState(0)
     const marca = CampoAtivoPadrao("Marca", "text", "Digite a marca...")
     const identificador = CampoAtivoPadrao("Número identificador:", "text", "###")
     const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
-    const descricao = CampoAtivoPadrao("Descricao", "textarea", "Digite a descricao")
+    const [descricao, setDescricao] = useState('')
     const [proximo, setProximo] = useState(1)
     const tipo = CampoAtivoPadrao("Tipo", "text", "Exemplo: automóvel, mobília...")
-
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         if (tipoAtivo === 1) {
-            fetch(`LINK_CONEXÃO_BACK_ATIVO_TANGÍVEIS`, {
+            fetch("http://localhost:8080/ativoTangivel/cadastro", {
                 method: 'POST',
                 body: JSON.stringify({
-                    "nome": nome.dados,
-                    "custoAquisicao": custoAquisicao.dados,
-                    "marca": marca.dados,
-                    "identificador": identificador.dados,
-                    "dataAquisicao": dataAquisicao.dados,
-                    "tipo": tipo.dados,
-                    "descricao": descricao.dados,
-                    "tag": paginaAtivosTangiveis.dados.tag,
+                    "ativo": {
+                        "nome": nome.dados,
+                        "custoAquisicao": Number(custoAquisicao.dados),
+                        "tipo": tipo.dados,
+                        "tag": paginaAtivosTangiveis.dados.tag,
+                        "grauImportancia": Number(paginaAtivosTangiveis.dados.importancia),
+                        "descricao": descricao,
+                        "numeroIdentificacao": identificador.dados,
+                        "marca": marca.dados,
+                        "dataAquisicao": dataAquisicao.dados
+                    },
                     "garantia": paginaAtivosTangiveis.dados.garantia,
-                    "importancia": paginaAtivosTangiveis.dados.importancia,
-                    "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao,
-                    "taxaDepreciacao": paginaAtivosTangiveis.dados.taxaDepreciacao
+                    "taxaDepreciacao": Number(paginaAtivosTangiveis.dados.taxaDepreciacao),
+                    "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao
                 }),
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 mode: 'cors'
             })
+                .then((response) => console.log(response.status))
         } else {
             fetch(`LINK_CONEXÃO_BACK_ATIVO_INTANGÍVEIS`, {
                 method: 'POST',
@@ -71,6 +73,7 @@ export default function CadastroAtivos() {
         <>
             <div className='divFormsAtivo'>
                 <div>
+                    {descricao}
                     <h1> Cadastrar {tipoAtivo === 1 ? <>Ativo Tangível</> : tipoAtivo === 2 ? <> Ativo Intangível</> : <> Ativo</>}</h1>
                 </div>
                 <form
@@ -150,7 +153,7 @@ export default function CadastroAtivos() {
                         <div className='colunaFormsAtivo'>
                             <div className='descricaoFormsAtivo'>
                                 <span>Descrição</span>
-                                <textarea placeholder='Digite a descrição...' />
+                                <textarea placeholder='Digite a descrição...' value={descricao} onChange={(e) => setDescricao(e.target.value)}/>
                             </div>
                         </div>
                         <div className='divBotaoForms'>
@@ -163,7 +166,6 @@ export default function CadastroAtivos() {
                         </div>
                     </>}
                 </form>
-
             </div >
         </>
     )
