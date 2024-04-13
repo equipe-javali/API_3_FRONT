@@ -16,9 +16,9 @@ interface UsuarioLogin {
 interface Usuario {
   id: number;
   nome: string;
+  email: string;
   cpf: string;
   nascimento: string;
-  email: string;
   departamento: string;
   telefone: string;  
   ativos: Ativo[];
@@ -35,7 +35,8 @@ interface Usuario {
 // ];
 
 function VisualizarUsuario(): JSX.Element {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]); 
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [departamentos, setDepartamentos] = useState<string[]>([]); 
   const [Pesquisa, setFilterValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -48,7 +49,18 @@ function VisualizarUsuario(): JSX.Element {
         }
         return response.json();
       })
-      .then(data => setUsuarios(data))
+      .then((data: Usuario[]) => {
+        setUsuarios(data);
+        // Extrair departamentos únicos e não vazios da lista de usuários
+        const uniqueDepartamentos = new Set<string>();
+        data.forEach(usuario => {
+          const departamento = usuario.departamento;
+          if (departamento && departamento.trim() !== '') {
+            uniqueDepartamentos.add(departamento.trim());
+          }
+        });
+        setDepartamentos(Array.from(uniqueDepartamentos));
+      })
       .catch(error => console.error('Error:', error));
   }, []);
 
@@ -98,8 +110,11 @@ function VisualizarUsuario(): JSX.Element {
         <h2>Usuários</h2>
         <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
           <option value="">Filtro</option>
-          <option value="Departamento 1">Departamento 1</option>
-          <option value="Departamento 2">Departamento 2</option>
+          {departamentos.map(departamento => (
+            <option key={departamento} value={departamento}>
+              {departamento}
+            </option>
+          ))}
         </select>
         <input
           type="text"
@@ -110,14 +125,15 @@ function VisualizarUsuario(): JSX.Element {
         />
         <table className="userTable">
         <thead>
+          <tr></tr>
           <tr>
             <th className="myHeaderCell">ID</th>
             <th className="myHeaderCell">Nome</th>
             <th className="myHeaderCell">CPF</th>
             <th className="myHeaderCell">Nascimento</th>
+            <th className="myHeaderCell">Departamento</th>
             <th className="myHeaderCell">Telefone</th>
             <th className="myHeaderCell">Email</th>
-            <th className="myHeaderCell">Departamento</th>
             <th className="myHeaderCell">Ações</th>
         </tr>
 </thead>
@@ -128,10 +144,9 @@ function VisualizarUsuario(): JSX.Element {
               <td>{usuario.nome}</td>
               <td>{usuario.cpf}</td>
               <td>{usuario.nascimento}</td>
+              <td>{usuario.departamento}</td>
               <td>{usuario.telefone}</td>
               <td>{usuario.email}</td>
-              <td>{usuario.departamento}</td>
-              {/* <td>{usuario.ativos.map(ativo => <p key={ativo.id}>{ativo.nome}</p>)}</td> */}
               <td>
                 <button type ='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
               </td>
