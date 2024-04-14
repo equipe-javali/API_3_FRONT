@@ -13,7 +13,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<BaseLateralHeader />}>
-          <Route index element={<CadastroAtivos />} />
+          <Route index element={<DashboardAtivos/>} />
           <Route path="/ListaAtivos" element={< DashboardAtivos />} />
           <Route path="/ListaUsuarios" element={< VisualizarUsuario />} />
           <Route path="/CadastroAtivo" element={< CadastroAtivos />} />
