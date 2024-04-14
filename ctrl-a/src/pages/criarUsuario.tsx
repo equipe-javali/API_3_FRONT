@@ -13,7 +13,7 @@ export default function CriarUsuario() {
     setNome(event.target.value);
   };
 
-  const handleCPFChange = (event: React.ChangeEvent<HTMLInput Element>) => {
+  const handleCPFChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCpf(event.target.value);
   };
 
