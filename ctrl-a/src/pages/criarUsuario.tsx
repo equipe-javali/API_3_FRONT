@@ -8,6 +8,7 @@ export default function CriarUsuario() {
   const [departamento, setDepartamento] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [aviso, setAviso] = useState("")
 
   const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNome(event.target.value);
@@ -56,7 +57,7 @@ export default function CriarUsuario() {
       });
 
       if (response.ok) {
-        console.log('Usuário cadastrado com sucesso!');
+        setAviso("Usuário cadastrado com sucesso!")
       } else {
         console.error('Falha ao cadastrar usuário.');
         const responseData = await response.json();
@@ -102,6 +103,9 @@ export default function CriarUsuario() {
           <input type="email" value={email} onChange={handleEmailChange} />
         </div>
         <button onClick={handleSubmit}>Cadastrar</button>
+        {aviso !== '' &&
+          <div>{aviso}</div>
+        }
       </div>
     </div>
   );
