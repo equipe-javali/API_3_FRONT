@@ -62,6 +62,27 @@
   /* Espaçamento interno */
 }
 
+.btnExcluir{
+  all: unset;
+  width: var(--widthLinhaAtvLocalBtnAtribuir);
+  padding: var(--paddingLinhaAtvLocalBtnAtribuir);
+  cursor: pointer;
+  border-radius: var(--borderRadiusLinhaAtvLocalBtnAtribuir);
+  background-color: var(--cor4);
+  color: var(--branco1);
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 10px;
+  cursor: pointer;
+  text-align: center; 
+  line-height: var(--heightLinhaAtvLocalBtnAtribuir); 
+}
+
+.userTable tr .btnExcluir:hover {
+  opacity: var(--opacityAtributosDashboard);
+}
+
+
 /* Para telas com largura de 600px ou menos */
 @media (max-width: 600px) {
   header {

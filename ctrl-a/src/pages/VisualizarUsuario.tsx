@@ -41,8 +41,10 @@ export default function VisualizarUsuario() {
         return response.json();
       })
       .then((data: Usuario[]) => {
+
+        data.sort((a, b) => a.id - b.id);
         setUsuarios(data);
-        // Extrair departamentos únicos e não vazios da lista de usuários
+        
         const uniqueDepartamentos = new Set<string>();
         data.forEach(usuario => {
           const departamento = usuario.departamento;

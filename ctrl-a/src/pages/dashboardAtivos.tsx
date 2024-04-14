@@ -183,6 +183,7 @@ export default function DashboardAtivos() {
 
     const [ativos, setAtivos] = useState<AtivoProps[]>([]);
     const [update, setUpdate] = useState(false);
+    const sortedAtivos = [...ativos].sort((a, b) => a.id - b.id);
 
     const excluirAtivo = (ativoId: number) => {
         fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, {
@@ -225,7 +226,7 @@ export default function DashboardAtivos() {
                 </select>
                 <input />
             </div>
-            <TabelaAtivos ativos={ativos} excluirAtivo={excluirAtivo} />
+            <TabelaAtivos ativos={sortedAtivos} excluirAtivo={excluirAtivo} />
         </div>
     );
-}
+};
