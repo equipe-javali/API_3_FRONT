@@ -4,7 +4,7 @@ import './css/criarUsuario.css';
 export default function CriarUsuario() {
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
+  const [nascimento, setNascimento] = useState('');
   const [departamento, setDepartamento] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -18,8 +18,8 @@ export default function CriarUsuario() {
     setCpf(event.target.value);
   };
 
-  const handleDataNascimentoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDataNascimento(event.target.value);
+  const handleNascimentoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNascimento(event.target.value);
   };
 
   const handleDepartamentoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -40,7 +40,7 @@ export default function CriarUsuario() {
     const data = {
       nome,
       cpf,
-      dataNascimento,
+      nascimento,
       departamento,
       email,
       telefone
@@ -84,7 +84,7 @@ export default function CriarUsuario() {
         </div>
         <div>
           <label>Data de Nascimento:</label>
-          <input type="date" value={dataNascimento} onChange={handleDataNascimentoChange} />
+          <input type="date" value={nascimento} onChange={handleNascimentoChange} />
         </div>
         <div>
           <label>Telefone:</label>
