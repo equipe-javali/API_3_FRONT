@@ -1,19 +1,31 @@
 import { useState } from "react";
-import ".css/respostaSistema.css";
-export default function respostaSistema(textoResposta: string, tipoResposta: string) {
-    const [deletar, setDeletar] = useState(true)
+import "./css/respostaSistema.css";
+import iconePopUpErro from "../assets/icons/popUpErro.svg"
+import iconePopUpSucesso from "../assets/icons/popUpSucesso.svg"
+export default function RespostaSistema(textoResposta: string, tipoResposta: string) {
+    const [visivel, setVisivel] = useState(true);
+    function fechaPopUp() {
+        setVisivel(false);
+    };
+
+    function impedeFechamento(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+        e.stopPropagation();
+    };
+    if (tipoResposta !== "Erro") {
+        setTimeout(() => { setVisivel(false) }, 3000)
+    }
+
     return {
-        "resposta": deletar,
-        "codigo": (
-            <>
-                {tipoResposta === 'erro' ? <div className="respostaSistema Erro">
-                    <span>{textoResposta}</span>
-                    <button onClick={(e) => setDeletar(false)}>OK</button>
-                </div> : <div className="respostaSistema Sucesso">
-                    <span>{textoResposta}</span>
-                    <button onClick={(e) => setDeletar(false)}>OK</button>
-                </div>}
-            </>
-        )
+        "visivel": visivel,
+        "codigo": <div className="respostaSistema" onClick={fechaPopUp}>
+            <div onClick={impedeFechamento}>
+                <img
+                    src={tipoResposta === 'Erro' ? iconePopUpErro : iconePopUpSucesso}
+                    alt={tipoResposta === 'Erro' ? "popUpErro" : "popUpSucesso"}
+                />
+                <span>{textoResposta}</span>
+                {tipoResposta === 'Erro' && <button onClick={(e) => setVisivel(false)}>OK</button>}
+            </div>
+        </div>
     }
 }
