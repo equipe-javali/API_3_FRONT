@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import './css/historicoManutencao.css'
 import Modal from '../components/modal/modal';
 
@@ -15,6 +15,8 @@ type TabelaManutencaoProps = {
     manutencao: ManutencaoProps[];
     excluirManutencao: (manutencaoId: number) => void;
 }
+
+
 
 function LinhaManutencao({ id, tipo, custo, dataEnvio, dataRetorno, excluirManutencao }: ManutencaoProps) {
     const [showModal, setShowModal] = useState<boolean>(false);    
@@ -71,6 +73,15 @@ export default function HistoricoManutencao() {
     const [manutencao, setManutencao] = useState<ManutencaoProps[]>([]);
     const [update, setUpdate] = useState(false);
     const sortedManutencao = [...manutencao].sort((a, b) => a.id - b.id);
+    const [Pesquisa, setPesquisa] = useState(''); 
+    const [searchTerm, setSearchTerm] = useState(''); 
+    const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        setPesquisa(event.target.value);
+    };
+    
+    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
 
     const excluirManutencao = (manutencaoId: number) => {
         fetch(`http://localhost:8080/manutencao/exclusao/${manutencaoId}`, {
@@ -102,9 +113,25 @@ export default function HistoricoManutencao() {
     }, [update]);
 
     return (
-        <div className="dasboardMan">
+        <div className="dashboardMan">
             <div className="tituloMan">
-                <h1>Ativos</h1>
+                <h1>Manutenção do Ativo ID </h1>
+            
+                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
+                    <option value="">Filtro</option>
+                    {manutencao.map((manutencao, index) => (
+                        <option key={index} value={manutencao.id}> 
+                        {manutencao.tipo} 
+                    </option>
+                ))}
+                </select>
+                <input
+                type="text"
+                placeholder="Buscar por usuários"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className='myInput'
+                />
             </div>
             <div className="buscaFiltro">
                 <select>

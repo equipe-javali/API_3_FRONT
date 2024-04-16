@@ -1,5 +1,5 @@
 :root{
-    --paddingDasboardMan:20px;
+    --paddingDashboardMan:20px;
     --paddingTabelaCabecalho: 5px;
     --widthLinhaManId:5%;
     --widthLinhaManNome:20%;
@@ -13,7 +13,7 @@
     --opacityAtributosDashboard: 0.9
 }
 
-.dasboardMan,
+.dashboardMan,
 .tabelaMan,
 .linhaMan {
     display: flex;
@@ -21,8 +21,8 @@
     color: var(--branco1);
 }
 
-.dasboardMan {
-    padding: var(--paddingDasboardMan);
+.dashboardMan {
+    padding: var(--paddingDashboardMan);
 }
 
 .buscaFiltro {
@@ -98,3 +98,29 @@
 .linhaMan:nth-child(even) .btnAtribuir:hover, .linhaMan .btnAtribuir:hover {
     opacity: var(--opacityAtributosDashboard);
 }
+
+.dashboardMan .mySelect {
+    width: 17%;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--cor4);
+    color: var(--branco);
+    /* Cor do texto */
+    margin-right: 20px;
+    margin-left: 20px;
+  }
+  
+.dashboardMan .myInput {
+    width: 79%;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--cor3);
+  }
+  
+.dashboardMan .myInput::placeholder {
+    color: var(--branco);
+    /* Cor do texto do placeholder */
+  }
+
+
+  
