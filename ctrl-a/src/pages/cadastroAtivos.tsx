@@ -3,6 +3,7 @@ import './css/cadastroAtivos.css'
 import { useState } from "react"
 import CadastroAtivosTangiveis from './cadastroAtivosTangiveis'
 import CadastroAtivosIntangiveis from './cadastroAtivosIntangiveis'
+import RespostaSistema from '../components/respostaSistema'
 
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
@@ -16,7 +17,15 @@ export default function CadastroAtivos() {
     const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
     const [descricao, setDescricao] = useState('')
     const [proximo, setProximo] = useState(1)
-    const [aviso, setAviso] = useState("")
+    var resposta = {
+        'visivel': false,
+        'codigo':
+            <>
+            </>
+    }
+    function setAviso(textoResposta: string, tipoResposta: string) {
+        resposta = RespostaSistema(textoResposta, tipoResposta)
+    }
     const tipo = CampoAtivoPadrao("Tipo", "text", "Exemplo: automóvel, mobília...")
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -48,7 +57,10 @@ export default function CadastroAtivos() {
                 })
                     .then((response) => {
                         if (response.status === 201) {
-                            setAviso("Ativo cadastrado com sucesso!")
+                            setAviso("Ativo cadastrado com sucesso!", "Sucesso")
+                        }
+                        else {
+                            setAviso(`Não foi possível cadastrar! Erro:${response.status}`, "Erro")
                         }
                     })
             } else {
@@ -78,16 +90,20 @@ export default function CadastroAtivos() {
                 })
                     .then((response) => {
                         if (response.status === 201) {
-                            setAviso("Ativo cadastrado com sucesso!")
+                            setAviso("Ativo cadastrado com sucesso!", "Sucesso")
+                        }
+                        else {
+                            setAviso(`Não foi possível cadastrar! Erro:${response.status}`, "Erro")
                         }
                     })
             }
         } catch (error) {
             console.error('Erro ao processar requisição:', error);
-          }
+        }
     }
     return (
         <>
+            {resposta.visivel && resposta.codigo}
             <div className='divFormsAtivo'>
                 <div>
                     <h1> Cadastrar {tipoAtivo === 1 ? <>Ativo Tangível</> : tipoAtivo === 2 ? <> Ativo Intangível</> : <> Ativo</>}</h1>
@@ -102,9 +118,7 @@ export default function CadastroAtivos() {
                             className='BotaoCadastrarAtivo'
                             value='Cadastrar'
                         />
-                        {aviso !== '' &&
-                            <span>{aviso}</span>
-                        }
+
                         <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
@@ -120,9 +134,6 @@ export default function CadastroAtivos() {
                             value='Cadastrar'
                             className='BotaoCadastrarAtivo'
                         />
-                        {aviso !== '' &&
-                            <span>{aviso}</span>
-                        }
                         <div className='divBotaoForms'>
                             <button
                                 onClick={() => setTipoAtivo(0)}
