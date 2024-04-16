@@ -1,0 +1,100 @@
+:root{
+    --paddingDasboardMan:20px;
+    --paddingTabelaCabecalho: 5px;
+    --widthLinhaManId:5%;
+    --widthLinhaManNome:20%;
+    --widthLinhaManResposavel:15%;
+    --widthLinhaManTipo:15%;
+    --widthLinhaManStatus:15%;
+    --widthLinhaManLocal:20%;
+    --widthLinhaManLocalBtnAtribuir:50%;
+    --paddingLinhaManLocalBtnAtribuir:5px;
+    --borderRadiusLinhaManLocalBtnAtribuir:5px;
+    --opacityAtributosDashboard: 0.9
+}
+
+.dasboardMan,
+.tabelaMan,
+.linhaMan {
+    display: flex;
+    flex-direction: column;
+    color: var(--branco1);
+}
+
+.dasboardMan {
+    padding: var(--paddingDasboardMan);
+}
+
+.buscaFiltro {
+    visibility: hidden;
+}
+
+.tabelaMan {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+}
+
+.tabelaMan #cabecalho {
+    background-color: var(--cor2);
+    text-align: center;
+    padding: var(--paddingTabelaCabecalho);
+}
+
+.tabelaMan .linhaMan {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.tabelaMan .linhaMan:nth-child(even) {
+    background-color: var(--cor6);
+    
+    
+}
+
+.linhaMan .id, .nome, .responsavel, .tipo, .status, .local {
+    text-align: center;
+}
+
+.linhaMan .id {
+    width: var(--widthLinhaManId);
+}
+
+.linhaMan .nome {
+    width: var(--widthLinhaManNome);
+}
+
+.linhaMan .responsavel {
+    width: var(--widthLinhaManResposavel);
+}
+
+.linhaMan .tipo {
+    width: var(--widthLinhaManTipo);
+}
+
+.linhaMan .status {
+    width: var(--widthLinhaManStatus);
+}
+
+.linhaMan .local {
+    width: var(--widthLinhaManLocal);
+}
+
+
+.linhaMan .local .btnAtribuir {
+    all: unset;
+    width: var(--widthLinhaManLocalBtnAtribuir);
+    padding: var(--paddingLinhaManLocalBtnAtribuir);
+    cursor: pointer;
+    border-radius: var(--borderRadiusLinhaManLocalBtnAtribuir);
+    background-color: var(--cor4);
+    color: var(--branco1);
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 10px;
+    cursor: pointer;
+}
+
+.linhaMan:nth-child(even) .btnAtribuir:hover, .linhaMan .btnAtribuir:hover {
+    opacity: var(--opacityAtributosDashboard);
+}
