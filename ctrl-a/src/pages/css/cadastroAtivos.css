@@ -1,7 +1,7 @@
 :root {
     /* Div Forms */
     --minWidthDivFormsAtivo: calc(100vw - var(--paddingDivFormsAtivo));
-    --HeightDivFormsAtivo: calc(100vh - var(--heightHeader));
+    --HeightDivFormsAtivo: calc(97vh - var(--heightHeader));
     --paddingLeftDivFormsAtivo: 40px;
     --paddingTopDivFormsAtivo: 40px;
 
@@ -38,8 +38,7 @@
     display: flex;
     flex-direction: column;
     min-height: var(--HeightDivFormsAtivo);
-    padding-left: var(--paddingLeftDivFormsAtivo);
-    padding-top: var(--paddingTopDivFormsAtivo);
+    padding: var(--paddingTopDivFormsAtivo) var(--paddingLeftDivFormsAtivo);
     min-width: var(--minWidthDivFormsAtivo);
 }
 
