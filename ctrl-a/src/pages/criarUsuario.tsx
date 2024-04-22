@@ -9,7 +9,6 @@ export default function CriarUsuario() {
   const [departamento, setDepartamento] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
-  const [aviso, setAviso] = useState("")
   const [textoResposta, setTextoResposta] = useState('')
   const [tipoResposta, setTipoResposta] = useState('')
   function fechaPopUp() {
@@ -126,9 +125,6 @@ export default function CriarUsuario() {
           <input type="email" value={email} onChange={handleEmailChange} />
         </div>
         <button onClick={handleSubmit}>Cadastrar</button>
-        {aviso !== '' &&
-          <div>{aviso}</div>
-        }
       </div>
     </div>
   );
