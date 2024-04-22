@@ -1,31 +1,28 @@
-import { useState } from "react";
 import "./css/respostaSistema.css";
-import iconePopUpErro from "../assets/icons/popUpErro.svg"
-import iconePopUpSucesso from "../assets/icons/popUpSucesso.svg"
-export default function RespostaSistema(textoResposta: string, tipoResposta: string) {
-    const [visivel, setVisivel] = useState(true);
-    function fechaPopUp() {
-        setVisivel(false);
-    };
+import iconePopUpErro from "../assets/icons/popUpErro.svg";
+import iconePopUpSucesso from "../assets/icons/popUpSucesso.svg";
 
-    function impedeFechamento(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        e.stopPropagation();
-    };
-    if (tipoResposta !== "Erro") {
-        setTimeout(() => { setVisivel(false) }, 3000)
+interface Props {
+    textoResposta: string;
+    tipoResposta: string;
+    onClose: () => void;
+}
+
+const RespostaSistema: React.FC<Props> = ({ textoResposta, tipoResposta, onClose }) => {
+    if (!textoResposta || !tipoResposta) {
+        return <></>;
     }
-
-    return {
-        "visivel": visivel,
-        "codigo": <div className="respostaSistema" onClick={fechaPopUp}>
-            <div onClick={impedeFechamento}>
-                <img
-                    src={tipoResposta === 'Erro' ? iconePopUpErro : iconePopUpSucesso}
-                    alt={tipoResposta === 'Erro' ? "popUpErro" : "popUpSucesso"}
-                />
+    const iconSrc = tipoResposta === 'Erro' ? iconePopUpErro : iconePopUpSucesso;
+    const altText = tipoResposta === 'Erro' ? "popUpErro" : "popUpSucesso";
+    return (
+        <div className="respostaSistema" onClick={onClose}>
+        <div onClick={(e) => e.stopPropagation()}>
+                <img src={iconSrc} alt={altText} />
                 <span>{textoResposta}</span>
-                {tipoResposta === 'Erro' && <button onClick={(e) => setVisivel(false)}>OK</button>}
+                {tipoResposta === 'Erro' && <button onClick={onClose}>OK</button>}
             </div>
         </div>
-    }
+    );
 }
+
+export default RespostaSistema
