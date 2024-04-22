@@ -4,6 +4,7 @@ import './modalAtivo.css'
 interface ModalProps {
     open: boolean;
     onClose: () => void;
+    onCancel: () => void;
     children: ReactElement;
 }
 
@@ -19,7 +20,7 @@ export default function Modal(props: ModalProps): ReturnType<FC> {
                 </div>
                 <div className="btn-container">
                     <button type="button" className="btn" onClick={props.onClose}>Salvar</button>
-                    <button type="button" className="btn cancelar" onClick={props.onClose}>Cancelar</button>
+                    <button type="button" className="btn cancelar" onClick={props.onCancel}>Cancelar</button>
                 </div>
             </div>
         </div>

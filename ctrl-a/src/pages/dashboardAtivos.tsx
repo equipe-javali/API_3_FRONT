@@ -41,6 +41,9 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     const [isHovered, setIsHovered] = useState(false);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UsuarioProps | null>(null);
+    function handleCancel() {
+        setShowModal(false);
+    }
 
     const localAtivo = (
         <div>
@@ -128,7 +131,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             <p className="tipo">{tipo}</p>
             <p className="status">{statusA}</p>
             <p className="local">{localAtivo}</p>
-            <Modal open={showModal} onClose={toggleModal}>
+            <Modal open={showModal} onClose={toggleModal} onCancel={handleCancel}>
                 <>
                     <div className='modal-responsavel'>
                         <h3>Responsável</h3>

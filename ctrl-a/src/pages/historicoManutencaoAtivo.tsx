@@ -78,6 +78,11 @@ export default function HistoricoManutencao() {
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
         setPesquisa(event.target.value);
     };
+    const [showModal, setShowModal] = useState(false);
+
+    const toggleModal = () => {
+        setShowModal(!showModal);
+    }
     
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
@@ -116,7 +121,12 @@ export default function HistoricoManutencao() {
         <div className="dashboardMan">
             <div className="tituloMan">
                 <h1>Manutenção do Ativo ID </h1>
-            
+                <button onClick={toggleModal}>Adicionar pedido de manutenção</button>
+            </div>
+            <Modal open={showModal} onClose={toggleModal} onCancel={() => {}}>
+                <h2>Formulário de Cadastro de Manutenção</h2>
+            </Modal>
+            <div className="buscaFiltro">            
                 <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
                     <option value="">Filtro</option>
                     {manutencao.map((manutencao, index) => (
@@ -127,7 +137,7 @@ export default function HistoricoManutencao() {
                 </select>
                 <input
                 type="text"
-                placeholder="Buscar por usuários"
+                placeholder="Buscar por manutenção"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 className='myInput'
