@@ -1,6 +1,6 @@
 import CampoAtivoPadrao from '../components/CampoAtivoPadrao'
 import './css/cadastroAtivos.css'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CadastroAtivosTangiveis from './cadastroAtivosTangiveis'
 import CadastroAtivosIntangiveis from './cadastroAtivosIntangiveis'
 import RespostaSistema from '../components/respostaSistema'
@@ -8,7 +8,6 @@ import RespostaSistema from '../components/respostaSistema'
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
     const paginaAtivosIntangiveis = CadastroAtivosIntangiveis()
-
     const nome = CampoAtivoPadrao("Nome do ativo", "text", "Digite o nome...")
     const custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "number", "R$00,00")
     const [tipoAtivo, setTipoAtivo] = useState(0)
@@ -17,15 +16,20 @@ export default function CadastroAtivos() {
     const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
     const [descricao, setDescricao] = useState('')
     const [proximo, setProximo] = useState(1)
-    var resposta = {
-        'visivel': false,
-        'codigo':
-            <>
-            </>
+    const [textoResposta, setTextoResposta] = useState('')
+    const [tipoResposta, setTipoResposta] = useState('')
+    function fechaPopUp() {
+        setTextoResposta('')
+        setTipoResposta('')
     }
-    function setAviso(textoResposta: string, tipoResposta: string) {
-        resposta = RespostaSistema(textoResposta, tipoResposta)
-    }
+    useEffect(() => {
+        if (tipoResposta === "Sucesso") {
+            const timer = setTimeout(() => {
+                fechaPopUp();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [tipoResposta]);
     const tipo = CampoAtivoPadrao("Tipo", "text", "Exemplo: automóvel, mobília...")
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -57,11 +61,17 @@ export default function CadastroAtivos() {
                 })
                     .then((response) => {
                         if (response.status === 201) {
-                            setAviso("Ativo cadastrado com sucesso!", "Sucesso")
+                            setTextoResposta("Ativo cadastrado com sucesso!")
+                            setTipoResposta("Sucesso")
                         }
                         else {
-                            setAviso(`Não foi possível cadastrar! Erro:${response.status}`, "Erro")
+                            setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
+                            setTipoResposta("Erro")
                         }
+                    })
+                    .catch((error) => {
+                        setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
+                        setTipoResposta("Erro")
                     })
             } else {
                 fetch("http://localhost:8080/ativoIntangivel/cadastro", {
@@ -90,20 +100,27 @@ export default function CadastroAtivos() {
                 })
                     .then((response) => {
                         if (response.status === 201) {
-                            setAviso("Ativo cadastrado com sucesso!", "Sucesso")
+                            setTextoResposta("Ativo cadastrado com sucesso!")
+                            setTipoResposta("Sucesso")
                         }
                         else {
-                            setAviso(`Não foi possível cadastrar! Erro:${response.status}`, "Erro")
+                            setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
+                            setTipoResposta("Erro")
                         }
+                    })
+                    .catch((error) => {
+                        setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
+                        setTipoResposta("Erro")
                     })
             }
         } catch (error) {
-            console.error('Erro ao processar requisição:', error);
+            setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
+            setTipoResposta("Erro")
         }
     }
     return (
         <>
-            {resposta.visivel && resposta.codigo}
+            <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <div className='divFormsAtivo'>
                 <div>
                     <h1> Cadastrar {tipoAtivo === 1 ? <>Ativo Tangível</> : tipoAtivo === 2 ? <> Ativo Intangível</> : <> Ativo</>}</h1>
