@@ -1,5 +1,6 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import './css/criarUsuario.css';
+import RespostaSistema from "../components/respostaSistema";
 
 export default function CriarUsuario() {
   const [nome, setNome] = useState('');
@@ -9,6 +10,20 @@ export default function CriarUsuario() {
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [aviso, setAviso] = useState("")
+  const [textoResposta, setTextoResposta] = useState('')
+  const [tipoResposta, setTipoResposta] = useState('')
+  function fechaPopUp() {
+    setTextoResposta('')
+    setTipoResposta('')
+  }
+  useEffect(() => {
+    if (tipoResposta === "Sucesso") {
+      const timer = setTimeout(() => {
+        fechaPopUp();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [tipoResposta]);
 
   const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNome(event.target.value);
@@ -54,22 +69,30 @@ export default function CriarUsuario() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-      });
-
-      if (response.ok) {
-        setAviso("Usuário cadastrado com sucesso!")
-      } else {
-        console.error('Falha ao cadastrar usuário.');
-        const responseData = await response.json();
-        console.log(responseData);
-      }
+      })
+        .then((response) => {
+          if (response.ok) {
+            setTextoResposta("Usuário cadastrado com sucesso!")
+            setTipoResposta("Sucesso")
+          }
+          else {
+            setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
+            setTipoResposta("Erro")
+          }
+        })
+        .catch((error) => {
+          setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
+          setTipoResposta("Erro")
+        })
     } catch (error) {
-      console.error('Erro ao processar requisição:', error);
+      setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
+      setTipoResposta("Erro")
     }
   };
 
   return (
     <div className="cadastroUsuário">
+      <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
       <div>
         <h2>Cadastrar usuário</h2>
       </div>
