@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import './css/dashboardAtivos.css'
 import Modal from '../components/modal/modal';
 
@@ -41,6 +41,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     const [isHovered, setIsHovered] = useState(false);
     const [showDeleteButton, setShowDeleteButton] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UsuarioProps | null>(null);
+    
     function handleCancel() {
         setShowModal(false);
     }
@@ -187,6 +188,13 @@ export default function DashboardAtivos() {
     const [ativos, setAtivos] = useState<AtivoProps[]>([]);
     const [update, setUpdate] = useState(false);
     const sortedAtivos = [...ativos].sort((a, b) => a.id - b.id);
+    const [Pesquisa, setPesquisa] = useState(''); 
+    const [searchTerm, setSearchTerm] = useState(''); 
+    const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        setPesquisa(event.target.value);    };
+    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
 
     const excluirAtivo = (ativoId: number) => {
         fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, {
@@ -222,13 +230,23 @@ export default function DashboardAtivos() {
             <div className="tituloAtv">
                 <h1>Ativos</h1>
             </div>
-            <div className="buscaFiltro">
-                <select>
-                    <option>Nome</option>
-                    <option>Responsável</option>
+            <div className="buscaFiltro">            
+                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
+                    <option value="">Filtro</option>
+                    {ativos.map((ativo, index) => (
+                        <option key={index} value={ativo.id}> 
+                        {ativo.tipo} 
+                    </option>
+                ))}
                 </select>
-                <input />
-            </div>
+                <input
+                type="text"
+                placeholder="Buscar por ativo"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className='myInput'
+                />
+            </div>    
             <TabelaAtivos ativos={sortedAtivos} excluirAtivo={excluirAtivo} />
         </div>
     );
