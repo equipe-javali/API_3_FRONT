@@ -14,7 +14,7 @@ export default function App() {
 
     <BrowserRouter>
       <Routes>
-      <Route path="/Home" element={< Home />} />
+      <Route path="/Home" element={<Home />} />
         <Route element={<BaseLateralHeader />}>
           <Route index element={<DashboardAtivos/>} />
           <Route path="/ListaAtivos" element={< DashboardAtivos />} />

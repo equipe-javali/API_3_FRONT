@@ -2,7 +2,7 @@
     --cor1: #40587E;
     --cor2: #0178D4;
     --cor3: #4152AC;
-    --cor4: #853f3f;
+    --cor4: #853F85;
     --cor5: #8764B8;
     --cor6: #3C3A48;
     --cor7: #191723;
@@ -17,6 +17,18 @@
     --branco1: #DDD8D8;
   }
   
+  .home-header {
+    background-color: var(--cor21);
+    text-align: left;
+  }
+
+  .logo {
+    width: 10%;
+    max-width: 100px;
+    margin-top: 20px;
+    margin-left: 30px;
+  }
+
   .login-container {
     background-color: var(--cor20);
     color: var(--branco);
@@ -65,4 +77,9 @@
     color: var(--cor23);
     margin-bottom: 10px;
   }
-  
+
+  .home-slogan {
+    padding-top: 8%;
+    text-align: center; /* Centraliza o texto */
+    font-size: 4vh; /* Define a altura do texto como 4vh */
+  }
