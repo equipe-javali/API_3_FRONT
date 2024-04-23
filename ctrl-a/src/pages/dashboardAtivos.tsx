@@ -13,6 +13,8 @@ type AtivoProps = {
     status: string;
     local: string;
     excluirAtivo: (ativoId: number) => void;
+    setTextoResposta: (texto: string) => void;
+    setTipoResposta: (tipo: string) => void;
 }
 
 type UsuarioLoginProps = {
@@ -29,7 +31,18 @@ type UsuarioProps = {
     departamento: string;
     telefone: string;
     usuariologin: UsuarioLoginProps[];
-}
+};
+
+type ManutencaoProps = {
+    id: number,
+    idAtivo: AtivoProps,
+    dataInicio: string,
+    dataFim: string,
+    custo: number,
+    tipo: number,
+    descricao: string,
+    localizacao: string
+};
 
 type TabelaAtivosProps<T extends AtivoProps> = {
     ativos: T[];
@@ -38,25 +51,40 @@ type TabelaAtivosProps<T extends AtivoProps> = {
     setTipoResposta: (tipo: string) => void;
 }
 
-function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo, setTextoResposta, setTipoResposta }: AtivoProps & { setTextoResposta: (texto: string) => void, setTipoResposta: (tipo: string) => void }) {
+function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo, setTextoResposta, setTipoResposta }: AtivoProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [manutencoes, setManutencoes] = useState<ManutencaoProps[]>([]);
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
     const [isHovered, setIsHovered] = useState(false);
-    const [showDeleteButton, setShowDeleteButton] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UsuarioProps | null>(null);
 
-    const localAtivo = (
-        <div>
-            {idResponsavel?.departamento && !isHovered && idResponsavel.departamento}
-            {!idResponsavel?.departamento || isHovered ? (
+    function emManutencao(): boolean {
+        if (manutencoes.length <= 0) {
+            return false;
+        }
+        return (Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim));
+    }
+
+    function localAtivo() {
+        if (emManutencao() && !isHovered) {// Se houver uma manutenção com data de início menor que hoje e data de fim maior que hoje, mostrar a localização da manutenção
+            return (
+                <>{manutencoes[0].localizacao}</>
+            );
+        } else if (idResponsavel?.departamento && !isHovered) {// Se não, se houver um responsável, mostrar a localização dele
+            return (
+                <>{idResponsavel.departamento}</>
+            );
+        } else if (!idResponsavel?.departamento || isHovered) {// Se não, se não houver um responsável ou passar o mouse em cima, mostrar os botões
+            return (
                 <>
-                    {!idResponsavel?.departamento && <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button>}
+                    <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button>
                     <button type='button' className='btnAtribuir' onClick={handleExcluir}>Excluir</button>
                 </>
-            ) : null}
-        </div>
-    )
+            );
+        }
+    }
     useEffect(() => {
+        // Listagem dos usuários
         fetch('http://localhost:8080/usuario/listagemTodos')
             .then(response => {
                 if (!response.ok) {
@@ -70,7 +98,25 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                 setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
                 setTipoResposta("Erro");
             });
-    }, []);
+
+        fetch(`http://localhost:8080/manutencao/listagem/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    setTextoResposta(`Não foi possível listar as manutenções do ativo! Erro:${response.status}`);
+                    setTipoResposta("Erro");
+                }
+                return response.json();
+            })
+            .then(data => {
+                setManutencoes(
+                    (data as ManutencaoProps[]).sort((a, b) => Date.parse(a.dataInicio) - Date.parse(b.dataInicio))
+                )
+            })
+            .catch(error => {
+                console.error(`Erro ao processar requisição! Erro:${error}`);
+            });
+    }, [id, setTextoResposta, setTipoResposta]);
+
     function toggleModal() {
         if (showModal && selectedUser) {
             fetch(`http://localhost:8080/ativo/associarAtivo/${id}`, {
@@ -100,13 +146,13 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
         }
     }
     let statusA = status
-    if (idResponsavel?.departamento == null) {
-        statusA = 'Não alocado'
+    if (idResponsavel?.departamento === null) {
+        statusA = 'Não alocado';
     }
-    else if (idResponsavel.departamento == 'TI') {
+    else if (emManutencao()) {
         statusA = 'Em manutenção'
     } else {
-        statusA = 'Em uso'
+        statusA = 'Em uso';
     }
     function handleExcluir() {
         excluirAtivo(id);
@@ -125,14 +171,14 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     }, [showModal, selectedUser]);
     return (
         <div className="linhaAtv"
-            onMouseEnter={() => { setIsHovered(true); setShowDeleteButton(true); }}
-            onMouseLeave={() => { setIsHovered(false); setShowDeleteButton(false); }}>
+            onMouseEnter={() => { setIsHovered(true); }}
+            onMouseLeave={() => { setIsHovered(false); }}>
             <p className="id">{id}</p>
             <p className="nome">{nome}</p>
             <p className="responsavel">{idResponsavel ? idResponsavel.nome : 'Não definido'}</p>
             <p className="tipo">{tipo}</p>
             <p className="status">{statusA}</p>
-            <p className="local">{localAtivo}</p>
+            <p className="local">{localAtivo()}</p>
             <Modal open={showModal} onClose={toggleModal}>
                 <>
                     <div className='modal-responsavel'>
@@ -186,7 +232,7 @@ function TabelaAtivos({ ativos, excluirAtivo, setTextoResposta, setTipoResposta 
 
 export default function DashboardAtivos() {
     const [ativos, setAtivos] = useState<AtivoProps[]>([]);
-    const [update, setUpdate] = useState(false);
+    var update = false
     const [textoResposta, setTextoResposta] = useState('');
     const [tipoResposta, setTipoResposta] = useState('');
 
