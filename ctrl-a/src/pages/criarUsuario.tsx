@@ -62,7 +62,7 @@ export default function CriarUsuario() {
 
     try {
       console.log(data);
-      const response = await fetch('http://localhost:8080/usuario/cadastro', {
+      fetch('http://localhost:8080/usuario/cadastro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
