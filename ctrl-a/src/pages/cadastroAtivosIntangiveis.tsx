@@ -1,3 +1,4 @@
+import React from 'react';
 import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
 
 
@@ -19,7 +20,6 @@ export default function CadastroAtivosIntangiveis() {
         },
         'código': (
             <>
-
                 <div className='colunaFormsAtivo'>
                     {tag.codigo}
                     {importancia.codigo}
