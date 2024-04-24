@@ -6,10 +6,12 @@ const Home: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Estado para controlar se a senha está visível
 
   const handleLogin = () => {
     if (username === 'admin' && password === 'admin123') {
-      console.log('Login bem-sucedido!');
+      // Redirecionar para a página de ativos
+      window.location.href = '/ListaAtivos';
     } else {
       setError('Credenciais inválidas. Por favor, tente novamente.');
     }
@@ -24,7 +26,7 @@ const Home: React.FC = () => {
         <div className="home-left-content">
           <p className="home-slogan">Dê um Ctrl A e controle seus ativos com facilidade!</p>
         </div>
-        </div>
+      </div>
       <div className="login-container">
         <h2>Login</h2>
         {error && <p className="error">{error}</p>}
@@ -40,12 +42,20 @@ const Home: React.FC = () => {
           </div>
           <div className="form-group">
             <label htmlFor="password">Senha:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="password-input-container">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? 'Ocultar' : 'Mostrar'}
+              </span>
+            </div>
           </div>
           <button type="button" onClick={handleLogin}>Entrar</button>
         </form>
