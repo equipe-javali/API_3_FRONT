@@ -1,0 +1,71 @@
+.primeiroBloco {
+  display: flex;
+  width: 90%;
+  align-self: center;
+  align-items: center;
+}
+
+.inputsPrimeiroBloco {
+  width: 100%;
+}
+
+.inputsFileira {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.nomeUsuario,
+.cpfUsuario,
+.telefoneUsuario,
+.nascimentoUsuario {
+  margin: 2%;
+}
+
+.inputContainer {
+  position: relative;
+}
+
+.inputContainer .input {
+  padding-right: 30px;
+}
+
+#iconeEditar {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.fotoUsuario {
+  width: 40%;
+}
+
+.fotoUsuario img {
+  width: 100%;
+}
+
+.segundoBloco {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  padding: 2%;
+  background-color: var(--cor8);
+  border-radius: 10px;
+}
+
+.buttonAtualizar {
+  all: unset;
+  width: auto;
+  padding: 0.5vw;
+  margin: 5%;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: var(--cor4);
+  color: var(--branco1);
+  font-size: 16px;
+}
