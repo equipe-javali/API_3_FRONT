@@ -132,7 +132,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             <p className="tipo">{tipo}</p>
             <p className="status">{statusA}</p>
             <p className="local">{localAtivo}</p>
-            <Modal open={showModal} onClose={toggleModal} onCancel={handleCancel}>
+            <Modal open={showModal} onClose={toggleModal} onCancel={handleCancel} title="Atribua seu ativo">
                 <>
                 <div className='modal-responsavel'>
                     <h3>Responsável</h3>

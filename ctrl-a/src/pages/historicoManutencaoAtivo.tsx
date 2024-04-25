@@ -6,7 +6,7 @@ import Modal from '../components/modal/modal';
 interface ManutencaoData {
     id: number;
     // ativo: any;
-    tipo: string;
+    tipo: string |number;
     descricao: string;
     localizacao: string;
     custo: string;
@@ -15,10 +15,21 @@ interface ManutencaoData {
     excluirManutencao: (manutencaoId: number) => void;
   }
 
-  interface TabelaManutencaoProps {
-    manutencao: ManutencaoData[];
-    excluirManutencao: (manutencaoId: number) => void;
+interface TabelaManutencaoProps {
+manutencao: ManutencaoData[];
+excluirManutencao: (manutencaoId: number) => void;
 }  
+const tipoMapping: { [key: string]: number } = {
+    "Preventiva": 1,
+    "Corretiva": 2,
+    "Preditiva": 3
+};
+
+const reverseTipoMapping: { [key: number]: string } = {
+    1: "Preventiva",
+    2: "Corretiva",
+    3: "Preditiva"
+};
 
 
 
@@ -32,17 +43,17 @@ function handleExcluir() {
 }
 
     return (
-        <div className="linhaMan"
+        <tr className="linhaMan"
             onMouseEnter={() => { setIsHovered(true); setShowDeleteButton(true); }}
             onMouseLeave={() => { setIsHovered(false); setShowDeleteButton(false); }}>
-            <p className="id">{id}</p>
-            <p className="tipo">{tipo}</p>
-            {/* <p className="descricao">{descricao}</p> */}
-            <p className="local">{localizacao}</p> 
-            <p className="custo">{custo}</p>
-            <p className="dataInicio">{new Date(dataInicio).toLocaleDateString()}</p>
-            <p className="dataFim">{new Date(dataFim).toLocaleDateString()}</p>
-        </div>
+            <td className="id">{id}</td>
+            <td className="tipo">{reverseTipoMapping[Number(tipo)]}</td>   
+            <td className="descricao">{descricao}</td>         
+            <td className="local">{localizacao}</td> 
+            <td className="custo">{custo}</td>
+            <td className="dataEnvio">{new Date(dataInicio).toLocaleDateString()}</td>
+            <td className="dataRetorno">{new Date(dataFim).toLocaleDateString()}</td>
+        </tr>
     )
 }
 
@@ -53,8 +64,7 @@ function TabelaManutencao({ manutencao, excluirManutencao }: TabelaManutencaoPro
                 <LinhaManutencao
                     key={man.id}
                     id={man.id}
-                    tipo={man.tipo}
-                    // ativo={man.ativo}
+                    tipo={man.tipo}                    
                     descricao={man.descricao}
                     localizacao={man.localizacao}
                     custo={man.custo}
@@ -62,6 +72,7 @@ function TabelaManutencao({ manutencao, excluirManutencao }: TabelaManutencaoPro
                     dataFim={man.dataFim}
                     excluirManutencao={excluirManutencao} />
             );
+
         } else {
             console.error(`Manutenção com id ${man.id} não tem dataInicio ou dataFim definida.`);
             return null;
@@ -69,17 +80,22 @@ function TabelaManutencao({ manutencao, excluirManutencao }: TabelaManutencaoPro
     });
 
     return (
-        <div className="tabelaMan">
-            <div className="linhaMan" id="cabecalho">
-                <h3 className="id">ID</h3>
-                <h3 className="nome">Tipo</h3>
-                <h3 className="localizacao">Local</h3> 
-                <h3 className="responsavel">Custo</h3>
-                <h3 className="tipo">Data de envio</h3>
-                <h3 className="status">Data de retorno</h3>                
-            </div>
-            {linhas}
-        </div>
+        <table className="tabelaMan">
+            <thead>
+                <tr className="linhaMan" id="cabecalho">
+                    <th className="id"><h3>ID</h3></th>
+                    <th className="nome"><h3>Tipo</h3></th>
+                    <th className="descricao"><h3>Descricão</h3></th>
+                    <th className="local"><h3>Local</h3></th> 
+                    <th className="custo"><h3>Custo</h3></th>
+                    <th className="dataEnvio"><h3>Data de envio</h3></th>
+                    <th className="DataRetorno"><h3>Data de retorno</h3></th>                
+                </tr>
+            </thead>
+            <tbody>
+                {linhas}
+            </tbody>
+        </table>
     )
 }
 
@@ -87,9 +103,8 @@ function TabelaManutencao({ manutencao, excluirManutencao }: TabelaManutencaoPro
 
 export default function HistoricoManutencao() {
     const [manutencaoData, setManutencaoData] = useState<ManutencaoData>({
-        id: 1,
+        id: 0,
         tipo: '',
-        // ativo: '',
         descricao: '',
         localizacao: '',
         custo: '',
@@ -120,16 +135,15 @@ export default function HistoricoManutencao() {
     const handleTextareaDataChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setManutencaoData({ ...manutencaoData, [event.target.name]: event.target.value });
     };
-    const tipoMapping: { [key: string]: number } = {
-        "Preventiva": 1,
-        "Corretiva": 2,
-        "Preditiva": 3
-    };
     
-    const handleSelectDataChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const tipoValue = tipoMapping[event.target.value];
-        setManutencaoData({ ...manutencaoData, [event.target.name]: tipoValue });
-    };
+    
+    function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
+        const { name, value } = event.target;
+        setManutencaoData(prevState => ({
+            ...prevState,
+            [name]: tipoMapping[value] || value
+        }));
+    }
     function handleCancel() {
         setShowManutencaoModal(false);
     }
@@ -145,6 +159,7 @@ export default function HistoricoManutencao() {
         
         const manutencaoDataWithDates = {
             ...manutencaoData,
+            tipo: typeof manutencaoData.tipo === 'string' ? tipoMapping[manutencaoData.tipo] || 0 : manutencaoData.tipo,
             dataInicio: dataInicio.toISOString(),
             dataFim: dataFim.toISOString()
         };
@@ -213,7 +228,7 @@ export default function HistoricoManutencao() {
             <h1>Manutenção do Ativo ID </h1>
             <button className='btnManutencao' onClick={toggleModal}>Adicionar pedido de manutenção</button>
             </div>
-            <Modal open={showManutencaoModal} onClose={handleManutencaoSubmit} onCancel={handleCancel}>
+            <Modal open={showManutencaoModal} onClose={handleManutencaoSubmit} onCancel={handleCancel} title="Pedido de manutenção">
                 <div>
                     <div className="containerModal">
                         <div className='modal-man'>
@@ -242,7 +257,7 @@ export default function HistoricoManutencao() {
                     </div>
                     <div className='modal-man'>
                         <h3>Tipo</h3>                        
-                        <select name="tipo" value={manutencaoData.tipo} onChange={handleSelectDataChange}>
+                        <select name="tipo" value={reverseTipoMapping[Number(manutencaoData.tipo)]} onChange={handleSelectDataChange}>
                             <option value="">Selecione</option>
                             <option value="Preventiva">Preventiva</option>
                             <option value="Corretiva">Corretiva</option>
@@ -258,9 +273,9 @@ export default function HistoricoManutencao() {
                         <option value="">Filtro</option>
                         {manutencao.map((manutencao, index) => (
                             <option key={index} value={manutencao.id}> 
-                            {manutencao.tipo} 
-                        </option>
-                    ))}
+                            {reverseTipoMapping[Number(manutencao.tipo)]} 
+                            </option>
+                        ))}
                     </select>
                     <input
                     type="text"

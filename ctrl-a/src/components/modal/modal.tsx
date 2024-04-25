@@ -5,7 +5,7 @@ interface ModalProps {
     open: boolean;
     onClose: () => void;
     onCancel: () => void;
-    
+    title: string;    
     children: ReactElement;
 }
 
@@ -14,7 +14,7 @@ export default function Modal(props: ModalProps): ReturnType<FC> {
         <div className={`${"modal"} ${props.open ? "display-block" : "display-none"}`}>
             <div className="modal-main">
                 <div className="modal-head">
-                    <h2>Atribua seu ativo</h2>
+                <h2>{props.title}</h2>
                 </div>
                 <div className="modal-body">
                     {props.children}

@@ -2,23 +2,28 @@
     --paddingDashboardMan:20px;
     --paddingTabelaCabecalho: 5px;
     --widthLinhaManId:5%;
-    --widthLinhaManNome:20%;
-    --widthLinhaManResposavel:15%;
-    --widthLinhaManTipo:15%;
-    --widthLinhaManStatus:15%;
-    --widthLinhaManLocal:20%;
+    --widthLinhaManTipo:20%;
+    --widthLinhaManDescricao:25%;
+    --widthLinhaManLocal:15%;
+    --widthLinhaManCusto:15%;
+    --widthLinhaManDataEnvio:20%;
+    --widthLinhaManDataRetorno:20%;
     --widthLinhaManLocalBtnAtribuir:50%;
     --paddingLinhaManLocalBtnAtribuir:5px;
     --borderRadiusLinhaManLocalBtnAtribuir:5px;
     --opacityAtributosDashboard: 0.9
 }
 
-.dashboardMan,
-.tabelaMan,
-.linhaMan {
+table.tabelaMan,
+tr.linhaMan {
     display: flex;
     flex-direction: column;
     color: var(--branco1);
+}
+
+tr.linhaMan td {
+    flex: 1;
+    text-align: center;
 }
 
 .dashboardMan {
@@ -29,61 +34,67 @@
     visibility: visible;
 }
 
-.tabelaMan {
+table.tabelaMan {
     width: 100%;
     border-collapse: collapse;
     overflow-x: auto;
 }
 
-.tabelaMan #cabecalho {
+table.tabelaMan #cabecalho {
     background-color: var(--cor2);
     text-align: center;
     padding: var(--paddingTabelaCabecalho);
 }
 
-.tabelaMan .linhaMan {
+table.tabelaMan #cabecalho th {
+    flex: 1;
+    text-align: center;
+}
+
+table.tabelaMan tr.linhaMan {
     flex-direction: row;
     justify-content: space-between;
     text-align: center;
     padding: var(--paddingTabelaCabecalho);
 }
 
-.tabelaMan .linhaMan:nth-child(even) {
+table.tabelaMan tr.linhaMan:nth-child(even) {
     background-color: var(--cor6);
-    
-    
 }
 
-.linhaMan .id, .nome, .responsavel, .tipo, .status, .local {
+tr.linhaMan td.id, td.tipo, td.descricao, td.local, td.custo, td.dataEnvio, td.dataRetorno {
     text-align: center;
 }
 
-.linhaMan .id {
+tr.linhaMan td.id {
     width: var(--widthLinhaManId);
 }
 
-.linhaMan .nome {
+tr.linhaMan td.tipo {
     width: var(--widthLinhaManNome);
 }
 
-.linhaMan .responsavel {
+tr.linhaMan td.descricao {
     width: var(--widthLinhaManResposavel);
 }
 
-.linhaMan .tipo {
+tr.linhaMan td.local {
     width: var(--widthLinhaManTipo);
 }
 
-.linhaMan .status {
+tr.linhaMan td.custo {
     width: var(--widthLinhaManStatus);
 }
 
-.linhaMan .local {
+tr.linhaMan td.dataEnvio {
     width: var(--widthLinhaManLocal);
 }
 
+tr.linhaMan td.dataRetorno {
+    width: var(--widthLinhaManLocal);
+}
 
-.linhaMan .local .btnAtribuir {
+tr.linhaMan td.local .btnAtribuir {
     all: unset;
     width: var(--widthLinhaManLocalBtnAtribuir);
     padding: var(--paddingLinhaManLocalBtnAtribuir);
@@ -97,7 +108,7 @@
     cursor: pointer;
 }
 
-.linhaMan:nth-child(even) .btnAtribuir:hover, .linhaMan .btnAtribuir:hover {
+tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     opacity: var(--opacityAtributosDashboard);
 }
 
@@ -110,20 +121,19 @@
     margin-right: 20px;
     margin-left: 3px;
     margin-bottom: 10px;
-    
-  }
-  
+}
+
 .dashboardMan .myInput {
     width: 79%;
     padding: 8px;
     border-radius: 4px;
     background-color: var(--cor3);
-  }
-  
+}
+
 .dashboardMan .myInput::placeholder {
     color: var(--branco);
     opacity: 0.7;
-  }
+}
 
 .tituloBotao {
     display: flex;
@@ -131,7 +141,6 @@
     justify-content: space-between;
     width: 100%;    
     margin-bottom: 15px;
-   
 }
 
 .tabelaMargin {
@@ -148,7 +157,6 @@
     text-align: center;
     font-size: 18px;    
     cursor: pointer;
-    
 }
 
 .containerModal {
@@ -164,14 +172,21 @@
     margin-top: 10px;
     margin-left: 40px;
     margin-right: 40px;
-    /* padding: auto; */
-
 }
 
-.textarea-description {
-    width: 100%;
-    height: 60%;
+.modal-man input,
+.modal-man select,
+.modal-man textarea {
+    width: 100%; 
+    padding: 8px; 
+    font-size: 16px; 
 }
+
+.modal-head {
+    margin-top: 20px; 
+}
+
+
 
 
 
