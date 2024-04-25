@@ -1,6 +1,7 @@
 .primeiroBloco {
   display: flex;
   width: 90%;
+  margin-bottom: 2%;
   align-self: center;
   align-items: center;
 }
@@ -27,13 +28,15 @@
 }
 
 .inputContainer .input {
-  padding-right: 30px;
+  padding: 3%;
+  background-color: var(--cor20);
 }
 
 #iconeEditar {
   position: absolute;
-  right: 10px;
-  top: 50%;
+  width: 10%;
+  right: 2%;
+  top: 48%;
   transform: translateY(-50%);
   cursor: pointer;
 }
@@ -51,7 +54,6 @@
   flex-direction: column;
   align-self: center;
   align-items: center;
-  justify-content: center;
   width: 90%;
   padding: 2%;
   background-color: var(--cor8);
@@ -62,7 +64,7 @@
   all: unset;
   width: auto;
   padding: 0.5vw;
-  margin: 5%;
+  margin-top: 5%;
   cursor: pointer;
   border-radius: 5px;
   background-color: var(--cor4);
