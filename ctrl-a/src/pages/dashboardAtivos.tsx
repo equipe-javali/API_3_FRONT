@@ -134,14 +134,15 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             <p className="local">{localAtivo}</p>
             <Modal open={showModal} onClose={toggleModal} onCancel={handleCancel}>
                 <>
-                    <div className='modal-responsavel'>
-                        <h3>Responsável</h3>
-                        <select onChange={handleUserChange}>
-                            {usuarios.map(usuario => (
-                                <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
-                            ))}
-                        </select>
-                    </div>
+                <div className='modal-responsavel'>
+                    <h3>Responsável</h3>
+                    <select onChange={handleUserChange}>
+                        <option value="">Selecione</option>
+                        {usuarios.map(usuario => (
+                            <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
+                        ))}
+                    </select>
+                </div>
                     <div className='modal-local'>
                         <h3>Departamento</h3>
                         <input value={selectedUserDepartment || ''} readOnly />

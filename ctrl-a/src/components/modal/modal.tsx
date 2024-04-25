@@ -1,10 +1,11 @@
 import { FC, ReactElement } from "react";
-import './modalAtivo.css'
+import './modal.css'
 
 interface ModalProps {
     open: boolean;
     onClose: () => void;
     onCancel: () => void;
+    
     children: ReactElement;
 }
 
