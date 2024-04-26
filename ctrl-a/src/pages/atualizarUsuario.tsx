@@ -1,19 +1,58 @@
 import iconEditar from '../assets/icons/editar.png'
 import iconUser from '../assets/icons/visualizar_usuario.png'
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import './css/atualizaUsuario.css'
 
 export default function AtualizarUsuario() {
     const [editable, setEditable] = useState(false);
-    const [inputValue, setInputValue] = useState('');
+    const [nome, setNome] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [nascimento, setNascimento] = useState('');
+    const [telefone, setTelefone] = useState('');
+    const [email, setEmail] = useState('');
+    const [permissao, setPermissao] = useState('');
+    const [departamento, setDepartamento] = useState('');
 
     const handleIconClick = () => {
         setEditable(true);
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
+    const handleNomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNome(e.target.value);
     };
+    const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCpf(e.target.value);
+    };
+    const handleNascimentoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNascimento(e.target.value);
+    };
+    const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTelefone(e.target.value);
+    };
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+    };
+    const handlePermissaoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setPermissao(e.target.value);
+    };
+    const handleDepartamentoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setDepartamento(e.target.value);
+    };
+
+    const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        const data = {
+            nome,
+            cpf,
+            nascimento,
+            telefone,
+            email,
+            permissao,
+            departamento
+        }
+    }
+
+    
 
     return (
         <>
@@ -21,32 +60,32 @@ export default function AtualizarUsuario() {
                 <div className='inputsPrimeiroBloco'>
                     <div className='inputsFileira'>
                         <div className='nomeUsuario'>
-                            <span>Nome</span>
+                            <label>Nome</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={inputValue} readOnly={!editable} onChange={handleInputChange} />
+                                <input className='input' type="text" value={nome} readOnly={!editable} onChange={handleNomeChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
                         <div className='cpfUsuario'>
-                            <span>CPF</span>
+                            <label>CPF</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={inputValue} readOnly={!editable} onChange={handleInputChange} />
+                                <input className='input' type="text" value={cpf} readOnly={!editable} onChange={handleCpfChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
                     </div>
                     <div className='inputsFileira'>
                         <div className='nascimentoUsuario'>
-                            <span>Data de nascimento</span>
+                            <label>Data de nascimento</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={inputValue} readOnly={!editable} onChange={handleInputChange} />
+                                <input className='input' type="text" value={nascimento} readOnly={!editable} onChange={handleNascimentoChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
                         <div className='telefoneUsuario'>
-                            <span>Telefone</span>
+                            <label>Telefone</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={inputValue} readOnly={!editable} onChange={handleInputChange} />
+                                <input className='input' type="text" value={telefone} readOnly={!editable} onChange={handleTelefoneChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
@@ -61,28 +100,34 @@ export default function AtualizarUsuario() {
             <div className="segundoBloco">
                 <div className='inputsFileira'>
                     <div className='emailUsuario'>
-                        <span>Email</span>
+                        <label>Email</label>
                         <div className="inputContainer">
-                            <input className='input' type="text" value={inputValue} readOnly={!editable} onChange={handleInputChange} />
+                            <input className='input' type="text" value={email} readOnly={!editable} onChange={handleEmailChange} />
                             <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                         </div>
                     </div>
                     <div className='permissaoUsuario'>
-                        <span>Permissão</span>
+                        <label>Permissão</label>
                         <div className="inputContainer">
-                            <input className='input' type="text" value={inputValue} readOnly={!editable} onChange={handleInputChange} />
-                            <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
+                            <select className='input' value={permissao} onChange={handlePermissaoChange}>
+                                <option value="">Selecione nova permissão</option>
+                                <option value="Usuario">Usuário</option>
+                                <option value="Administrador">Administrador</option>
+                            </select>
                         </div>
                     </div>
                     <div className='deptoUsuario'>
-                        <span>Departamento</span>
+                        <label>Departamento</label>
                         <div className="inputContainer">
-                            <input className='input' type="text" value={inputValue} readOnly={!editable} onChange={handleInputChange} />
-                            <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
+                            <select className='input' value={departamento} onChange={handleDepartamentoChange}>
+                                <option value="">Selecione novo departamento</option>
+                                <option value="Departamento 1">Departamento 1</option>
+                                <option value="Departamento 2">Departamento 2</option>
+                            </select>
                         </div>
                     </div>
                 </div>
-                <button type='button' className='buttonAtualizar'>Atualizar</button>
+                <button type='button' className='buttonAtualizar' onClick={handleSubmit}>Atualizar</button>
             </div>
         </>
     )

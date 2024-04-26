@@ -28,7 +28,9 @@
 }
 
 .inputContainer .input {
+  margin-top: 5%;
   padding: 3%;
+  color: var(--branco1);
   background-color: var(--cor20);
 }
 
@@ -36,7 +38,7 @@
   position: absolute;
   width: 10%;
   right: 2%;
-  top: 48%;
+  top: 60%;
   transform: translateY(-50%);
   cursor: pointer;
 }
