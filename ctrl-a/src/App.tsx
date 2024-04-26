@@ -20,6 +20,7 @@ export default function App() {
           <Route path="/CadastroAtivo" element={< CadastroAtivos />} />
           <Route path="/CadastroUsuario" element={< CriarUsuario />} />
           <Route path="/AtualizarUsuario" element={< AtualizarUsuario />} />
+          <Route path="/EdicaoUsuario/:id" element={< AtualizarUsuario />} />
           {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
           <Route path="*" element={<CadastroAtivos />} />
         </Route>

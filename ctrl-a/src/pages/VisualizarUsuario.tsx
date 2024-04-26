@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './css/visualizarUsuario.css'
+import { Link } from 'react-router-dom';
 
 interface Ativo {
   id: number;
@@ -44,7 +45,7 @@ export default function VisualizarUsuario() {
 
         data.sort((a, b) => a.id - b.id);
         setUsuarios(data);
-        
+
         const uniqueDepartamentos = new Set<string>();
         data.forEach(usuario => {
           const departamento = usuario.departamento;
@@ -141,6 +142,7 @@ export default function VisualizarUsuario() {
                 <td>{usuario.telefone}</td>
                 <td>{usuario.email}</td>
                 <td>
+                  <Link to={`EdicaoUsuario/${usuario.id}`} type='button' className='btnExcluir'>Editar</Link>
                   <button type='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
                 </td>
               </tr>
@@ -148,9 +150,6 @@ export default function VisualizarUsuario() {
           </tbody>
         </table>
       </div>
-      {/* <footer>
-        <h1 className="footerText">Todos os direitos reservados à Ctrl A</h1>
-      </footer> */}
     </div>
   );
 }
