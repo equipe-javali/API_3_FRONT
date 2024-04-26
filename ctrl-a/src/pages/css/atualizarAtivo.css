@@ -106,3 +106,23 @@
     background-color: var(--cor20);
     color: var(--branco);
 }
+
+.atualizarAtivo .primeira-parte label.required::after {
+    content: '*';
+    color: red;
+    margin-left: 4px;
+  }
+  
+  .atualizarAtivo .error-list {
+    margin-top: 10px;
+  }
+  
+  .atualizarAtivo .error-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .atualizarAtivo .error-list ul li {
+    color: red;
+  }
+  
