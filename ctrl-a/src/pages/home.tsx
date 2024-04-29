@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import './home.css';
-import logo from '../../assets/icons/logo.png';
+import { useState } from 'react';
+import './css/home.css';
+import logo from '../assets/icons/logo.png';
 
-const Home: React.FC = () => {
+export default function Home() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -10,7 +10,6 @@ const Home: React.FC = () => {
 
   const handleLogin = () => {
     if (username === 'admin' && password === 'admin123') {
-      // Redirecionar para a página de ativos
       window.location.href = '/ListaAtivos';
     } else {
       setError('Credenciais inválidas. Por favor, tente novamente.');
@@ -18,8 +17,8 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div>
-      <header className="home-header">
+    <div className='DivHome'>
+      <header id="header-component">
         <img src={logo} alt="Logo" className="logo" />
       </header>
       <div className="home-content">
@@ -63,5 +62,3 @@ const Home: React.FC = () => {
     </div>
   );
 };
-
-export default Home;

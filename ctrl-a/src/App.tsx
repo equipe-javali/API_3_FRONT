@@ -5,7 +5,7 @@ import CadastroAtivos from './pages/cadastroAtivos';
 import DashboardAtivos from './pages/dashboardAtivos';
 import CriarUsuario from './pages/criarUsuario';
 import VisualizarUsuario from './pages/VisualizarUsuario';
-import Home from './pages/home/home';
+import Home from './pages/home';
 import React from 'react';
 
 
@@ -14,9 +14,8 @@ export default function App() {
 
     <BrowserRouter>
       <Routes>
-      <Route path="/Home" element={<Home />} />
+        <Route index element={<Home />} />
         <Route element={<BaseLateralHeader />}>
-          <Route index element={<DashboardAtivos/>} />
           <Route path="/ListaAtivos" element={< DashboardAtivos />} />
           <Route path="/ListaUsuarios" element={< VisualizarUsuario />} />
           <Route path="/CadastroAtivo" element={< CadastroAtivos />} />
