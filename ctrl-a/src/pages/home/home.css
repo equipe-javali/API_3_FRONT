@@ -1,0 +1,85 @@
+:root {
+    --cor1: #40587E;
+    --cor2: #0178D4;
+    --cor3: #4152AC;
+    --cor4: #853F85;
+    --cor5: #8764B8;
+    --cor6: #3C3A48;
+    --cor7: #191723;
+    --cor8: #2F3D54;
+    --cor9: #d9d9d94a;
+    --cor10: #808080;
+    --cor20: #25293E;
+    --cor21: #121212;
+    --cor22: #171717;
+    --cor23: #ff4f4f;
+    --branco: #FFFFFF;
+    --branco1: #DDD8D8;
+  }
+  
+  .home-header {
+    background-color: var(--cor21);
+    text-align: left;
+  }
+
+  .logo {
+    width: 10%;
+    max-width: 100px;
+    margin-top: 20px;
+    margin-left: 30px;
+  }
+
+  .login-container {
+    background-color: var(--cor20);
+    color: var(--branco);
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  h2 {
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  input {
+    width: calc(100% - 10px);
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid var(--cor6);
+  }
+  
+  button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--cor7);
+    color: var(--branco);
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: var(--cor4);
+  }
+  
+  .error {
+    color: var(--cor23);
+    margin-bottom: 10px;
+  }
+
+  .home-slogan {
+    padding-top: 8%;
+    text-align: center; /* Centraliza o texto */
+    font-size: 4vh; /* Define a altura do texto como 4vh */
+  }
