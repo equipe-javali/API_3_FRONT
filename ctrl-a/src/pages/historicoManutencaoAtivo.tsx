@@ -57,9 +57,10 @@ function handleExcluir() {
     )
 }
 
-function TabelaManutencao({ manutencao, excluirManutencao }: TabelaManutencaoProps) {
-    const linhas = manutencao.map((man: ManutencaoData) => {
-        if (man.dataInicio && man.dataFim) {
+function TabelaManutencao({ manutencao, excluirManutencao, filtro }: TabelaManutencaoProps & { filtro: string }) {
+    const linhas = manutencao
+        .filter(man => filtro ? reverseTipoMapping[Number(man.tipo)] === filtro : true)
+        .map((man: ManutencaoData) => {
             return (
                 <LinhaManutencao
                     key={man.id}
@@ -73,10 +74,10 @@ function TabelaManutencao({ manutencao, excluirManutencao }: TabelaManutencaoPro
                     excluirManutencao={excluirManutencao} />
             );
 
-        } else {
-            console.error(`Manutenção com id ${man.id} não tem dataInicio ou dataFim definida.`);
-            return null;
-        }
+        // } else {
+        //     console.error(`Manutenção com id ${man.id} não tem dataInicio ou dataFim definida.`);
+        //     return null;
+        // }
     });
 
     return (
@@ -115,27 +116,45 @@ export default function HistoricoManutencao() {
 
     const [manutencao, setManutencao] = useState<ManutencaoData[]>([]);
     const [update, setUpdate] = useState(false);
-    const sortedManutencao = [...manutencao].sort((a, b) => a.id - b.id);
-    const [Pesquisa, setPesquisa] = useState(''); 
-    const [searchTerm, setSearchTerm] = useState(''); 
-    const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        setPesquisa(event.target.value);    };
+    const sortedManutencao = [...manutencao].sort((a, b) => a.id - b.id);    
+    const [Pesquisa, setFilterValue] = useState('');
+    const tipos = ["Corretiva", "Preventiva", "Preditiva"];    
+    const [searchTerm, setSearchTerm] = useState('');     
     const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
-    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    
+    
+    
+    const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFilterValue(event.target.value);
+    };
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
 
+    const Pesquisando = sortedManutencao.filter(manutencao => {
+        const searchTermLower = searchTerm.toLowerCase();
+    
+        if (Pesquisa === '' || Pesquisa === 'Todos') {
+          return Object.values(manutencao).some(value =>
+            typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
+          );
+        } else {
+          return reverseTipoMapping[Number(manutencao.tipo)] === Pesquisa &&
+            Object.values(manutencao).some(value =>
+              typeof value === 'string' && value.toLowerCase().includes(searchTermLower)
+            );
+        }
+    });
     function toggleModal() {
         setShowManutencaoModal(!showManutencaoModal);
-   }
-    
+   }    
     function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
         setManutencaoData({ ...manutencaoData, [event.target.name]: event.target.value });
     }
-    const handleTextareaDataChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    function handleTextareaDataChange (event: React.ChangeEvent<HTMLTextAreaElement>) {
         setManutencaoData({ ...manutencaoData, [event.target.name]: event.target.value });
-    };
-    
+    };   
     
     function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
         const { name, value } = event.target;
@@ -186,7 +205,7 @@ export default function HistoricoManutencao() {
     }
       
 
-    const excluirManutencao = (manutencaoId: number) => {
+    function excluirManutencao(manutencaoId: number){
         fetch(`http://localhost:8080/manutencao/exclusao/${manutencaoId}`, {
             method: 'DELETE',
         })
@@ -269,14 +288,14 @@ export default function HistoricoManutencao() {
             </Modal>            
                 
                 <div className="buscaFiltro">            
-                    <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
-                        <option value="">Filtro</option>
-                        {manutencao.map((manutencao, index) => (
-                            <option key={index} value={manutencao.id}> 
-                            {reverseTipoMapping[Number(manutencao.tipo)]} 
-                            </option>
-                        ))}
-                    </select>
+                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
+                    <option value="">Filtro</option>
+                    {tipos.map(tipo => (
+                        <option key={tipo} value={tipo}>
+                            {tipo}
+                        </option>
+                    ))}
+                </select>
                     <input
                     type="text"
                     placeholder="Buscar por manutenção"
@@ -285,7 +304,7 @@ export default function HistoricoManutencao() {
                     className='myInput'
                     />
                 </div>            
-                <TabelaManutencao manutencao={sortedManutencao} excluirManutencao={excluirManutencao} />
+                <TabelaManutencao manutencao={Pesquisando} excluirManutencao={excluirManutencao} filtro={Pesquisa} />
         </div>
     );
 };
