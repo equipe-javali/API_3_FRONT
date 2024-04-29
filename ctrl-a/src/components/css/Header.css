@@ -48,3 +48,10 @@
     height: 100%;
     margin: auto;
 }
+
+.logo {
+    width: 10%;
+    max-width: 100px;
+    margin-top: 20px;
+    margin-left: 30px;
+  }
