@@ -16,6 +16,7 @@
 .dasboardAtv,
 .tabelaAtv,
 .linhaAtv {
+    min-width: 100px;
     display: flex;
     flex-direction: column;
     color: var(--branco1);
@@ -30,15 +31,16 @@
 }
 
 .tabelaAtv {
-    width: 100%;
-    border-collapse: collapse;
-    overflow-x: auto;
+    width: 100%; 
+    border-collapse: collapse;       
+    overflow: auto;
 }
 
 .tabelaAtv #cabecalho {
     background-color: var(--cor2);
     text-align: center;
     padding: var(--paddingTabelaCabecalho);
+    
 }
 
 .tabelaAtv .linhaAtv {
@@ -54,6 +56,8 @@
 
 .linhaAtv .id, .nome, .responsavel, .tipo, .status, .local {
     text-align: center;
+    min-width: 100px;
+    
 }
 
 .linhaAtv .id {
@@ -97,4 +101,44 @@
 
 .linhaAtv:nth-child(even) .btnAtribuir:hover, .linhaAtv .btnAtribuir:hover {
     opacity: var(--opacityAtributosDashboard);
+    
 }
+
+@media screen and (max-width: 600px) {
+    .tabelaAtv {
+      width: 100%;
+      height: auto;
+    }
+  
+    .linhaAtv {
+      flex-direction: column;
+      align-items: center;
+      width: max-content;
+          }
+  
+    .linhaAtv .id, .nome, .responsavel, .tipo, .status, .local {
+      width: 100%;
+      padding: 10px 0;
+    }
+  
+    .linhaAtv .local .btnAtribuir {
+      width: 100%;
+      margin: 10px auto;
+    }
+
+    .tabelaAtv #cabecalho {
+        background-color: var(--cor2);
+        text-align: center;
+        padding: var(--paddingTabelaCabecalho);
+        width: max-content;
+        
+    }
+
+    
+.linhaAtv:nth-child(even)  {
+    opacity: var(--opacityAtributosDashboard);
+    width: max-content;
+    
+}
+  }
+

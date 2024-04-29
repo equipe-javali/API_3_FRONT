@@ -82,17 +82,21 @@ export default function VisualizarUsuario() {
   };
 
   const handleDelete = (id: number) => {
-    fetch(`http://localhost:8080/usuario/exclusao/${id}`, {
-      method: 'DELETE',
+    fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: 'inativo' }),
     })
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        console.log('Usuário excluído com sucesso!', id);
+        console.log('Usuário inativado com sucesso!', id);
 
-        setUsuarios(usuarios.filter(usuario => usuario.id !== id));
+        setUsuarios(usuarios.map(usuario => usuario.id === id ? { ...usuario, status: 'inativo' } : usuario));
       })
       .catch(error => console.error('Error:', error));
   };
