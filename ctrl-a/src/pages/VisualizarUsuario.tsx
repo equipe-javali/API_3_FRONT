@@ -33,7 +33,7 @@ export default function VisualizarUsuario() {
 
 
   useEffect(() => {
-    fetch('http://localhost:8080/usuario/listagemTodos')
+    fetch('http://localhost:8080/usuario/cadastro')
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
