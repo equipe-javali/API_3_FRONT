@@ -15,7 +15,6 @@ export default class BaseLateralHeader extends Component<RouteProps> {
         return (
             <div id="app-content-lr">
                 <SideMenu links={[
-                    [home_png, "/"],
                     [visualizar_usuario_png, "ListaUsuarios"],
                     [criar_Ativo_png, "CadastroAtivo"],
                     [criar_usuario_png, "CadastroUsuario"],

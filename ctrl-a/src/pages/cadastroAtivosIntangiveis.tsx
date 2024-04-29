@@ -1,6 +1,5 @@
 import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
 
-
 export default function CadastroAtivosIntangiveis() {
     const tag = CampoAtivoPadrao("Tag", "text", "Insira as tags...")
     const importancia = CampoAtivoPadrao("Grau de importância", "text", "Insira o grau de importância...")
@@ -19,7 +18,6 @@ export default function CadastroAtivosIntangiveis() {
         },
         'código': (
             <>
-
                 <div className='colunaFormsAtivo'>
                     {tag.codigo}
                     {importancia.codigo}
