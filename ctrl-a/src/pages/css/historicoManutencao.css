@@ -186,6 +186,43 @@ tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     margin-top: 20px; 
 }
 
+@media screen and (max-width: 600px) {
+    .tabelaMan {
+      width: 100%;
+      height: auto;
+    }
+  
+    .linhaMan {
+      flex-direction: column;
+      align-items: center;
+      width: max-content;
+          }
+  
+    .linhaMan .id, .nome, .responsavel, .tipo, .status, .local {
+      width: 100%;
+      padding: 10px 0;
+    }
+  
+    .linhaMan .local .btnAtribuir {
+      width: 100%;
+      margin: 10px auto;
+    }
+
+    .tabelaMan #cabecalho {
+        background-color: var(--cor2);
+        text-align: center;
+        padding: var(--paddingTabelaCabecalho);
+        width: max-content;
+        
+    }
+
+    
+.linhaMan:nth-child(even)  {
+    opacity: var(--opacityAtributosDashboard);
+    width: max-content;
+    
+}
+  }
 
 
 
