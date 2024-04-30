@@ -1,58 +1,71 @@
 import iconEditar from '../assets/icons/editar.png'
 import iconUser from '../assets/icons/visualizar_usuario.png'
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import './css/atualizaUsuario.css'
+import { useParams } from 'react-router-dom';
 
 export default function AtualizarUsuario() {
+    const { id } = useParams<{id: string}>()
     const [editable, setEditable] = useState(false);
-    const [nome, setNome] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [nascimento, setNascimento] = useState('');
-    const [telefone, setTelefone] = useState('');
-    const [email, setEmail] = useState('');
-    const [permissao, setPermissao] = useState('');
-    const [departamento, setDepartamento] = useState('');
+    const [formData, setFormData] = useState({
+        nome: '',
+        cpf: '',
+        nascimento: '',
+        telefone: '',
+        email: '',
+        permissao: '',
+        departamento: ''
+    });
+
+    useEffect(() => {
+        fetchUserData();
+    }, []);
+
+    const fetchUserData = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/usuario/listagem/${id}`);
+            if (response.ok) {
+                const userData = await response.json();
+                setFormData(userData);
+            } else {
+                console.error('Failed to fetch user data:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    };
 
     const handleIconClick = () => {
         setEditable(true);
     };
 
-    const handleNomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNome(e.target.value);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
-    const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCpf(e.target.value);
-    };
-    const handleNascimentoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNascimento(e.target.value);
-    };
-    const handleTelefoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTelefone(e.target.value);
-    };
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail(e.target.value);
-    };
-    const handlePermissaoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setPermissao(e.target.value);
-    };
-    const handleDepartamentoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setDepartamento(e.target.value);
-    };
+
 
     const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const data = {
-            nome,
-            cpf,
-            nascimento,
-            telefone,
-            email,
-            permissao,
-            departamento
+        try {
+            const response = await fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            if (response.ok) {
+                console.log('User updated successfully');
+
+            } else {
+                console.error('Failed to update user:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating user:', error);
         }
     }
 
-    
 
     return (
         <>
@@ -62,14 +75,14 @@ export default function AtualizarUsuario() {
                         <div className='nomeUsuario'>
                             <label>Nome</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={nome} readOnly={!editable} onChange={handleNomeChange} />
+                                <input className='input' type="text" value={formData.nome} readOnly={!editable} onChange={handleChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
                         <div className='cpfUsuario'>
                             <label>CPF</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={cpf} readOnly={!editable} onChange={handleCpfChange} />
+                                <input className='input' type="text" value={formData.cpf} readOnly={!editable} onChange={handleChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
@@ -78,14 +91,14 @@ export default function AtualizarUsuario() {
                         <div className='nascimentoUsuario'>
                             <label>Data de nascimento</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={nascimento} readOnly={!editable} onChange={handleNascimentoChange} />
+                                <input className='input' type="text" value={formData.nascimento} readOnly={!editable} onChange={handleChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
                         <div className='telefoneUsuario'>
                             <label>Telefone</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={telefone} readOnly={!editable} onChange={handleTelefoneChange} />
+                                <input className='input' type="text" value={formData.telefone} readOnly={!editable} onChange={handleChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
@@ -102,14 +115,14 @@ export default function AtualizarUsuario() {
                     <div className='emailUsuario'>
                         <label>Email</label>
                         <div className="inputContainer">
-                            <input className='input' type="text" value={email} readOnly={!editable} onChange={handleEmailChange} />
+                            <input className='input' type="text" value={formData.email} readOnly={!editable} onChange={handleChange} />
                             <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                         </div>
                     </div>
                     <div className='permissaoUsuario'>
                         <label>Permissão</label>
                         <div className="inputContainer">
-                            <select className='input' value={permissao} onChange={handlePermissaoChange}>
+                            <select className='input' value={formData.permissao} onChange={handleChange}>
                                 <option value="">Selecione nova permissão</option>
                                 <option value="Usuario">Usuário</option>
                                 <option value="Administrador">Administrador</option>
@@ -119,7 +132,7 @@ export default function AtualizarUsuario() {
                     <div className='deptoUsuario'>
                         <label>Departamento</label>
                         <div className="inputContainer">
-                            <select className='input' value={departamento} onChange={handleDepartamentoChange}>
+                            <select className='input' value={formData.departamento} onChange={handleChange}>
                                 <option value="">Selecione novo departamento</option>
                                 <option value="Departamento 1">Departamento 1</option>
                                 <option value="Departamento 2">Departamento 2</option>

@@ -142,7 +142,7 @@ export default function VisualizarUsuario() {
                 <td>{usuario.telefone}</td>
                 <td>{usuario.email}</td>
                 <td>
-                  <Link to={`EdicaoUsuario/${usuario.id}`} type='button' className='btnExcluir'>Editar</Link>
+                  <Link to={`/EdicaoUsuario/${usuario.id}`} type='button' className='btnExcluir'>Editar</Link>
                   <button type='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
                 </td>
               </tr>
