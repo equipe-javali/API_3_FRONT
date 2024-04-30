@@ -1,6 +1,4 @@
-// DashboardAtivos.tsx
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import './css/dashboardAtivos.css'
 import Modal from '../components/modal/modal';
 import RespostaSistema from '../components/respostaSistema';
@@ -57,6 +55,11 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
     const [isHovered, setIsHovered] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UsuarioProps | null>(null);
+    const [showDeleteButton, setShowDeleteButton] = useState(false);
+
+    function handleCancel() {
+        setShowModal(false);
+    }
 
     function emManutencao(): boolean {
         if (manutencoes.length <= 0) {
@@ -77,14 +80,13 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
         } else if (!idResponsavel?.departamento || isHovered) {// Se não, se não houver um responsável ou passar o mouse em cima, mostrar os botões
             return (
                 <>
-                    <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button>
+                    { !idResponsavel ? <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button> : <></> }
                     <button type='button' className='btnAtribuir' onClick={handleExcluir}>Excluir</button>
                 </>
             );
         }
     }
     useEffect(() => {
-        // Listagem dos usuários
         fetch('http://localhost:8080/usuario/listagemTodos')
             .then(response => {
                 if (!response.ok) {
@@ -102,8 +104,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
         fetch(`http://localhost:8080/manutencao/listagem/${id}`)
             .then(response => {
                 if (!response.ok) {
-                    setTextoResposta(`Não foi possível listar as manutenções do ativo! Erro:${response.status}`);
-                    setTipoResposta("Erro");
+                    console.error(`Não foi possível listar as manutenções do ativo! Erro:${response.status}`);
                 }
                 return response.json();
             })
@@ -171,19 +172,20 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     }, [showModal, selectedUser]);
     return (
         <div className="linhaAtv"
-            onMouseEnter={() => { setIsHovered(true); }}
-            onMouseLeave={() => { setIsHovered(false); }}>
+            onMouseEnter={() => { setIsHovered(true); setShowDeleteButton(true); }}
+            onMouseLeave={() => { setIsHovered(false); setShowDeleteButton(false); }}>
             <p className="id">{id}</p>
             <p className="nome">{nome}</p>
             <p className="responsavel">{idResponsavel ? idResponsavel.nome : 'Não definido'}</p>
             <p className="tipo">{tipo}</p>
             <p className="status">{statusA}</p>
             <p className="local">{localAtivo()}</p>
-            <Modal open={showModal} onClose={toggleModal}>
+            <Modal open={showModal} onClose={toggleModal} onCancel={handleCancel} title="Atribua seu ativo">
                 <>
                     <div className='modal-responsavel'>
                         <h3>Responsável</h3>
                         <select onChange={handleUserChange}>
+                            <option value="">Selecione</option>
                             {usuarios.map(usuario => (
                                 <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
                             ))}
@@ -251,6 +253,15 @@ export default function DashboardAtivos() {
     }, [tipoResposta]);
 
     const sortedAtivos = [...ativos].sort((a, b) => a.id - b.id);
+    const [Pesquisa, setPesquisa] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        setPesquisa(event.target.value);
+    };
+    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
 
     const excluirAtivo = (ativoId: number) => {
         fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, {
@@ -281,7 +292,7 @@ export default function DashboardAtivos() {
                 }
                 return response.json();
             })
-            .then(data => setAtivos(data))
+            .then(data => setAtivos((data as AtivoProps[])))
             .catch(error => {
                 setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
                 setTipoResposta('Erro');
@@ -295,11 +306,21 @@ export default function DashboardAtivos() {
                 <h1>Ativos</h1>
             </div>
             <div className="buscaFiltro">
-                <select>
-                    <option>Nome</option>
-                    <option>Responsável</option>
+                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
+                    <option value="">Filtro</option>
+                    {ativos.map((ativo, index) => (
+                        <option key={index} value={ativo.id}>
+                            {ativo.tipo}
+                        </option>
+                    ))}
                 </select>
-                <input />
+                <input
+                    type="text"
+                    placeholder="Buscar por ativo"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className='myInput'
+                />
             </div>
             <TabelaAtivos ativos={sortedAtivos} excluirAtivo={excluirAtivo} setTextoResposta={setTextoResposta} setTipoResposta={setTipoResposta} />
         </div>

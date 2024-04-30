@@ -99,8 +99,12 @@ export default function VisualizarUsuario() {
   };
 
   const handleDelete = (id: number) => {
-    fetch(`http://localhost:8080/usuario/exclusao/${id}`, {
-      method: 'DELETE',
+    fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: 'inativo' }),
     })
       .then((response) => {
         if (response.ok) {

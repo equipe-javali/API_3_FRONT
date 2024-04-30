@@ -1,0 +1,233 @@
+:root{
+    --paddingDashboardMan:20px;
+    --paddingTabelaCabecalho: 5px;
+    --widthLinhaManId:5%;
+    --widthLinhaManTipo:20%;
+    --widthLinhaManDescricao:25%;
+    --widthLinhaManLocal:15%;
+    --widthLinhaManCusto:15%;
+    --widthLinhaManDataEnvio:20%;
+    --widthLinhaManDataRetorno:20%;
+    --widthLinhaManLocalBtnAtribuir:50%;
+    --paddingLinhaManLocalBtnAtribuir:5px;
+    --borderRadiusLinhaManLocalBtnAtribuir:5px;
+    --opacityAtributosDashboard: 0.9
+}
+
+table.tabelaMan,
+tr.linhaMan {
+    display: flex;
+    flex-direction: column;
+    color: var(--branco1);
+}
+
+tr.linhaMan td {
+    flex: 1;
+    text-align: center;
+}
+
+.dashboardMan {
+    padding: var(--paddingDashboardMan);
+}
+
+.buscaFiltro {
+    visibility: visible;
+}
+
+table.tabelaMan {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+}
+
+table.tabelaMan #cabecalho {
+    background-color: var(--cor2);
+    text-align: center;
+    padding: var(--paddingTabelaCabecalho);
+}
+
+table.tabelaMan #cabecalho th {
+    flex: 1;
+    text-align: center;
+}
+
+table.tabelaMan tr.linhaMan {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: center;
+    padding: var(--paddingTabelaCabecalho);
+}
+
+table.tabelaMan tr.linhaMan:nth-child(even) {
+    background-color: var(--cor6);
+}
+
+tr.linhaMan td.id, td.tipo, td.descricao, td.local, td.custo, td.dataEnvio, td.dataRetorno {
+    text-align: center;
+}
+
+tr.linhaMan td.id {
+    width: var(--widthLinhaManId);
+}
+
+tr.linhaMan td.tipo {
+    width: var(--widthLinhaManNome);
+}
+
+tr.linhaMan td.descricao {
+    width: var(--widthLinhaManResposavel);
+}
+
+tr.linhaMan td.local {
+    width: var(--widthLinhaManTipo);
+}
+
+tr.linhaMan td.custo {
+    width: var(--widthLinhaManStatus);
+}
+
+tr.linhaMan td.dataEnvio {
+    width: var(--widthLinhaManLocal);
+}
+
+tr.linhaMan td.dataRetorno {
+    width: var(--widthLinhaManLocal);
+}
+
+tr.linhaMan td.local .btnAtribuir {
+    all: unset;
+    width: var(--widthLinhaManLocalBtnAtribuir);
+    padding: var(--paddingLinhaManLocalBtnAtribuir);
+    cursor: pointer;
+    border-radius: var(--borderRadiusLinhaManLocalBtnAtribuir);
+    background-color: var(--cor4);
+    color: var(--branco1);
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 10px;
+    cursor: pointer;
+}
+
+tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
+    opacity: var(--opacityAtributosDashboard);
+}
+
+.dashboardMan .mySelect {
+    width: 19%;
+    padding: 9px;
+    border-radius: 4px;
+    background-color: var(--cor4);
+    color: var(--branco);   
+    margin-right: 20px;
+    margin-left: 3px;
+    margin-bottom: 10px;
+}
+
+.dashboardMan .myInput {
+    width: 79%;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--cor3);
+}
+
+.dashboardMan .myInput::placeholder {
+    color: var(--branco);
+    opacity: 0.7;
+}
+
+.tituloBotao {
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+    width: 100%;    
+    margin-bottom: 15px;
+}
+
+.tabelaMargin {
+    margin-top: 20px;
+}
+
+.btnManutencao {
+    all: unset;
+    min-width: 25%;
+    padding: 7px;    
+    border-radius: 5px;
+    background-color: var(--verde1);
+    color: var(--branco);
+    text-align: center;
+    font-size: 18px;    
+    cursor: pointer;
+}
+
+.containerModal {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.modal-man {
+    flex: 1;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.modal-man input,
+.modal-man select,
+.modal-man textarea {
+    width: 100%; 
+    padding: 8px; 
+    font-size: 16px; 
+}
+
+.modal-head {
+    margin-top: 20px; 
+}
+
+@media screen and (max-width: 600px) {
+    .tabelaMan {
+      width: 100%;
+      height: auto;
+    }
+  
+    .linhaMan {
+      flex-direction: column;
+      align-items: center;
+      width: max-content;
+          }
+  
+    .linhaMan .id, .nome, .responsavel, .tipo, .status, .local {
+      width: 100%;
+      padding: 10px 0;
+    }
+  
+    .linhaMan .local .btnAtribuir {
+      width: 100%;
+      margin: 10px auto;
+    }
+
+    .tabelaMan #cabecalho {
+        background-color: var(--cor2);
+        text-align: center;
+        padding: var(--paddingTabelaCabecalho);
+        width: max-content;
+        
+    }
+
+    
+.linhaMan:nth-child(even)  {
+    opacity: var(--opacityAtributosDashboard);
+    width: max-content;
+    
+}
+  }
+
+
+
+
+
+
+
+  
