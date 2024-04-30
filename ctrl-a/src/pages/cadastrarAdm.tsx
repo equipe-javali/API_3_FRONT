@@ -1,11 +1,10 @@
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import './css/cadastrarUsuarioAdm.css';
 
 export default function CriarUsuarioAdm() {
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [nascimento, setNascimento] = useState('');
-  const [departamento, setDepartamento] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
@@ -22,10 +21,6 @@ export default function CriarUsuarioAdm() {
 
   const handleNascimentoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNascimento(event.target.value);
-  };
-
-  const handleDepartamentoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDepartamento(event.target.value);
   };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,95 +40,90 @@ export default function CriarUsuarioAdm() {
   };
 
 
-  const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+  
     if (senha !== confirmarSenha) {
       alert('As senhas não correspondem!');
       return;
     }
-
-    const data = {
+  
+    const userData = {
       nome,
       cpf,
       nascimento,
-      departamento,
       email,
       telefone,
-      senha,
-      confirmarSenha
+      status: 'ativo'
     };
-
+  
     try {
-      console.log(data);
-      const response = await fetch('http://localhost:8080/usuario/cadastro', {
+      const userResponse = await fetch('http://localhost:8080/usuario/cadastro', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(userData)
       });
-
-      if (response.ok) {
-        setAviso("Usuário cadastrado com sucesso!")
+  
+      if (userResponse.ok) {
+        const userData = await userResponse.json();
+        const { id } = userData;
+  
+        const loginData = {
+          usuario: {
+            id,
+          },
+          senha
+        };
+  
+        const loginResponse = await fetch('http://localhost:8080/usuarioLogin/cadastro', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(loginData)
+        });
+  
+        if (loginResponse.ok) {
+          setAviso("Usuário cadastrado com sucesso!");
+        } else {
+          console.error('Falha ao cadastrar login do usuário');
+          const loginResponseData = await loginResponse.json();
+          console.log(loginResponseData);
+        }
       } else {
-        console.error('Falha ao cadastrar usuário.');
-        const responseData = await response.json();
-        console.log(responseData);
+        console.error('Falha ao cadastrar usuário');
+        const userResponseData = await userResponse.json();
+        console.log(userResponseData);
       }
     } catch (error) {
-      console.error('Erro ao processar requisição:', error);
+      console.error(error);
     }
   };
 
   return (
-    <div className="cadastroUsuário">
-      <div>
-        <h2>Cadastrar Administrador</h2>
-      </div>
-      <div className="primeira-parte">
-        <div>
-          <label>Nome Completo: *</label>
-          <input type="text" value={nome} onChange={handleNomeChange} required />
-        </div>
-        <div>
-        <div>
-          <label>Data de Nascimento: *</label>
-          <input type="date" value={nascimento} onChange={handleNascimentoChange} required />
-        </div>
-          <label>CPF: *</label>
-          <input type="text" value={cpf} onChange={handleCPFChange} required />
-        </div>
-        <div>
-          <label>Telefone:</label>
-          <input type="text" value={telefone} onChange={handleTelefoneChange} />
-        </div>
-        <div>
-          <label>Email: *</label>
-          <input type="email" value={email} onChange={handleEmailChange} required />
-        </div>
-        <div>
-          <label>Senha: *</label>
-          <input type="password" value={senha} onChange={handleSenhaChange} required />
-        </div>
-        <div>
-          <label>Confirme a senha: *</label>
-          <input type="password" value={confirmarSenha} onChange={handleConfirmarSenhaChange} required />
-        </div>
-        <div>
-          <label>Departamento: </label>
-          <select value={departamento} onChange={handleDepartamentoChange}>
-            <option value="">Selecione...</option>
-            <option value="Departamento 1">Departamento 1</option>
-            <option value="Departamento 2">Departamento 2</option>
-          </select>
-        </div>
-        <button onClick={handleSubmit}>Cadastre-se</button>
-        <h1>* Campo de preenchimento obrigatório.</h1>
-        {aviso !== '' &&
-          <div>{aviso}</div>
-        }
-      </div>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label>Nome Completo: *</label>
+        <input type="text" value={nome} onChange={handleNomeChange} required />
+        <label>Data de Nascimento: *</label>
+        <input type="date" value={nascimento} onChange={handleNascimentoChange} required />
+        <label>CPF: *</label>
+        <input type="text" value={cpf} onChange={handleCPFChange} required />
+        <label>Telefone: </label>
+        <input type="text" value={telefone} onChange={handleTelefoneChange} required />
+        <label>Email: *</label>
+        <input type="email" value={email} onChange={handleEmailChange} required />
+        <label>Senha: *</label>
+        <input type="password" value={senha} onChange={handleSenhaChange} required />
+        <label>Confirme a senha: *</label>
+        <input type="password" value={confirmarSenha} onChange={handleConfirmarSenhaChange} required />
+    
+        <button type="submit">Cadastre-se</button>
+        <p>Campo de preenchimento obrigatório.</p>
+        {aviso !== '' && <p>{aviso}</p>}
+      </form>
     </div>
   );
 }
