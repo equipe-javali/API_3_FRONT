@@ -1,0 +1,14 @@
+{
+  "name": "api_3_front",
+  "version": "1.0.0",
+  "description": "Referente ao Frontend da API do terceiro semestre da FATEC",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

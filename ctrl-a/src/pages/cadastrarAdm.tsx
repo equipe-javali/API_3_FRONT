@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import './css/criarUsuario.css';
+import './css/cadastrarUsuarioAdm.css';
 
 export default function CriarUsuarioAdm() {
   const [nome, setNome] = useState('');
@@ -9,6 +9,7 @@ export default function CriarUsuarioAdm() {
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
   const [aviso, setAviso] = useState("")
 
   const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,9 +40,19 @@ export default function CriarUsuarioAdm() {
     setSenha(event.target.value);
   };
 
+  const handleConfirmarSenhaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmarSenha(event.target.value);
+  };
+
 
   const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
+    if (senha !== confirmarSenha) {
+      alert('As senhas não correspondem!');
+      return;
+    }
+
     const data = {
       nome,
       cpf,
@@ -49,7 +60,8 @@ export default function CriarUsuarioAdm() {
       departamento,
       email,
       telefone,
-      senha
+      senha,
+      confirmarSenha
     };
 
     try {
@@ -77,39 +89,39 @@ export default function CriarUsuarioAdm() {
   return (
     <div className="cadastroUsuário">
       <div>
-        <h2>Cadastrar usuário</h2>
+        <h2>Cadastrar Administrador</h2>
       </div>
       <div className="primeira-parte">
         <div>
-          <label>Nome da Empresa:</label>
-          <input type="text" value={nome} onChange={handleNomeChange} />
-        </div>
-        <div>
-          <label>Nome Completo:</label>
-          <input type="text" value={nome} onChange={handleNomeChange} />
+          <label>Nome Completo: *</label>
+          <input type="text" value={nome} onChange={handleNomeChange} required />
         </div>
         <div>
         <div>
-          <label>Data de Nascimento:</label>
-          <input type="date" value={nascimento} onChange={handleNascimentoChange} />
+          <label>Data de Nascimento: *</label>
+          <input type="date" value={nascimento} onChange={handleNascimentoChange} required />
         </div>
-          <label>CPF:</label>
-          <input type="text" value={cpf} onChange={handleCPFChange} />
+          <label>CPF: *</label>
+          <input type="text" value={cpf} onChange={handleCPFChange} required />
         </div>
         <div>
           <label>Telefone:</label>
           <input type="text" value={telefone} onChange={handleTelefoneChange} />
         </div>
         <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={handleEmailChange} />
+          <label>Email: *</label>
+          <input type="email" value={email} onChange={handleEmailChange} required />
         </div>
         <div>
-          <label>Senha:</label>
-          <input type="email" value={senha} onChange={handleSenhaChange} />
+          <label>Senha: *</label>
+          <input type="password" value={senha} onChange={handleSenhaChange} required />
         </div>
         <div>
-          <label>Departamento:</label>
+          <label>Confirme a senha: *</label>
+          <input type="password" value={confirmarSenha} onChange={handleConfirmarSenhaChange} required />
+        </div>
+        <div>
+          <label>Departamento: </label>
           <select value={departamento} onChange={handleDepartamentoChange}>
             <option value="">Selecione...</option>
             <option value="Departamento 1">Departamento 1</option>
@@ -117,6 +129,7 @@ export default function CriarUsuarioAdm() {
           </select>
         </div>
         <button onClick={handleSubmit}>Cadastre-se</button>
+        <h1>* Campo de preenchimento obrigatório.</h1>
         {aviso !== '' &&
           <div>{aviso}</div>
         }

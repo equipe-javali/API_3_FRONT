@@ -1,112 +1,111 @@
 .cadastroUsuário {
-    padding-top: 5%;
-    padding-bottom: 5%;
-    margin: 0;
-    font-family: Arial, sans-serif;
-    height: 100%;
-  }
-  
-  .cadastroUsuário h1 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 20px;
-    text-align: center;
-  }
-  
-  .cadastroUsuário h2 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 5vh;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    text-align: left;
-    padding-left: 2%;
-  }
-  
-  .cadastroUsuário h3 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 4vh;
-    text-align: left;
-    padding-left: 3%;
-    font-family: 'Arial Narrow Bold', sans-serif;
-  }
-  
-  
-  /* personalização especifica da página */
-  
-  .cadastroUsuário #primeira-parte {
-    margin: 10px;
-    background-color: var(--cor8);
-    border-radius: 4px;
-  }
-  
-  .cadastroUsuário .primeira-parte {
-    margin: 20px;
-    background-color: var(--cor8);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 6px #0000001a;
-    font-size: 2vh;
-  }
-  
-  .cadastroUsuário .primeira-parte label {
-    display: block;
-    margin-bottom: 10px;
-    color: var(--branco);
-  }
-  
-  .cadastroUsuário .nome label {
-    display: block;
-    margin-left: 10%;
-    margin-bottom: 5px;
-    font-size: 2vh;
-    color: var(--branco1);
-  }
-  
-  .cadastroUsuário .primeira-parte input,
-  .cadastroUsuário .primeira-parte select {
-    width: 98%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid var(--cor10);
-    border-radius: 5px;
-  }
-  
-  .cadastroUsuário .primeira-parte button {
-    padding: 10px 20px;
-    background-color: var(--cor5);
-    color: var(--branco);
-    border: none;
-    border-radius: 5px;
-    font-size: 3vh;
-    cursor: pointer;
-  }
-  
-  .cadastroUsuário .primeira-parte button {
-    display: block;
-    margin: 20px auto 0;
-  }
-  
-  
-  .cadastroUsuário .primeira-parte input,
-  .cadastroUsuário select {
-    width: 98%;
-    padding: 8px;
-    margin-left: 10px;
-    border-radius: 4px;
-    background-color: var(--cor20);
-    color: var(--branco);
-  }
-  
-  
-  .cadastroUsuário .primeira-parte button:hover {
-    background-color: var(--cor20);
-  }
-  
-  .cadastroUsuário .primeira-parte .checkbox-container {
-    display: flex;
-    align-items: left;
-    margin-bottom: 10px;
-  }
-  
+  padding-top: 5%;
+  padding-bottom: 5%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  height: 100%;
+}
+
+.cadastroUsuário h1 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.cadastroUsuário h2 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 3vh;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  text-align: left;
+  padding-left: 2%;
+}
+
+.cadastroUsuário h3 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 4vh;
+  text-align: left;
+  padding-left: 3%;
+  font-family: 'Arial Narrow Bold', sans-serif;
+}
+
+
+/* personalização especifica da página */
+
+.cadastroUsuário #primeira-parte {
+  margin: 10px;
+  background-color: var(--cor8);
+  border-radius: 4px;
+}
+
+.cadastroUsuário .primeira-parte {
+  margin: 20px;
+  background-color: var(--cor8);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px #0000001a;
+  font-size: 2vh;
+}
+
+.cadastroUsuário .primeira-parte label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--branco);
+}
+
+.cadastroUsuário .nome label {
+  display: block;
+  margin-left: 10%;
+  margin-bottom: 5px;
+  font-size: 2vh;
+  color: var(--branco1);
+}
+
+.cadastroUsuário .primeira-parte input,
+.cadastroUsuário .primeira-parte select {
+  width: 98%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid var(--cor10);
+  border-radius: 5px;
+}
+
+.cadastroUsuário .primeira-parte button {
+  padding: 10px 20px;
+  background-color: var(--cor5);
+  color: var(--branco);
+  border: none;
+  border-radius: 5px;
+  font-size: 3vh;
+  cursor: pointer;
+}
+
+.cadastroUsuário .primeira-parte button {
+  display: block;
+  margin: 20px auto 0;
+}
+
+
+.cadastroUsuário .primeira-parte input,
+.cadastroUsuário select {
+  width: 98%;
+  padding: 8px;
+  margin-left: 10px;
+  border-radius: 4px;
+  background-color: var(--cor20);
+  color: var(--branco);
+}
+
+
+.cadastroUsuário .primeira-parte button:hover {
+  background-color: var(--cor20);
+}
+
+.cadastroUsuário .primeira-parte .checkbox-container {
+  display: flex;
+  align-items: left;
+  margin-bottom: 10px;
+}
