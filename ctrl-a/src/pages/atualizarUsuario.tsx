@@ -40,7 +40,8 @@ export default function AtualizarUsuario() {
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
+        const value = e.target.value;
+        const name = e.target.name;
         setFormData({ ...formData, [name]: value });
     };
 
@@ -53,10 +54,18 @@ export default function AtualizarUsuario() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({
+                    'nome': formData.nome,
+                    'cpf': formData.cpf,
+                    'nascimento': formData.nascimento,
+                    'departamento': formData.departamento,
+                    'telefone': formData.telefone,
+                    'email': formData.email
+                })
             });
             if (response.ok) {
                 console.log('User updated successfully');
+                console.log(formData)
 
             } else {
                 console.error('Failed to update user:', response.statusText);
@@ -75,14 +84,14 @@ export default function AtualizarUsuario() {
                         <div className='nomeUsuario'>
                             <label>Nome</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={formData.nome} readOnly={!editable} onChange={handleChange} />
+                                <input className='input' type="text" name='nome' defaultValue={formData.nome} onChange={handleChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
                         <div className='cpfUsuario'>
                             <label>CPF</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={formData.cpf} readOnly={!editable} onChange={handleChange} />
+                                <input className='input' type="text" name='cpf' defaultValue={formData.cpf} readOnly={!editable} onChange={handleChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
@@ -91,14 +100,14 @@ export default function AtualizarUsuario() {
                         <div className='nascimentoUsuario'>
                             <label>Data de nascimento</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={formData.nascimento} readOnly={!editable} onChange={handleChange} />
+                                <input className='input' type="text" name='nascimento' defaultValue={formData.nascimento} readOnly={!editable} onChange={handleChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
                         <div className='telefoneUsuario'>
                             <label>Telefone</label>
                             <div className="inputContainer">
-                                <input className='input' type="text" value={formData.telefone} readOnly={!editable} onChange={handleChange} />
+                                <input className='input' type="text" name='telefone' defaultValue={formData.telefone} readOnly={!editable} onChange={handleChange} />
                                 <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                             </div>
                         </div>
@@ -115,14 +124,14 @@ export default function AtualizarUsuario() {
                     <div className='emailUsuario'>
                         <label>Email</label>
                         <div className="inputContainer">
-                            <input className='input' type="text" value={formData.email} readOnly={!editable} onChange={handleChange} />
+                            <input className='input' type="text" name='email' defaultValue={formData.email} readOnly={!editable} onChange={handleChange} />
                             <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                         </div>
                     </div>
                     <div className='permissaoUsuario'>
                         <label>Permissão</label>
                         <div className="inputContainer">
-                            <select className='input' value={formData.permissao} onChange={handleChange}>
+                            <select className='input' name='permissao' defaultValue={formData.permissao} onChange={handleChange}>
                                 <option value="">Selecione nova permissão</option>
                                 <option value="Usuario">Usuário</option>
                                 <option value="Administrador">Administrador</option>
@@ -132,7 +141,7 @@ export default function AtualizarUsuario() {
                     <div className='deptoUsuario'>
                         <label>Departamento</label>
                         <div className="inputContainer">
-                            <select className='input' value={formData.departamento} onChange={handleChange}>
+                            <select className='input' name='departamento' defaultValue={formData.departamento} onChange={handleChange}>
                                 <option value="">Selecione novo departamento</option>
                                 <option value="Departamento 1">Departamento 1</option>
                                 <option value="Departamento 2">Departamento 2</option>
