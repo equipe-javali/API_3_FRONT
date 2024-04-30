@@ -17,6 +17,7 @@
 }
 
 #sidemenu-component {
+    position: fixed;
     background-color: var(--cor22);
     width: var(--widthSideMenu);
     min-height: var(--minHeightSideMenu);
@@ -40,7 +41,7 @@
     height: 100%;
 }
 
-.sidemenu- {
+.sidemenu {
     background-color: var(--cor21);
     height: var(--heightSideMenuDivisor);
     width: var(--widthSideMenuDivisor);
