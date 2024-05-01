@@ -2,7 +2,8 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import './css/dashboardAtivos.css'
 import Modal from '../components/modal/modal';
 import RespostaSistema from '../components/respostaSistema';
-
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import { Link } from 'react-router-dom';
 type AtivoProps = {
     id: number;
     nome: string;
@@ -55,10 +56,14 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
     const [isHovered, setIsHovered] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UsuarioProps | null>(null);
-    const [showDeleteButton, setShowDeleteButton] = useState(false);
+    const [showDeleteButton, setShowDeleteButton] = useState(false);    
 
     function handleCancel() {
         setShowModal(false);
+    }
+
+    function handleExcluir() {
+        excluirAtivo(id);
     }
 
     function emManutencao(): boolean {
@@ -69,23 +74,31 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     }
 
     function localAtivo() {
-        if (emManutencao() && !isHovered) {// Se houver uma manutenção com data de início menor que hoje e data de fim maior que hoje, mostrar a localização da manutenção
+        if (emManutencao() && !isHovered) {
             return (
                 <>{manutencoes[0].localizacao}</>
             );
-        } else if (idResponsavel?.departamento && !isHovered) {// Se não, se houver um responsável, mostrar a localização dele
+        } else if (idResponsavel?.departamento && !isHovered) {
             return (
                 <>{idResponsavel.departamento}</>
             );
-        } else if (!idResponsavel?.departamento || isHovered) {// Se não, se não houver um responsável ou passar o mouse em cima, mostrar os botões
+        } else {
             return (
-                <>
-                    { !idResponsavel ? <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button> : <></> }
-                    <button type='button' className='btnAtribuir' onClick={handleExcluir}>Excluir</button>
-                </>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    { !idResponsavel && <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button> }
+                    { isHovered && 
+                        <div style={{ display: 'flex', justifyContent: 'space-around', width: '50%' }}>
+                            <button type='button' className='btnIcon' onClick={handleExcluir}><i className="bi bi-trash-fill"></i></button>
+                            <button type='button' className='btnIcon'><i className="bi bi-wrench"></i></button>
+                            <Link to={`/AtualizarAtivo/${id}`}>
+                                <button type='button' className='btnIcon'><i className="bi bi-pencil-fill"></i></button>
+                            </Link>
+                        </div> 
+                    }
+                </div>
             );
         }
-    }
+}
     useEffect(() => {
         fetch('http://localhost:8080/usuario/listagemTodos')
             .then(response => {
@@ -155,9 +168,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     } else {
         statusA = 'Em uso';
     }
-    function handleExcluir() {
-        excluirAtivo(id);
-    }
+   
     const [selectedUserDepartment, setSelectedUserDepartment] = useState<string | null>(null);
     function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
         const userId = Number(event.target.value);
@@ -174,6 +185,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
         <div className="linhaAtv"
             onMouseEnter={() => { setIsHovered(true); setShowDeleteButton(true); }}
             onMouseLeave={() => { setIsHovered(false); setShowDeleteButton(false); }}>
+            {/* onClick={() => window.location.href = `/AtualizarAtivo/${id}`}> */}
             <p className="id">{id}</p>
             <p className="nome">{nome}</p>
             <p className="responsavel">{idResponsavel ? idResponsavel.nome : 'Não definido'}</p>

@@ -7,6 +7,7 @@ import VisualizarUsuario from './pages/VisualizarUsuario';
 import CadastroAtivos from './pages/cadastroAtivos';
 import CriarUsuario from './pages/criarUsuario';
 import AtualizarAtivo from './pages/atualizarAtivos';
+import HistoricoManutencao from './pages/historicoManutencaoAtivo';
 
 export default function App() {
   return (
@@ -19,7 +20,8 @@ export default function App() {
           <Route path="/ListaUsuarios" element={< VisualizarUsuario />} />
           <Route path="/CadastroAtivo" element={< CadastroAtivos />} />
           <Route path="/CadastroUsuario" element={< CriarUsuario />} />
-          <Route path="/AtualizarAtivo" element={< AtualizarAtivo />} />
+          <Route path="/AtualizarAtivo/:id" element={< AtualizarAtivo />} />
+          <Route path="/HistoricoManutencao" element={<HistoricoManutencao/>} />
           {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
           <Route path="*" element={<Home />} />
         </Route>

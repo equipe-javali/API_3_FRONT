@@ -2,7 +2,6 @@ import React, { useState, useEffect, ChangeEvent } from 'react';
 import './css/historicoManutencao.css'
 import Modal from '../components/modal/modal';
 
-
 interface ManutencaoData {
     id: number;
     // ativo: any;
@@ -14,7 +13,6 @@ interface ManutencaoData {
     dataFim: string;
     excluirManutencao: (manutencaoId: number) => void;
   }
-
 interface TabelaManutencaoProps {
 manutencao: ManutencaoData[];
 excluirManutencao: (manutencaoId: number) => void;
@@ -30,9 +28,6 @@ const reverseTipoMapping: { [key: number]: string } = {
     2: "Corretiva",
     3: "Preditiva"
 };
-
-
-
 function LinhaManutencao({ id, tipo, descricao, localizacao,custo, dataInicio, dataFim, excluirManutencao }: ManutencaoData) {
     const [showModal, setShowModal] = useState<boolean>(false);    
     const [isHovered, setIsHovered] = useState(false);
@@ -72,12 +67,7 @@ function TabelaManutencao({ manutencao, excluirManutencao, filtro }: TabelaManut
                     dataInicio={man.dataInicio}
                     dataFim={man.dataFim}
                     excluirManutencao={excluirManutencao} />
-            );
-
-        // } else {
-        //     console.error(`Manutenção com id ${man.id} não tem dataInicio ou dataFim definida.`);
-        //     return null;
-        // }
+            );        
     });
 
     return (
@@ -99,9 +89,6 @@ function TabelaManutencao({ manutencao, excluirManutencao, filtro }: TabelaManut
         </table>
     )
 }
-
-
-
 export default function HistoricoManutencao() {
     const [manutencaoData, setManutencaoData] = useState<ManutencaoData>({
         id: 0,
@@ -120,18 +107,13 @@ export default function HistoricoManutencao() {
     const [Pesquisa, setFilterValue] = useState('');
     const tipos = ["Corretiva", "Preventiva", "Preditiva"];    
     const [searchTerm, setSearchTerm] = useState('');     
-    const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
-    
-    
-    
+    const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);       
     const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setFilterValue(event.target.value);
     };
-
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-
     const Pesquisando = sortedManutencao.filter(manutencao => {
         const searchTermLower = searchTerm.toLowerCase();
     
@@ -154,8 +136,7 @@ export default function HistoricoManutencao() {
     }
     function handleTextareaDataChange (event: React.ChangeEvent<HTMLTextAreaElement>) {
         setManutencaoData({ ...manutencaoData, [event.target.name]: event.target.value });
-    };   
-    
+    };       
     function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
         const { name, value } = event.target;
         setManutencaoData(prevState => ({
@@ -166,7 +147,6 @@ export default function HistoricoManutencao() {
     function handleCancel() {
         setShowManutencaoModal(false);
     }
-
     function handleManutencaoSubmit() {
         let dataInicio = new Date(manutencaoData.dataInicio);
         let dataFim = new Date(manutencaoData.dataFim);
@@ -175,7 +155,7 @@ export default function HistoricoManutencao() {
             console.error('Data de início ou fim inválida');
             return;
         }
-        
+               
         const manutencaoDataWithDates = {
             ...manutencaoData,
             tipo: typeof manutencaoData.tipo === 'string' ? tipoMapping[manutencaoData.tipo] || 0 : manutencaoData.tipo,
@@ -285,26 +265,25 @@ export default function HistoricoManutencao() {
                     </div>
                     </div>
                 </div>
-            </Modal>            
-                
-                <div className="buscaFiltro">            
-                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
-                    <option value="">Filtro</option>
-                    {tipos.map(tipo => (
-                        <option key={tipo} value={tipo}>
-                            {tipo}
-                        </option>
-                    ))}
-                </select>
-                    <input
-                    type="text"
-                    placeholder="Buscar por manutenção"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    className='myInput'
-                    />
-                </div>            
-                <TabelaManutencao manutencao={Pesquisando} excluirManutencao={excluirManutencao} filtro={Pesquisa} />
+            </Modal>                        
+            <div className="buscaFiltro">            
+            <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
+                <option value="">Filtro</option>
+                {tipos.map(tipo => (
+                    <option key={tipo} value={tipo}>
+                        {tipo}
+                    </option>
+                ))}
+            </select>
+                <input
+                type="text"
+                placeholder="Buscar por manutenção"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className='myInput'
+                />
+            </div>            
+            <TabelaManutencao manutencao={Pesquisando} excluirManutencao={excluirManutencao} filtro={Pesquisa} />
         </div>
     );
 };
