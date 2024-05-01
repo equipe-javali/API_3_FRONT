@@ -9,6 +9,7 @@ export default function CriarUsuarioAdm() {
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [departamento, setDepartamento] = useState('');
   const [aviso, setAviso] = useState("")
 
   const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +40,6 @@ export default function CriarUsuarioAdm() {
     setConfirmarSenha(event.target.value);
   };
 
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   
@@ -52,6 +52,7 @@ export default function CriarUsuarioAdm() {
       nome,
       cpf,
       nascimento,
+      departamento,
       email,
       telefone,
       status: 'ativo'
@@ -87,6 +88,10 @@ export default function CriarUsuarioAdm() {
   
         if (loginResponse.ok) {
           setAviso("Usuário cadastrado com sucesso!");
+          setTimeout(() => {
+            setAviso('');
+          }, 2000);
+
         } else {
           console.error('Falha ao cadastrar login do usuário');
           const loginResponseData = await loginResponse.json();
@@ -96,32 +101,52 @@ export default function CriarUsuarioAdm() {
         console.error('Falha ao cadastrar usuário');
         const userResponseData = await userResponse.json();
         console.log(userResponseData);
+        setAviso("Falha ao cadastrar usuário!");
+          setTimeout(() => {
+            setAviso('');
+          }, 2000);
       }
     } catch (error) {
       console.error(error);
     }
-  };
+  
+  setNome('');
+  setCpf('');
+  setNascimento('');
+  setDepartamento('');
+  setEmail('');
+  setTelefone('');
+  setSenha('');
+  setConfirmarSenha('');
+};
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <label>Nome Completo: *</label>
+
+      <form onSubmit={handleSubmit} className="form-cadastro">
+        <h1 className="titulo">Cadastro</h1>
+        <label>Insira o nome: *</label>
         <input type="text" value={nome} onChange={handleNomeChange} required />
-        <label>Data de Nascimento: *</label>
+        <label>Insira a data de Nascimento: *</label>
         <input type="date" value={nascimento} onChange={handleNascimentoChange} required />
-        <label>CPF: *</label>
+        <label>Insira o CPF: *</label>
         <input type="text" value={cpf} onChange={handleCPFChange} required />
-        <label>Telefone: </label>
+        <label>Insira o Telefone: *</label>
         <input type="text" value={telefone} onChange={handleTelefoneChange} required />
-        <label>Email: *</label>
+        <label>Insira o e-mail: *</label>
         <input type="email" value={email} onChange={handleEmailChange} required />
-        <label>Senha: *</label>
+        <label>Insira a senha: *</label>
         <input type="password" value={senha} onChange={handleSenhaChange} required />
         <label>Confirme a senha: *</label>
         <input type="password" value={confirmarSenha} onChange={handleConfirmarSenhaChange} required />
-    
-        <button type="submit">Cadastre-se</button>
-        <p>Campo de preenchimento obrigatório.</p>
+        <label>Selecione o Departamento: *</label>
+        <select name="departamento" value={departamento} onChange={event => setDepartamento(event.target.value)} required>
+          <option value="">Selecione...</option>
+          <option value="Departamento 1">Departamento 1</option>
+          <option value="Departamento 2">Departamento 2</option>
+        </select>
+        <button type="submit">Cadastrar</button>
+        <label className="legenda">* Campo de preenchimento obrigatório.</label>
         {aviso !== '' && <p>{aviso}</p>}
       </form>
     </div>
