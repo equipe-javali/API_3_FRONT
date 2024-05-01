@@ -25,7 +25,8 @@ export default function CriarUsuarioAdm() {
   };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+    const email = event.target.value;
+    setEmail(email);
   };
 
   const handleTelefoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +43,13 @@ export default function CriarUsuarioAdm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(email)) {
+    console.log('Email inválido');
+    return;
+  }
   
     if (senha !== confirmarSenha) {
       alert('As senhas não correspondem!');
