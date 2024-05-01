@@ -89,7 +89,9 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                     { isHovered && 
                         <div style={{ display: 'flex', justifyContent: 'space-around', width: '50%' }}>
                             <button type='button' className='btnIcon' onClick={handleExcluir}><i className="bi bi-trash-fill"></i></button>
+                            <Link to={`/HistoricoManutencao`}>
                             <button type='button' className='btnIcon'><i className="bi bi-wrench"></i></button>
+                            </Link>
                             <Link to={`/AtualizarAtivo/${id}`}>
                                 <button type='button' className='btnIcon'><i className="bi bi-pencil-fill"></i></button>
                             </Link>

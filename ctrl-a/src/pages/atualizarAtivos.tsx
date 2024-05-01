@@ -39,29 +39,29 @@ export default function AtualizarAtivo({ ativo }: Props) {
         
         // Validando os campos
         const errors: string[] = [];
-        if (!inputValues.nome) {
-            errors.push('Nome é obrigatório.');
-        }
-        if (!inputValues.custoAquisicao) {
-            errors.push('Custo de aquisição é obrigatório.');
-        }
-        if (!inputValues.tipo) {
-            errors.push('Tipo é obrigatório.');
-        }
-        if (!inputValues.marca) {
-            errors.push('Marca é obrigatória.');
-        }
-        if (!inputValues.numeroIdentificacao) {
-            errors.push('Número de identificação é obrigatório.');
-        }
-        if (!inputValues.dataAquisicao) {
-            errors.push('Data de aquisição é obrigatória.');
-        }
-        if (!inputValues.descricao) {
-            errors.push('Descrição é obrigatória.');
-        }
+        // if (!inputValues.nome) {
+        //     errors.push('Nome é obrigatório.');
+        // }
+        // if (!inputValues.custoAquisicao) {
+        //     errors.push('Custo de aquisição é obrigatório.');
+        // }
+        // if (!inputValues.tipo) {
+        //     errors.push('Tipo é obrigatório.');
+        // }
+        // if (!inputValues.marca) {
+        //     errors.push('Marca é obrigatória.');
+        // }
+        // if (!inputValues.numeroIdentificacao) {
+        //     errors.push('Número de identificação é obrigatório.');
+        // }
+        // if (!inputValues.dataAquisicao) {
+        //     errors.push('Data de aquisição é obrigatória.');
+        // }
+        // if (!inputValues.descricao) {
+        //     errors.push('Descrição é obrigatória.');
+        // }
 
-        setFormErrors(errors);
+        // setFormErrors(errors);
 
         // Se não houver erros, envia o formulário
         if (errors.length === 0) {
