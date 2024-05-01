@@ -3,7 +3,7 @@ import './css/dashboardAtivos.css'
 import Modal from '../components/modal/modal';
 import RespostaSistema from '../components/respostaSistema';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 type AtivoProps = {
     id: number;
     nome: string;
@@ -73,6 +73,11 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
         return (Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim));
     }
 
+    function HistoricoManutencao() {
+        let { id } = useParams<{ id: string }>();
+        // Use o id para buscar as manutenções do ativo
+    }
+
     function localAtivo() {
         if (emManutencao() && !isHovered) {
             return (
@@ -89,8 +94,8 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                     { isHovered && 
                         <div style={{ display: 'flex', justifyContent: 'space-around', width: '50%' }}>
                             <button type='button' className='btnIcon' onClick={handleExcluir}><i className="bi bi-trash-fill"></i></button>
-                            <Link to={`/HistoricoManutencao`}>
-                            <button type='button' className='btnIcon'><i className="bi bi-wrench"></i></button>
+                            <Link to={`/HistoricoManutencao/${id}`}>
+                                <button type='button' className='btnIcon'><i className="bi bi-wrench"></i></button>
                             </Link>
                             <Link to={`/AtualizarAtivo/${id}`}>
                                 <button type='button' className='btnIcon'><i className="bi bi-pencil-fill"></i></button>

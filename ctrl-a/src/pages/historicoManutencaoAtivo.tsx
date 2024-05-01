@@ -1,18 +1,20 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import './css/historicoManutencao.css'
 import Modal from '../components/modal/modal';
+import { useParams } from 'react-router-dom';
 
 interface ManutencaoData {
     id: number;
-    // ativo: any;
-    tipo: string |number;
+    tipo: string | number;
     descricao: string;
     localizacao: string;
     custo: string;
     dataInicio: string;
     dataFim: string;
+    ativoId: number; // Novo campo para o ID do ativo
     excluirManutencao: (manutencaoId: number) => void;
-  }
+}
+
 interface TabelaManutencaoProps {
 manutencao: ManutencaoData[];
 excluirManutencao: (manutencaoId: number) => void;
@@ -60,6 +62,7 @@ function TabelaManutencao({ manutencao, excluirManutencao, filtro }: TabelaManut
                 <LinhaManutencao
                     key={man.id}
                     id={man.id}
+                    ativoId={man.ativoId}
                     tipo={man.tipo}                    
                     descricao={man.descricao}
                     localizacao={man.localizacao}
@@ -90,8 +93,10 @@ function TabelaManutencao({ manutencao, excluirManutencao, filtro }: TabelaManut
     )
 }
 export default function HistoricoManutencao() {
+    const { id_ativo } = useParams();
     const [manutencaoData, setManutencaoData] = useState<ManutencaoData>({
         id: 0,
+        ativoId: Number(id_ativo),
         tipo: '',
         descricao: '',
         localizacao: '',
@@ -204,8 +209,8 @@ export default function HistoricoManutencao() {
 
     useEffect(() => {
         console.log('Fetching manutencoes...');
-    
-        fetch('http://localhost:8080/manutencao/listagemTodos')
+        
+        fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -217,9 +222,8 @@ export default function HistoricoManutencao() {
                 setManutencao(data);
             })
             .catch(error => console.error('Error:', error));
-    }, [update]);
+    }, [id_ativo, update]);
     
-    console.log('Manutencoes:', manutencao);
 
     return (
         <div className="dashboardMan">
