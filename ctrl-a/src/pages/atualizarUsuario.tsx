@@ -13,9 +13,9 @@ export default function AtualizarUsuario() {
         nascimento: '',
         telefone: '',
         email: '',
-        permissao: '',
         departamento: ''
     });
+    const [departamento, setDepartamento] = useState('');
 
     useEffect(() => {
         fetchUserData();
@@ -131,7 +131,7 @@ export default function AtualizarUsuario() {
                     <div className='permissaoUsuario'>
                         <label>Permissão</label>
                         <div className="inputContainer">
-                            <select className='input' name='permissao' defaultValue={formData.permissao} onChange={handleChange}>
+                            <select className='input' name='permissao' onChange={handleChange}>
                                 <option value="">Selecione nova permissão</option>
                                 <option value="Usuario">Usuário</option>
                                 <option value="Administrador">Administrador</option>
@@ -141,8 +141,8 @@ export default function AtualizarUsuario() {
                     <div className='deptoUsuario'>
                         <label>Departamento</label>
                         <div className="inputContainer">
-                            <select className='input' name='departamento' defaultValue={formData.departamento} onChange={handleChange}>
-                                <option value="">Selecione novo departamento</option>
+                            <select className='input' name='departamento' value={formData.departamento} onChange={handleChange}>
+                                <option value="" >Selecione novo departamento</option>
                                 <option value="Departamento 1">Departamento 1</option>
                                 <option value="Departamento 2">Departamento 2</option>
                             </select>
