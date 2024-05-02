@@ -10,6 +10,8 @@ Cada branch é referente a uma tarefa ou um conjunto de tarefas para gerar cada 
 - 4: Atualizar informações de um usuário, integrar com a página de atualização
 
 - 9: Listagem e cadastro de manutenção
+  
+- 9.10: Conexão do cadastro de manutenção com o back 
 
 - 11: Aparecer o local do ativo dinâmicon onde possa ser identificado o local do usuário ou da manutenção
 
@@ -18,3 +20,5 @@ Cada branch é referente a uma tarefa ou um conjunto de tarefas para gerar cada 
 - 14: Pop-up de mensagem de erro ou sucesso
 
 - 15: Página para atualizar informações do usuário
+
+- 17: Página de cadastro de Adm
