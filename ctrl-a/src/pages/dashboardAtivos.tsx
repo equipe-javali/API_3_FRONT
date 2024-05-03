@@ -1,6 +1,9 @@
+// DashboardAtivos.tsx
+
 import React, { useEffect, useState } from 'react';
 import './css/dashboardAtivos.css'
 import Modal from '../components/modal/modal';
+import RespostaSistema from '../components/respostaSistema';
 
 type AtivoProps = {
     id: number;
@@ -15,7 +18,6 @@ type AtivoProps = {
 type UsuarioLoginProps = {
     id: number;
     senha: string;
-
 }
 
 type UsuarioProps = {
@@ -29,13 +31,14 @@ type UsuarioProps = {
     usuariologin: UsuarioLoginProps[];
 }
 
-
 type TabelaAtivosProps<T extends AtivoProps> = {
     ativos: T[];
     excluirAtivo: (ativoId: number) => void;
+    setTextoResposta: (texto: string) => void;
+    setTipoResposta: (tipo: string) => void;
 }
 
-function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo }: AtivoProps) {
+function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo, setTextoResposta, setTipoResposta }: AtivoProps & { setTextoResposta: (texto: string) => void, setTipoResposta: (tipo: string) => void }) {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
     const [isHovered, setIsHovered] = useState(false);
@@ -53,19 +56,21 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             ) : null}
         </div>
     )
-
     useEffect(() => {
         fetch('http://localhost:8080/usuario/listagemTodos')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    setTextoResposta(`Não foi possível listar os ativos! Erro:${response.status}`);
+                    setTipoResposta("Erro");
                 }
                 return response.json();
             })
             .then(data => setUsuarios(data))
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
+                setTipoResposta("Erro");
+            });
     }, []);
-
     function toggleModal() {
         if (showModal && selectedUser) {
             fetch(`http://localhost:8080/ativo/associarAtivo/${id}`, {
@@ -76,18 +81,24 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                 body: JSON.stringify(selectedUser.id),
             })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                    if (response.ok) {
+                        setTextoResposta(`Responsável atualizado com sucesso!`);
+                        setTipoResposta("Sucesso");
                     }
-                    console.log('Responsável atualizado com sucesso!');
+                    else {
+                        setTextoResposta(`Não foi possível associar o ativo! Erro:${response.status}`);
+                        setTipoResposta("Erro");
+                    }
                     setShowModal(false);
                 })
-                .catch(error => console.error('Error:', error));
-        } else{
+                .catch(error => {
+                    setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
+                    setTipoResposta("Erro");
+                });
+        } else {
             setShowModal(!showModal);
         }
     }
-
     let statusA = status
     if (idResponsavel?.departamento == null) {
         statusA = 'Não alocado'
@@ -97,27 +108,21 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     } else {
         statusA = 'Em uso'
     }
-
-
     function handleExcluir() {
         excluirAtivo(id);
     }
-
     const [selectedUserDepartment, setSelectedUserDepartment] = useState<string | null>(null);
-
     function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
         const userId = Number(event.target.value);
         const user = usuarios.find(u => u.id === userId);
         setSelectedUser(user || null);
         setSelectedUserDepartment(user ? user.departamento : null);
     }
-
     useEffect(() => {
         if (!showModal && selectedUser) {
             window.location.reload();
         }
     }, [showModal, selectedUser]);
-
     return (
         <div className="linhaAtv"
             onMouseEnter={() => { setIsHovered(true); setShowDeleteButton(true); }}
@@ -148,7 +153,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     )
 }
 
-function TabelaAtivos({ ativos, excluirAtivo }: TabelaAtivosProps<AtivoProps>) {
+function TabelaAtivos({ ativos, excluirAtivo, setTextoResposta, setTipoResposta }: TabelaAtivosProps<AtivoProps>) {
     const linhas = ativos.map((atv) => {
         return (
             <LinhaAtivo
@@ -159,10 +164,11 @@ function TabelaAtivos({ ativos, excluirAtivo }: TabelaAtivosProps<AtivoProps>) {
                 tipo={atv.tipo}
                 status={atv.status}
                 local={atv.local}
-                excluirAtivo={excluirAtivo} />
+                excluirAtivo={excluirAtivo}
+                setTextoResposta={setTextoResposta}
+                setTipoResposta={setTipoResposta} />
         );
     });
-
     return (
         <div className="tabelaAtv">
             <div className="linhaAtv" id="cabecalho">
@@ -176,29 +182,47 @@ function TabelaAtivos({ ativos, excluirAtivo }: TabelaAtivosProps<AtivoProps>) {
             {linhas}
         </div>
     )
-
 }
 
 export default function DashboardAtivos() {
-
     const [ativos, setAtivos] = useState<AtivoProps[]>([]);
     const [update, setUpdate] = useState(false);
+    const [textoResposta, setTextoResposta] = useState('');
+    const [tipoResposta, setTipoResposta] = useState('');
+
+    function fechaPopUp() {
+        setTextoResposta('');
+        setTipoResposta('');
+    }
+
+    useEffect(() => {
+        if (tipoResposta === 'Sucesso') {
+            const timer = setTimeout(() => {
+                fechaPopUp();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [tipoResposta]);
+
     const sortedAtivos = [...ativos].sort((a, b) => a.id - b.id);
 
     const excluirAtivo = (ativoId: number) => {
         fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, {
             method: 'DELETE',
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+            .then((response) => {
+                if (response.ok) {
+                    setTextoResposta('Ativo excluído com sucesso!');
+                    setTipoResposta('Sucesso');
+                } else {
+                    setTextoResposta(`Não foi possível deletar! Erro:${response.status}`);
+                    setTipoResposta('Erro');
                 }
-                console.log('Ativo excluído com sucesso!', ativoId);
-
                 setAtivos(ativos.filter(ativo => ativo.id !== ativoId));
             })
             .catch((error) => {
-                console.error('Error:', error);
+                setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
+                setTipoResposta('Erro');
             });
     }
 
@@ -206,16 +230,21 @@ export default function DashboardAtivos() {
         fetch('http://localhost:8080/ativo/listagemTodos')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    setTextoResposta(`Não foi possível listar os ativos! Erro:${response.status}`);
+                    setTipoResposta('Erro');
                 }
                 return response.json();
             })
             .then(data => setAtivos(data))
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
+                setTipoResposta('Erro');
+            })
     }, [update]);
 
     return (
         <div className="dasboardAtv">
+            <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <div className="tituloAtv">
                 <h1>Ativos</h1>
             </div>
@@ -226,7 +255,7 @@ export default function DashboardAtivos() {
                 </select>
                 <input />
             </div>
-            <TabelaAtivos ativos={sortedAtivos} excluirAtivo={excluirAtivo} />
+            <TabelaAtivos ativos={sortedAtivos} excluirAtivo={excluirAtivo} setTextoResposta={setTextoResposta} setTipoResposta={setTipoResposta} />
         </div>
     );
 };
