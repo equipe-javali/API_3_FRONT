@@ -4,18 +4,34 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import './css/atualizaUsuario.css'
 import { useParams } from 'react-router-dom';
 
+interface UsuarioData {
+    nome: string;
+    cpf: string;
+    nascimento: string;
+    telefone: string;
+    email: string;
+    permissao: string; // Será 'Usuario' ou 'Administrador'
+    departamento: string;
+    usuariologin: { // Será null para 'Usuario' e contém informações para 'Administrador'
+        id: number;
+        senha: string;
+    } | null;
+}
+
 export default function AtualizarUsuario() {
-    const { id } = useParams<{id: string}>()
+    const { id } = useParams<{ id: string }>()
     const [editable, setEditable] = useState(false);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<UsuarioData>({
         nome: '',
         cpf: '',
         nascimento: '',
         telefone: '',
         email: '',
-        departamento: ''
+        departamento: '',
+        permissao: '',
+        usuariologin: null
     });
-    const [departamento, setDepartamento] = useState('');
+    const [senhaInput, setSenhaInput] = useState(false);
 
     useEffect(() => {
         fetchUserData();
@@ -25,8 +41,9 @@ export default function AtualizarUsuario() {
         try {
             const response = await fetch(`http://localhost:8080/usuario/listagem/${id}`);
             if (response.ok) {
-                const userData = await response.json();
-                setFormData(userData);
+                const userData: UsuarioData = await response.json();
+                const permissao = userData.usuariologin ? 'Administrador' : 'Usuario';
+                setFormData({ ...userData, permissao });
             } else {
                 console.error('Failed to fetch user data:', response.statusText);
             }
@@ -42,13 +59,39 @@ export default function AtualizarUsuario() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const value = e.target.value;
         const name = e.target.name;
+
+        if (name === 'permissao') {
+            if (value === 'Usuario') {
+                setSenhaInput(false);
+                setFormData({ ...formData, usuariologin: null });
+            } else {
+                setSenhaInput(true);
+            }
+        }
+
         setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSenhaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = e.target;
+        setFormData({
+            ...formData,
+            usuariologin: { ...formData.usuariologin!, senha: value }
+        });
     };
 
 
     const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
+            let usuariologinData = null;
+            if (formData.permissao === 'Administrador') {
+                usuariologinData = {
+                    id: id || '',
+                    senha: formData.usuariologin?.senha || ''
+                };
+            }
+
             const response = await fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -60,7 +103,8 @@ export default function AtualizarUsuario() {
                     'nascimento': formData.nascimento,
                     'departamento': formData.departamento,
                     'telefone': formData.telefone,
-                    'email': formData.email
+                    'email': formData.email,
+                    'usuariologin': usuariologinData
                 })
             });
             if (response.ok) {
@@ -128,16 +172,25 @@ export default function AtualizarUsuario() {
                             <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
                         </div>
                     </div>
+
                     <div className='permissaoUsuario'>
                         <label>Permissão</label>
                         <div className="inputContainer">
-                            <select className='input' name='permissao' onChange={handleChange}>
+                            <select className='input' name='permissao' value={formData.permissao} onChange={handleChange}>
                                 <option value="">Selecione nova permissão</option>
                                 <option value="Usuario">Usuário</option>
                                 <option value="Administrador">Administrador</option>
                             </select>
                         </div>
                     </div>
+
+                    {senhaInput && (
+                        <div className='senhaUsuario inputContainer'>
+                            <label>Senha</label>
+                            <input className='input' type="password" name="senha" defaultValue={formData.usuariologin?.senha || ''} onChange={handleSenhaChange} />
+                        </div>
+                    )}
+
                     <div className='deptoUsuario'>
                         <label>Departamento</label>
                         <div className="inputContainer">
