@@ -23,9 +23,9 @@ export default function App() {
           <Route path="/AtualizarAtivo/:id" element={<AtualizarAtivo />} />
           <Route path="/HistoricoManutencao/:id_ativo" element={<HistoricoManutencao />} />
           <Route path="/CadastroUsuarioAdm" element={<CriarUsuarioAdm />} />
-          {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
-          <Route path="*" element={<Home />} />
         </Route>
+        {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
+        <Route path="*" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );
