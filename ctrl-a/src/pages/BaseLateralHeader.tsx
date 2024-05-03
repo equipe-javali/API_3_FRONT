@@ -18,8 +18,7 @@ export default class BaseLateralHeader extends Component<RouteProps> {
                     [visualizar_usuario_png, "ListaUsuarios"],
                     [criar_Ativo_png, "CadastroAtivo"],
                     [criar_usuario_png, "CadastroUsuario"],
-                    [ver_Ativo_png, "ListaAtivos"],
-                    [manutencao_png, "HistoricoManutencao"]
+                    [ver_Ativo_png, "ListaAtivos"],                    
                 ]} />
                 <div id="app-content-tb">
                     <Header />

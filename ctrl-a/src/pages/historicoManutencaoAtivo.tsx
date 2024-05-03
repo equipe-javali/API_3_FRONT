@@ -1,23 +1,23 @@
+
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import './css/historicoManutencao.css'
 import Modal from '../components/modal/modal';
-
+import { useParams } from 'react-router-dom';
 
 interface ManutencaoData {
     id: number;
-    // ativo: any;
-    tipo: string |number;
+    tipo: string | number;
     descricao: string;
     localizacao: string;
     custo: string;
     dataInicio: string;
     dataFim: string;
-    excluirManutencao: (manutencaoId: number) => void;
-  }
+    ativoId: number; 
+    
+}
 
 interface TabelaManutencaoProps {
 manutencao: ManutencaoData[];
-excluirManutencao: (manutencaoId: number) => void;
 }  
 const tipoMapping: { [key: string]: number } = {
     "Preventiva": 1,
@@ -30,34 +30,25 @@ const reverseTipoMapping: { [key: number]: string } = {
     2: "Corretiva",
     3: "Preditiva"
 };
+function LinhaManutencao({ id, tipo, descricao, localizacao,custo, dataInicio, dataFim }: ManutencaoData) {
+    
 
-
-
-function LinhaManutencao({ id, tipo, descricao, localizacao,custo, dataInicio, dataFim, excluirManutencao }: ManutencaoData) {
-    const [showModal, setShowModal] = useState<boolean>(false);    
-    const [isHovered, setIsHovered] = useState(false);
-    const [showDeleteButton, setShowDeleteButton] = useState(false);   
-
-function handleExcluir() {
-    excluirManutencao(id);
-}
 
     return (
-        <tr className="linhaMan"
-            onMouseEnter={() => { setIsHovered(true); setShowDeleteButton(true); }}
-            onMouseLeave={() => { setIsHovered(false); setShowDeleteButton(false); }}>
+        <tr className="linhaMan">
             <td className="id">{id}</td>
-            <td className="tipo">{reverseTipoMapping[Number(tipo)]}</td>   
-            <td className="descricao">{descricao}</td>         
-            <td className="local">{localizacao}</td> 
+            <td className="tipo">{reverseTipoMapping[Number(tipo)]}</td>
+            <td className="descricao">{descricao}</td>
+            <td className="local">{localizacao}</td>
             <td className="custo">{custo}</td>
             <td className="dataEnvio">{new Date(dataInicio).toLocaleDateString()}</td>
-            <td className="dataRetorno">{new Date(dataFim).toLocaleDateString()}</td>
+            <td className="dataRetorno">{dataFim ? new Date(dataFim).toLocaleDateString():''}</td>
         </tr>
+
     )
 }
 
-function TabelaManutencao({ manutencao, excluirManutencao, filtro }: TabelaManutencaoProps & { filtro: string }) {
+function TabelaManutencao({ manutencao, filtro }: TabelaManutencaoProps & { filtro: string }) {
     const linhas = manutencao
         .filter(man => filtro ? reverseTipoMapping[Number(man.tipo)] === filtro : true)
         .map((man: ManutencaoData) => {
@@ -65,19 +56,15 @@ function TabelaManutencao({ manutencao, excluirManutencao, filtro }: TabelaManut
                 <LinhaManutencao
                     key={man.id}
                     id={man.id}
+                    ativoId={man.ativoId}
                     tipo={man.tipo}                    
                     descricao={man.descricao}
                     localizacao={man.localizacao}
                     custo={man.custo}
                     dataInicio={man.dataInicio}
                     dataFim={man.dataFim}
-                    excluirManutencao={excluirManutencao} />
-            );
-
-        // } else {
-        //     console.error(`Manutenção com id ${man.id} não tem dataInicio ou dataFim definida.`);
-        //     return null;
-        // }
+                     />
+            );        
     });
 
     return (
@@ -99,39 +86,33 @@ function TabelaManutencao({ manutencao, excluirManutencao, filtro }: TabelaManut
         </table>
     )
 }
-
-
-
 export default function HistoricoManutencao() {
+    const { id_ativo } = useParams();
     const [manutencaoData, setManutencaoData] = useState<ManutencaoData>({
         id: 0,
+        ativoId: Number(id_ativo),
         tipo: '',
         descricao: '',
         localizacao: '',
         custo: '',
         dataInicio: '',
         dataFim: '',
-        excluirManutencao: () => {} 
+        
     });
 
     const [manutencao, setManutencao] = useState<ManutencaoData[]>([]);
-    const [update, setUpdate] = useState(false);
+    const [update] = useState(false);
     const sortedManutencao = [...manutencao].sort((a, b) => a.id - b.id);    
     const [Pesquisa, setFilterValue] = useState('');
     const tipos = ["Corretiva", "Preventiva", "Preditiva"];    
     const [searchTerm, setSearchTerm] = useState('');     
-    const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
-    
-    
-    
+    const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);       
     const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setFilterValue(event.target.value);
     };
-
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-
     const Pesquisando = sortedManutencao.filter(manutencao => {
         const searchTermLower = searchTerm.toLowerCase();
     
@@ -149,83 +130,78 @@ export default function HistoricoManutencao() {
     function toggleModal() {
         setShowManutencaoModal(!showManutencaoModal);
    }    
-    function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setManutencaoData({ ...manutencaoData, [event.target.name]: event.target.value });
-    }
+   function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setManutencaoData(prevData => ({
+        ...prevData,
+        [event.target.name]: event.target.value,
+        ativoId: prevData.ativoId, 
+    }));
+}
+
     function handleTextareaDataChange (event: React.ChangeEvent<HTMLTextAreaElement>) {
-        setManutencaoData({ ...manutencaoData, [event.target.name]: event.target.value });
-    };   
-    
-    function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        const { name, value } = event.target;
-        setManutencaoData(prevState => ({
-            ...prevState,
-            [name]: tipoMapping[value] || value
+        setManutencaoData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+            ativoId: prevData.ativoId, 
+        }));
+    };       
+    function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {        
+        setManutencaoData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+            ativoId: prevData.ativoId, 
         }));
     }
     function handleCancel() {
         setShowManutencaoModal(false);
-    }
-
+    }       
     function handleManutencaoSubmit() {
-        let dataInicio = new Date(manutencaoData.dataInicio);
-        let dataFim = new Date(manutencaoData.dataFim);
-        
-        if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
-            console.error('Data de início ou fim inválida');
-            return;
-        }
-        
+        const currentDate = new Date().toISOString().split('T')[0];
         const manutencaoDataWithDates = {
             ...manutencaoData,
             tipo: typeof manutencaoData.tipo === 'string' ? tipoMapping[manutencaoData.tipo] || 0 : manutencaoData.tipo,
-            dataInicio: dataInicio.toISOString(),
-            dataFim: dataFim.toISOString()
-        };
+            dataInicio: manutencaoData.dataInicio ? new Date(manutencaoData.dataInicio).toISOString() : currentDate, 
+            dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null,
+            ativo: { id: manutencaoData.ativoId },
+        };    
         
         fetch('http://localhost:8080/manutencao/cadastro', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(manutencaoDataWithDates),
+            body: JSON.stringify(manutencaoDataWithDates), 
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                return response.json(); 
+                return response.json();
             })
             .then(data => {
                 console.log('Manutenção cadastrada com sucesso!', data);
                 setShowManutencaoModal(false);
-                setManutencao([...manutencao, data]); 
+                setManutencao(prevManutencao => [...prevManutencao, data]);
+    
+                setManutencaoData({
+                    id: 0,
+                    ativoId: Number(id_ativo),
+                    tipo: '',
+                    descricao: '',
+                    localizacao: '',
+                    custo: '',
+                    dataInicio: '',
+                    dataFim: '',
+                });
             })
             .catch(error => console.error('Error:', error));
     }
-      
-
-    function excluirManutencao(manutencaoId: number){
-        fetch(`http://localhost:8080/manutencao/exclusao/${manutencaoId}`, {
-            method: 'DELETE',
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                console.log('Manutencao excluída com sucesso!', manutencaoId);
-
-                setManutencao(manutencao.filter(man => man.id !== manutencaoId));
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }
+    
 
     useEffect(() => {
         console.log('Fetching manutencoes...');
-    
-        fetch('http://localhost:8080/manutencao/listagemTodos')
+        
+        fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -237,9 +213,8 @@ export default function HistoricoManutencao() {
                 setManutencao(data);
             })
             .catch(error => console.error('Error:', error));
-    }, [update]);
+    }, [id_ativo, update]);
     
-    console.log('Manutencoes:', manutencao);
 
     return (
         <div className="dashboardMan">
@@ -285,26 +260,25 @@ export default function HistoricoManutencao() {
                     </div>
                     </div>
                 </div>
-            </Modal>            
-                
-                <div className="buscaFiltro">            
-                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
-                    <option value="">Filtro</option>
-                    {tipos.map(tipo => (
-                        <option key={tipo} value={tipo}>
-                            {tipo}
-                        </option>
-                    ))}
-                </select>
-                    <input
-                    type="text"
-                    placeholder="Buscar por manutenção"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    className='myInput'
-                    />
-                </div>            
-                <TabelaManutencao manutencao={Pesquisando} excluirManutencao={excluirManutencao} filtro={Pesquisa} />
+            </Modal>                        
+            <div className="buscaFiltro">            
+            <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
+                <option value="">Filtro</option>
+                {tipos.map(tipo => (
+                    <option key={tipo} value={tipo}>
+                        {tipo}
+                    </option>
+                ))}
+            </select>
+                <input
+                type="text"
+                placeholder="Buscar por manutenção"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className='myInput'
+                />
+            </div>            
+            <TabelaManutencao manutencao={Pesquisando} filtro={Pesquisa} />
         </div>
     );
 };
