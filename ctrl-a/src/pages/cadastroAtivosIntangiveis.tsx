@@ -1,6 +1,4 @@
-import React from 'react';
 import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
-
 
 export default function CadastroAtivosIntangiveis() {
     const tag = CampoAtivoPadrao("Tag", "text", "Insira as tags...")

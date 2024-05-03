@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './css/atualizarAtivo.css';
+import { useParams } from 'react-router';
 
 interface AtivoTangivel {
     numeroIdentificacao: string,
@@ -20,6 +21,7 @@ interface AtivoTangivel {
 }
 
 export default function AtualizarAtivo() {
+    const { id } = useParams<{id: string}>()
     const [formValues, setFormValues] = useState<AtivoTangivel>({
         // custoAquisicao: (ativo?.custoAquisicao || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }), // Formatando o custo de aquisição em reais
         numeroIdentificacao: '',
