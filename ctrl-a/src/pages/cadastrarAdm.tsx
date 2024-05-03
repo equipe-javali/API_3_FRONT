@@ -132,7 +132,7 @@ export default function CriarUsuarioAdm() {
     <div>
 
       <form onSubmit={handleSubmit} className="form-cadastro">
-        <h1 className="titulo">Cadastro</h1>
+        <h1 className="titulo">Cadastrar Adm</h1>
         <label>Insira o nome: *</label>
         <input type="text" value={nome} onChange={handleNomeChange} required />
         <label>Insira a data de Nascimento: *</label>
