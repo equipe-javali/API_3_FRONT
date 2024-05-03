@@ -3,6 +3,7 @@ import iconUser from '../assets/icons/visualizar_usuario.png'
 import React, { FormEvent, useEffect, useState } from 'react';
 import './css/atualizaUsuario.css'
 import { useParams } from 'react-router-dom';
+import RespostaSistema from '../components/respostaSistema';
 
 interface UsuarioData {
     nome: string;
@@ -32,6 +33,21 @@ export default function AtualizarUsuario() {
         usuariologin: null
     });
     const [senhaInput, setSenhaInput] = useState(false);
+
+    const [textoResposta, setTextoResposta] = useState('')
+    const [tipoResposta, setTipoResposta] = useState('')
+    function fechaPopUp() {
+        setTextoResposta('')
+        setTipoResposta('')
+    }
+    useEffect(() => {
+        if (tipoResposta === "Sucesso") {
+            const timer = setTimeout(() => {
+                fechaPopUp();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [tipoResposta]);
 
     useEffect(() => {
         fetchUserData();
@@ -108,12 +124,14 @@ export default function AtualizarUsuario() {
                 })
             });
             if (response.ok) {
-                console.log('User updated successfully');
+                setTextoResposta("Usuário cadastrado com sucesso!")
+                setTipoResposta("Sucesso")
                 console.log(formData)
-
-            } else {
-                console.error('Failed to update user:', response.statusText);
-            }
+              }
+              else {
+                setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
+                setTipoResposta("Erro")
+              }
         } catch (error) {
             console.error('Error updating user:', error);
         }
@@ -122,6 +140,7 @@ export default function AtualizarUsuario() {
 
     return (
         <>
+            <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <div className="primeiroBloco">
                 <div className='inputsPrimeiroBloco'>
                     <div className='inputsFileira'>
