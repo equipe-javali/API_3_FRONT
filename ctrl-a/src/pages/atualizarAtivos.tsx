@@ -27,7 +27,7 @@ export default function AtualizarAtivo({ ativo }: Props) {
         descricao: ativo?.descricao || ''
     });
 
-    const [formErrors, setFormErrors] = useState<string[]>([]);
+    const formErrors:string[] =[];
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
