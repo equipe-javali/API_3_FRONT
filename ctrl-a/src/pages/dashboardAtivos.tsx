@@ -2,7 +2,7 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import './css/dashboardAtivos.css';
 import Modal from '../components/modal/modal';
 import RespostaSistema from '../components/respostaSistema';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import { FaWrench, FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 type AtivoProps = {
@@ -169,22 +169,20 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             <p className="tipo">{tipo}</p>
             <p className="status">{statusA}</p>
             <p className="local">{localAtivo()}</p>
-            <div className="containerAtv"> 
-                <div className="iconContainerAtv">
-                    <Link to={`/HistoricoManutencao/${id}`}>
-                        <button type='button' className='btnIcon'>
-                            <i className="bi bi-wrench"></i>
-                        </button>
-                    </Link>
-                    <Link to={`/AtualizarAtivo/${id}`}>
-                        <button type='button' className='btnIcon'>
-                            <i className="bi bi-pencil-fill"></i>
-                        </button>
-                    </Link>
-                    <button type='button' className='btnIcon' onClick={handleExcluir}>
-                        <i className="bi bi-trash-fill"></i>
+            <div className="iconContainerAtv">
+                <Link to={`/HistoricoManutencao/${id}`}>
+                    <button type="button" className="btnIcon">
+                        <FaWrench /> 
                     </button>
-                </div>
+                </Link>
+                <Link to={`/AtualizarAtivo/${id}`}>
+                    <button type="button" className="btnIcon">
+                        <FaPencilAlt /> 
+                    </button>
+                </Link>
+                <button type="button" className="btnIcon" onClick={handleExcluir}>
+                    <FaTrash /> 
+                </button>
             </div>
             <Modal open={showModal} onClose={toggleModal} onCancel={handleCancel} title="Atribua seu ativo">
                 <>
