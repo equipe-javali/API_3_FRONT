@@ -11,9 +11,9 @@ interface UsuarioData {
     nascimento: string;
     telefone: string;
     email: string;
-    permissao: string; // Será 'Usuario' ou 'Administrador'
+    permissao: string; //'Usuario' ou 'Administrador'
     departamento: string;
-    usuariologin: { // Será null para 'Usuario' e contém informações para 'Administrador'
+    usuariologin: { // null para 'Usuario' e contém informações para 'Administrador'
         id: number;
         senha: string;
     } | null;
@@ -33,6 +33,7 @@ export default function AtualizarUsuario() {
         usuariologin: null
     });
     const [senhaInput, setSenhaInput] = useState(false);
+    const [showSenha, setShowSenha] = useState(false)
 
     const [textoResposta, setTextoResposta] = useState('')
     const [tipoResposta, setTipoResposta] = useState('')
@@ -59,6 +60,11 @@ export default function AtualizarUsuario() {
             if (response.ok) {
                 const userData: UsuarioData = await response.json();
                 const permissao = userData.usuariologin ? 'Administrador' : 'Usuario';
+                if (permissao == 'Usuario') {
+                    setSenhaInput(false)
+                } else {
+                    setSenhaInput(true)
+                }
                 setFormData({ ...userData, permissao });
             } else {
                 console.error('Failed to fetch user data:', response.statusText);
@@ -103,10 +109,24 @@ export default function AtualizarUsuario() {
             let usuariologinData = null;
             if (formData.permissao === 'Administrador') {
                 usuariologinData = {
-                    id: id || '',
                     senha: formData.usuariologin?.senha || ''
                 };
+                const respLogin = await fetch(`http://localhost:8080/usuarioLogin/atualizacao/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'usuario': {'id': id},
+                        'senha': usuariologinData
+                    })
+                });
+                if (respLogin.ok){
+                    console.log('Senha alterada com sucesso')
+                    console.log(respLogin)
+                }
             }
+
 
             const response = await fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
                 method: 'PUT',
@@ -119,19 +139,18 @@ export default function AtualizarUsuario() {
                     'nascimento': formData.nascimento,
                     'departamento': formData.departamento,
                     'telefone': formData.telefone,
-                    'email': formData.email,
-                    'usuariologin': usuariologinData
+                    'email': formData.email
                 })
             });
             if (response.ok) {
                 setTextoResposta("Usuário cadastrado com sucesso!")
                 setTipoResposta("Sucesso")
                 console.log(formData)
-              }
-              else {
+            }
+            else {
                 setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
                 setTipoResposta("Erro")
-              }
+            }
         } catch (error) {
             console.error('Error updating user:', error);
         }
@@ -204,9 +223,12 @@ export default function AtualizarUsuario() {
                     </div>
 
                     {senhaInput && (
-                        <div className='senhaUsuario inputContainer'>
+                        <div className='senhaUsuario'>
                             <label>Senha</label>
-                            <input className='input' type="password" name="senha" defaultValue={formData.usuariologin?.senha || ''} onChange={handleSenhaChange} />
+                            <div className='inputContainer'>
+                                <input className='input' type="password" name="senha" defaultValue={formData.usuariologin?.senha || ''} onChange={handleSenhaChange} />
+                                <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
+                            </div>
                         </div>
                     )}
 

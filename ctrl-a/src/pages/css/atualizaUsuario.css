@@ -1,26 +1,37 @@
+:root{
+  --doisPorcento: 2%;
+  --tresPorcento: 3%;
+  --cincoPorcento: 5%;
+  --dezPorcento: 10%;
+  --quarentaPorcento: 40%;
+  --secentaPorcento: 60%;
+  --noventaPorcento: 90%;
+  --total: 100%;
+}
+
 .primeiroBloco {
   display: flex;
-  width: 90%;
-  margin-bottom: 2%;
+  width: var(--noventaPorcento);
+  margin-bottom: var(--doisPorcento);
   align-self: center;
   align-items: center;
 }
 
 .inputsPrimeiroBloco {
-  width: 100%;
+  width: var(--total);
 }
 
 .inputsFileira {
   display: flex;
   justify-content: space-around;
-  width: 100%;
+  width: var(--total);
 }
 
 .nomeUsuario,
 .cpfUsuario,
 .telefoneUsuario,
 .nascimentoUsuario {
-  margin: 2%;
+  margin: var(--doisPorcento);
 }
 
 .inputContainer {
@@ -28,27 +39,27 @@
 }
 
 .inputContainer .input {
-  margin-top: 5%;
-  padding: 3%;
+  margin-top: var(--cincoPorcento);
+  padding: var(--tresPorcento);
   color: var(--branco1);
   background-color: var(--cor20);
 }
 
 #iconeEditar {
   position: absolute;
-  width: 10%;
-  right: 2%;
-  top: 60%;
+  width: var(--dezPorcento);
+  right: var(--tresPorcento);
+  top: var(--secentaPorcento);
   transform: translateY(-50%);
   cursor: pointer;
 }
 
 .fotoUsuario {
-  width: 40%;
+  width: var(--quarentaPorcento);
 }
 
 .fotoUsuario img {
-  width: 100%;
+  width: var(--total);
 }
 
 .segundoBloco {
@@ -56,8 +67,8 @@
   flex-direction: column;
   align-self: center;
   align-items: center;
-  width: 90%;
-  padding: 2%;
+  width: var(--noventaPorcento);
+  padding: var(--doisPorcento);
   background-color: var(--cor8);
   border-radius: 10px;
 }
@@ -66,7 +77,7 @@
   all: unset;
   width: auto;
   padding: 0.5vw;
-  margin-top: 5%;
+  margin-top: var(--cincoPorcento);
   cursor: pointer;
   border-radius: 5px;
   background-color: var(--cor4);
