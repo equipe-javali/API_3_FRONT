@@ -6,13 +6,11 @@ import { Link } from 'react-router-dom';
 interface Ativo {
   id: number;
   nome: string;
-
 }
 
 interface UsuarioLogin {
   id: number;
   senha: string;
-
 }
 
 interface Usuario {
@@ -55,7 +53,7 @@ export default function VisualizarUsuario() {
           setTipoResposta("Erro")
         }
         return response.json();
-     })
+      })
       .then((data: Usuario[]) => {
         data.sort((a, b) => a.id - b.id);
         setUsuarios(data);
