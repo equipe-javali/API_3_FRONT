@@ -1,4 +1,5 @@
-import React, { FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './css/cadastrarUsuarioAdm.css';
 
 export default function CriarUsuarioAdm() {
@@ -9,6 +10,7 @@ export default function CriarUsuarioAdm() {
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [departamento, setDepartamento] = useState('');
   const [aviso, setAviso] = useState("")
 
@@ -35,10 +37,6 @@ export default function CriarUsuarioAdm() {
 
   const handleSenhaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSenha(event.target.value);
-  };
-
-  const handleConfirmarSenhaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmarSenha(event.target.value);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -144,9 +142,12 @@ export default function CriarUsuarioAdm() {
         <label>Insira o e-mail: *</label>
         <input type="email" value={email} onChange={handleEmailChange} required />
         <label>Insira a senha: *</label>
-        <input type="password" value={senha} onChange={handleSenhaChange} required />
-        <label>Confirme a senha: *</label>
-        <input type="password" value={confirmarSenha} onChange={handleConfirmarSenhaChange} required />
+        <div className="input-container">
+          <input type={showPassword ? "text" : "password"} value={senha} onChange={handleSenhaChange} required />
+          {showPassword ? <FaEyeSlash className="password-icon" onClick={() => setShowPassword(!showPassword)} /> : <FaEye className="password-icon" onClick={() => setShowPassword(!showPassword)} />}
+        </div>
+        {/* <label>Confirme a senha: *</label>
+        <input type="password" value={confirmarSenha} onChange={handleConfirmarSenhaChange} required /> */}
         <label>Selecione o Departamento: *</label>
         <select name="departamento" value={departamento} onChange={event => setDepartamento(event.target.value)} required>
           <option value="">Selecione...</option>
