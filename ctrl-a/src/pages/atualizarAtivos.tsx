@@ -142,10 +142,10 @@ export default function AtualizarAtivo() {
                                 </div>
                             </div>
                         </div>
-                        <div className='campoInput descricao'>
+                        <div className='descricao'>
                             <label>Descrição</label>
                             <div className='inputContainer'>
-                                <textarea className='descricao' name='descricao' value={''}></textarea>
+                                <textarea className='descricaoText' name='descricao' value={''}></textarea>
                             </div>
                         </div>
                     </div>
@@ -164,7 +164,7 @@ export default function AtualizarAtivo() {
                                 <label>Grau de importância</label>
                                 <div className='inputContainer'>
                                     <select className='input' name='grauImportancia' value={''}>
-                                        <option value={''}>Selecione grau de importância</option>
+                                        <option value={''}>Selecione nova importância</option>
                                         <option value={'Alto'}>Alto</option>
                                         <option value={'Medio'}>Médio</option>
                                         <option value={'Baixo'}>Baixo</option>
@@ -218,9 +218,9 @@ export default function AtualizarAtivo() {
                             </div>
                         </div>
                         <div className='botoes'>
-                            <Link to={`/HistoricoManutencao/${id}`}>Histórico Manutenção</Link>
-                            <button type="submit">Adicionar pedido de manutenção</button>
-                            <button type="submit" onClick={handleSubmit}>Atualizar</button>
+                            <Link className='button' to={`/HistoricoManutencao/${id}`}>Histórico Manutenção</Link>
+                            <button className='button'>Adicionar pedido de manutenção</button>
+                            <button id='btnSubmit' className='button' type="submit" onClick={handleSubmit}>Atualizar</button>
                         </div>
                     </div>
                 </div>
