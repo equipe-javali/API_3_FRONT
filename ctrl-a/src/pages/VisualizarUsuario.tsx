@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './css/visualizarUsuario.css'
 import RespostaSistema from '../components/respostaSistema';
+import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 interface Ativo {
   id: number;
@@ -22,6 +24,7 @@ interface Usuario {
   nascimento: string;
   departamento: string;
   telefone: string;
+  status: string;
   ativos: Ativo[];
   usuariologin: UsuarioLogin;
 }
@@ -148,28 +151,33 @@ export default function VisualizarUsuario() {
             <tr>
               <th className="myHeaderCell">ID</th>
               <th className="myHeaderCell">Nome</th>
-              <th className="myHeaderCell">CPF</th>
-              <th className="myHeaderCell">Nascimento</th>
               <th className="myHeaderCell">Departamento</th>
-              <th className="myHeaderCell">Telefone</th>
               <th className="myHeaderCell">Email</th>
+              <th className="myHeaderCell">Status</th>
               <th className="myHeaderCell">Ações</th>
             </tr>
           </thead>
           <tbody>
             {Pesquisando.map((usuario) => (
-              <tr key={usuario.id}>
-                <td>{usuario.id}</td>
-                <td>{usuario.nome}</td>
-                <td>{usuario.cpf}</td>
-                <td>{usuario.nascimento}</td>
-                <td>{usuario.departamento}</td>
-                <td>{usuario.telefone}</td>
-                <td>{usuario.email}</td>
+                <tr key={usuario.id}>
+                  <td>{usuario.id}</td>
+                  <td>{usuario.nome}</td>
+                  <td>{usuario.departamento}</td>
+                  <td>{usuario.email}</td>
+                  <td>{usuario.status}</td>
                 <td>
-                  <button type='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
+                  <div className="iconContainerAtv">
+                    {/* <Link to={`/AtualizarUsuario/${id}`}> Colocar o link da rota para alterar o usuario aqui e descomentar
+                    <button type="button" className="btnIcon">
+                    <FaPencilAlt /> 
+                    </button>
+                    </Link> */}
+                    <button type="button" className="btnIcon" onClick={(event: React.MouseEvent<HTMLButtonElement>) => handleDelete(usuario.id)}>
+                      <FaTrash />
+                    </button>
+                  </div>
                 </td>
-              </tr>
+                </tr>
             ))}
           </tbody>
         </table>
