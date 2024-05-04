@@ -4,6 +4,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import './css/atualizaUsuario.css'
 import { useParams } from 'react-router-dom';
 import RespostaSistema from '../components/respostaSistema';
+import { response } from 'express';
 
 interface UsuarioData {
     nome: string;
@@ -33,7 +34,6 @@ export default function AtualizarUsuario() {
         usuariologin: null
     });
     const [senhaInput, setSenhaInput] = useState(false);
-    const [showSenha, setShowSenha] = useState(false)
 
     const [textoResposta, setTextoResposta] = useState('')
     const [tipoResposta, setTipoResposta] = useState('')
@@ -102,6 +102,20 @@ export default function AtualizarUsuario() {
         });
     };
 
+    const excluirUsuarioLogin = async () => {
+        try {
+            const excluir = await fetch(`http://localhost:8080/usuarioLogin/exclusao/${id}`, {
+                method: 'DELETE'
+            });
+            if (excluir.ok) {
+                console.log('Login excluído com sucesso!');
+            } else {
+                console.error('Falha ao excluir login:', excluir.statusText);
+            }
+        } catch (err) {
+            console.error('Erro ao excluir login: ', err)
+        }
+    }
 
     const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -109,7 +123,7 @@ export default function AtualizarUsuario() {
             let usuariologinData = null;
             if (formData.permissao === 'Administrador') {
                 usuariologinData = {
-                    senha: formData.usuariologin?.senha || ''
+                    senha: formData.usuariologin?.senha || null
                 };
                 const respLogin = await fetch(`http://localhost:8080/usuarioLogin/atualizacao/${id}`, {
                     method: 'PUT',
@@ -127,7 +141,7 @@ export default function AtualizarUsuario() {
                 }
             }
 
-
+            const permissaoAnterior = formData.permissao;
             const response = await fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -143,12 +157,15 @@ export default function AtualizarUsuario() {
                 })
             });
             if (response.ok) {
-                setTextoResposta("Usuário cadastrado com sucesso!")
+                if (permissaoAnterior === 'Administrador' && formData.permissao === 'Usuario') {
+                    await excluirUsuarioLogin();
+                }
+                setTextoResposta("Usuário alterado com sucesso!")
                 setTipoResposta("Sucesso")
                 console.log(formData)
             }
             else {
-                setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
+                setTextoResposta(`Não foi possível atualizar! Erro:${response.status}`)
                 setTipoResposta("Erro")
             }
         } catch (error) {
