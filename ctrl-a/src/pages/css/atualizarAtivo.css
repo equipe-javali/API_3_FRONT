@@ -1,0 +1,57 @@
+.atualizarAtivo, 
+.separados, 
+.dadosGerais .linha, 
+.superiorDireito .linha, 
+.inferiorDireito,
+.botoes {
+  display: flex;
+}
+
+.atualizarAtivo{
+  flex-direction: column;
+  width: 100%;
+}
+
+.titulo {
+  margin-top: 2%;
+  margin-left: 1%;
+  width: 100%;
+}
+
+.separados{
+  width: 100%;
+}
+
+.ladoEsquerdo, .ladoDireito{
+  width: 50%;
+  margin: 0 1% 0 1%;
+}
+
+.nomeAtivo, 
+.dadosGerais, 
+.superiorDireito, 
+.inferiorDireito .coluna{
+  margin-top: 5%;
+  padding: 2%;
+  background-color: var(--cor8);
+}
+
+.dadosGerais .linha, .superiorDireito .linha{
+  justify-content: space-between;
+}
+
+.descricao {
+  resize: none;
+  width: 100%;
+}
+
+.inferiorDireito{
+  justify-content: space-between;
+}
+
+.botoes{
+  margin-top: 5%;
+  margin-right: 2%;
+  flex-direction: column;
+  justify-content: space-around;
+}
