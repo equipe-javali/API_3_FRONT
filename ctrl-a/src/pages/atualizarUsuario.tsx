@@ -1,5 +1,7 @@
 import iconEditar from '../assets/icons/editar.png'
-import iconUser from '../assets/icons/visualizar_usuario.png'
+import iconUser from '../assets/icons/visualizar_usuario.png';
+import olho from '../assets/icons/olho.png';
+import olhoCortado from '../assets/icons/olhoCortado.png';
 import React, { FormEvent, useEffect, useState } from 'react';
 import './css/atualizaUsuario.css'
 import { useParams } from 'react-router-dom';
@@ -34,6 +36,8 @@ export default function AtualizarUsuario() {
         usuariologin: null
     });
     const [senhaInput, setSenhaInput] = useState(false);
+    const [showSenha, setShowSenha] = useState(false);
+    const [permissaoAnterior, setPermissaoAnterior] = useState('')
 
     const [textoResposta, setTextoResposta] = useState('')
     const [tipoResposta, setTipoResposta] = useState('')
@@ -66,6 +70,7 @@ export default function AtualizarUsuario() {
                     setSenhaInput(true)
                 }
                 setFormData({ ...userData, permissao });
+                setPermissaoAnterior(permissao);
             } else {
                 console.error('Failed to fetch user data:', response.statusText);
             }
@@ -78,6 +83,10 @@ export default function AtualizarUsuario() {
         setEditable(true);
     };
 
+    const handleOlhoClick = () => {
+        setShowSenha(!showSenha)
+    }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const value = e.target.value;
         const name = e.target.name;
@@ -85,7 +94,7 @@ export default function AtualizarUsuario() {
         if (name === 'permissao') {
             if (value === 'Usuario') {
                 setSenhaInput(false);
-                setFormData({ ...formData, usuariologin: null });
+                excluirUsuarioLogin()
             } else {
                 setSenhaInput(true);
             }
@@ -117,22 +126,41 @@ export default function AtualizarUsuario() {
         }
     }
 
+    const cadastroUsuarioLogin = async () => {
+        try {
+            const novoLogin = await fetch(`http://localhost:8080/usuarioLogin/cadastro`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    'usuario': {"id" : id},
+                    'senha': formData.usuariologin?.senha
+                })
+            });
+            if (novoLogin.ok) {
+                console.log('Novo login cadastrado!')
+            } else {
+                console.error('Falha ao cadastrar login: ', novoLogin.statusText)
+            }
+        } catch (err) {
+            console.error('Erro ao cadastrar login: ', err)
+        }
+    }
+
     const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            let usuariologinData = null;
             if (formData.permissao === 'Administrador') {
-                usuariologinData = {
-                    senha: formData.usuariologin?.senha || null
-                };
+                if (permissaoAnterior === 'Usuario') {
+                    cadastroUsuarioLogin()
+                }
                 const respLogin = await fetch(`http://localhost:8080/usuarioLogin/atualizacao/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        'usuario': {'id': id},
-                        'senha': usuariologinData
+                        'usuario': {"id" : id},
+                        'senha': formData.usuariologin?.senha
                     })
                 });
                 if (respLogin.ok){
@@ -141,7 +169,6 @@ export default function AtualizarUsuario() {
                 }
             }
 
-            const permissaoAnterior = formData.permissao;
             const response = await fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -157,9 +184,6 @@ export default function AtualizarUsuario() {
                 })
             });
             if (response.ok) {
-                if (permissaoAnterior === 'Administrador' && formData.permissao === 'Usuario') {
-                    await excluirUsuarioLogin();
-                }
                 setTextoResposta("Usuário alterado com sucesso!")
                 setTipoResposta("Sucesso")
                 console.log(formData)
@@ -243,8 +267,8 @@ export default function AtualizarUsuario() {
                         <div className='senhaUsuario'>
                             <label>Senha</label>
                             <div className='inputContainer'>
-                                <input className='input' type="password" name="senha" defaultValue={formData.usuariologin?.senha || ''} onChange={handleSenhaChange} />
-                                <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
+                                <input className='input' type={showSenha ? 'text' : 'password'} name="senha" defaultValue={formData.usuariologin?.senha || ''} onChange={handleSenhaChange} />
+                                <img src={showSenha ? olhoCortado : olho} id='iconeEditar' onClick={handleOlhoClick} />
                             </div>
                         </div>
                     )}
