@@ -49,17 +49,17 @@ export default function AtualizarAtivo() {
     });
 
     useEffect(() => {
-        fetchAtivoTangivelData()
+        fetchAtivoData()
     })
 
-    const fetchAtivoTangivelData = async () => {
+    const fetchAtivoData = async () => {
         try {
-            const respTangivel = await fetch(`http://localhost:8080/ativoTangivel/listagem/${id}`);
-            if (respTangivel.ok) {
-                const formAtivo = await respTangivel.json();
+            const respAtivo = await fetch(`http://localhost:8080/ativo/listagem/${id}`);
+            if (respAtivo.ok) {
+                const formAtivo = await respAtivo.json();
                 setFormAtivo(formAtivo)
             } else {
-                console.error('Failed to fetch user data:', respTangivel.statusText);
+                console.error('Failed to fetch user data:', respAtivo.statusText);
             }
         } catch (error) {
             console.error('Error fetching ativo data:', error);
@@ -105,19 +105,19 @@ export default function AtualizarAtivo() {
                                 <div className='campoInput'>
                                     <label>Data da aquisição</label>
                                     <div className='inputContainer'>
-                                        <input className='input' type='date' name='dataAquisicao' value={''}></input>
+                                        <input className='input' type='date' name='dataAquisicao' defaultValue={'2024/02/12'}></input>
                                     </div>
                                 </div>
                                 <div className='campoInput'>
                                     <label>Custo da aquisição</label>
                                     <div className='inputContainer'>
-                                        <input className='input' type='number' name='custoAquisicao' value={''}></input>
+                                        <input className='input' type='number' name='custoAquisicao' defaultValue={''}></input>
                                     </div>
                                 </div>
                                 <div className='campoInput'>
                                     <label>Taxa de depreciação</label> {/* tangivel */}
                                     <div className='inputContainer'>
-                                        <input className='input' type='number' name='taxaDepreciacao' value={''}></input>
+                                        <input className='input' type='number' name='taxaDepreciacao' defaultValue={''}></input>
                                     </div>
                                 </div>
                             </div>
@@ -125,19 +125,19 @@ export default function AtualizarAtivo() {
                                 <div className='campoInput'>
                                     <label>Período de depreciação</label> {/* tangivel */}
                                     <div className='inputContainer'>
-                                        <input className='input' type='text' name='periodoDepreciacao' value={''}></input>
+                                        <input className='input' type='text' name='periodoDepreciacao' defaultValue={''}></input>
                                     </div>
                                 </div>
                                 <div className='campoInput'>
                                     <label>Validade da garantia</label>
                                     <div className='inputContainer'>
-                                        <input className='input' type='date' name='validade' value={''}></input>
+                                        <input className='input' type='date' name='validade' defaultValue={''}></input>
                                     </div>
                                 </div>
                                 <div className='campoInput'>
                                     <label>Marca</label>
                                     <div className='inputContainer'>
-                                        <input className='input' type='text' name='marca' value={''}></input>
+                                        <input className='input' type='text' name='marca' defaultValue={''}></input>
                                     </div>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@ export default function AtualizarAtivo() {
                         <div className='descricao'>
                             <label>Descrição</label>
                             <div className='inputContainer'>
-                                <textarea className='descricaoText' name='descricao' value={''}></textarea>
+                                <textarea className='descricaoText' name='descricao' defaultValue={''}></textarea>
                             </div>
                         </div>
                     </div>
@@ -157,7 +157,7 @@ export default function AtualizarAtivo() {
                             <div className='campoInput'>
                                 <label>Tipo</label>
                                 <div className='inputContainer'>
-                                    <input className='input' type='text' name='tipo' value={''}></input>
+                                    <input className='input' type='text' name='tipo' defaultValue={''}></input>
                                 </div>
                             </div>
                             <div className='campoInput'>
@@ -176,13 +176,13 @@ export default function AtualizarAtivo() {
                             <div className='campoInput'>
                                 <label>Tag</label>
                                 <div className='inputContainer'>
-                                    <input className='input' name='tag' value={''}></input>
+                                    <input className='input' name='tag' defaultValue={''}></input>
                                 </div>
                             </div>
                             <div className='campoInput'>
                                 <label>Status</label>
                                 <div className='inputContainer'>
-                                    <input className='input' name='status' value={''}></input>
+                                    <input className='input' name='status' defaultValue={''}></input>
                                 </div>
                             </div>
                         </div>
@@ -213,7 +213,7 @@ export default function AtualizarAtivo() {
                             <div className='campoInput'>
                                 <label>Localização</label>
                                 <div className='inputContainer'>
-                                    <input className='input' name='status' value={''}></input>
+                                    <input className='input' name='status' defaultValue={''}></input>
                                 </div>
                             </div>
                         </div>
