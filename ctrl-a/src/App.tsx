@@ -9,6 +9,7 @@ import CriarUsuario from './pages/criarUsuario';
 import AtualizarAtivo from './pages/atualizarAtivos';
 import HistoricoManutencao from './pages/historicoManutencaoAtivo';
 
+import AtualizarUsuario from './pages/atualizarUsuario';
 
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/CadastroUsuario" element={< CriarUsuario />} />
           <Route path="/HistoricoManutencao/:id_ativo" element={< HistoricoManutencao />} />
           <Route path="/AtualizarAtivo/:id" element={< AtualizarAtivo />} />
+          <Route path="/EdicaoUsuario/:id" element={< AtualizarUsuario />} />
           {/* path="*" serve para qualquer rota, então deve ficar por último e direcionar para a home ou uma página de erro 404 */}
           <Route path="*" element={<DashboardAtivos />} />
         </Route>

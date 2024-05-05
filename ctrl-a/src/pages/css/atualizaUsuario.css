@@ -1,0 +1,86 @@
+:root{
+  --doisPorcento: 2%;
+  --tresPorcento: 3%;
+  --cincoPorcento: 5%;
+  --dezPorcento: 10%;
+  --quarentaPorcento: 40%;
+  --secentaPorcento: 60%;
+  --noventaPorcento: 90%;
+  --total: 100%;
+}
+
+.primeiroBloco {
+  display: flex;
+  width: var(--noventaPorcento);
+  margin-bottom: var(--doisPorcento);
+  align-self: center;
+  align-items: center;
+}
+
+.inputsPrimeiroBloco {
+  width: var(--total);
+}
+
+.inputsFileira {
+  display: flex;
+  justify-content: space-around;
+  width: var(--total);
+}
+
+.nomeUsuario,
+.cpfUsuario,
+.telefoneUsuario,
+.nascimentoUsuario {
+  margin: var(--doisPorcento);
+}
+
+.inputContainer {
+  position: relative;
+}
+
+.inputContainer .input {
+  margin-top: var(--cincoPorcento);
+  padding: var(--tresPorcento);
+  color: var(--branco1);
+  background-color: var(--cor20);
+}
+
+#iconeEditar {
+  position: absolute;
+  width: var(--dezPorcento);
+  right: var(--tresPorcento);
+  top: var(--secentaPorcento);
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.fotoUsuario {
+  width: var(--quarentaPorcento);
+}
+
+.fotoUsuario img {
+  width: var(--total);
+}
+
+.segundoBloco {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  align-items: center;
+  width: var(--noventaPorcento);
+  padding: var(--doisPorcento);
+  background-color: var(--cor8);
+  border-radius: 10px;
+}
+
+.buttonAtualizar {
+  all: unset;
+  width: auto;
+  padding: 0.5vw;
+  margin-top: var(--cincoPorcento);
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: var(--cor4);
+  color: var(--branco1);
+  font-size: 16px;
+}
