@@ -5,17 +5,16 @@ import RespostaSistema from '../components/respostaSistema';
 import CampoAtivoEditavel from '../components/CampoAtivoEditavel';
 import lapis from "../assets/icons/lapis.svg"
 import { Link } from 'react-router-dom';
-
+import Modal from '../components/modal/modal';
 interface Ativo {
     nome: string;
     dataAquisicao: Date;
     custoAquisicao: number;
     taxaOperacional: number;
     periodoOperacional: string;
-    validadeGarantida: Date;
+    dataLimite: Date;
     marca: string;
     numeroIdentificacao: string;
-    dataExpiracao: Date;
     //anexos: Documento[];
     descricao: string;
     tipo: string;
@@ -25,13 +24,36 @@ interface Ativo {
     idResponsavel: number;
     departamento: string;
     local: string;
+};
+
+interface Usuario {
+    id: number;
+    nome: string;
+    email: string;
+    cpf: string;
+    nascimento: string;
+    departamento: string;
+    telefone: string;
+    usuariologin: UsuarioLogin[];
+};
+
+type UsuarioLogin = {
+    id: number;
+    senha: string;
 }
 
-interface Props {
-    ativo?: Ativo; // tornando a propriedade opcional
-}
+type Manutencao = {
+    id: number;
+    idAtivo: Ativo;
+    dataInicio: string;
+    dataFim: string;
+    custo: number;
+    tipo: string;
+    descricao: string;
+    localizacao: string;
+};
 
-export default function AtualizarAtivo({ ativo }: Props) {
+export default function AtualizarAtivo() {
     const [tipoAtivoTangivel, setTipoAtivoTangivel] = useState(true)
     const [dados, setDados] = useState<Ativo | null>(null);
     const [textoResposta, setTextoResposta] = useState('');
@@ -41,13 +63,13 @@ export default function AtualizarAtivo({ ativo }: Props) {
         setTextoResposta('')
         setTipoResposta('')
     }
-    // Pegando dados anteriores
     useEffect(() => {
         try {
             fetch(`http://localhost:8080/ativoIntangivel/listagem/${id}`)
                 .then(response => {
                     if (response.status === 200) {
                         setTextoTipoOperacional("amortização")
+                        setTextoDataLimite("Data de Expiracao")
                         setTipoAtivoTangivel(false)
                         return response.json();
                     } else if (response.status !== 404) {
@@ -73,10 +95,9 @@ export default function AtualizarAtivo({ ativo }: Props) {
                                     custoAquisicao: data.ativo?.custoAquisicao || 0,
                                     taxaOperacional: data.taxaDepreciacao || 0,
                                     periodoOperacional: data.periodoDepreciacao || "",
-                                    validadeGarantida: data.ativo?.validadeGarantida || new Date(),
+                                    dataLimite: data.dataExpiracao || new Date(),
                                     marca: data.ativo?.marca || "",
                                     numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
-                                    dataExpiracao: data.ativo?.dataExpiracao || new Date(),
                                     descricao: data.ativo?.descricao || "",
                                     tipo: data.ativo?.tipo || "",
                                     grauImportancia: data.ativo?.grauImportancia || "",
@@ -100,10 +121,9 @@ export default function AtualizarAtivo({ ativo }: Props) {
                         custoAquisicao: data.ativo?.custoAquisicao || 0,
                         taxaOperacional: data.taxaAmortizacao || 0,
                         periodoOperacional: data.periodoAmortizacao || "",
-                        validadeGarantida: data.ativo?.validadeGarantida || new Date(),
+                        dataLimite: data.garantia || new Date(),
                         marca: data.ativo?.marca || "",
                         numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
-                        dataExpiracao: data.ativo?.dataExpiracao || new Date(),
                         descricao: data.ativo?.descricao || "",
                         tipo: data.ativo?.tipo || "",
                         grauImportancia: data.ativo?.grauImportancia || "",
@@ -117,11 +137,27 @@ export default function AtualizarAtivo({ ativo }: Props) {
                 .catch(error => {
                     console.error(`Erro ao processar requisição! Erro:${error}`);
                 })
-            if (tipoAtivoTangivel) {
-            }
         } catch (error) {
             setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
             setTipoResposta("Erro")
+        }
+        try {
+            fetch('http://localhost:8080/usuario/listagemTodos')
+                .then(response => {
+                    if (!response.ok) {
+                        setTextoResposta(`Não foi possível listar os ativo! Erro:${response.status}`)
+                        setTipoResposta("Erro")
+                    }
+                    return response.json();
+                })
+                .then(data => setUsuarios(data))
+                .catch(error => {
+                    setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+                    setTipoResposta("Erro");
+                });
+        } catch (error) {
+            setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+            setTipoResposta("Erro");
         }
     }, [id])
 
@@ -132,49 +168,88 @@ export default function AtualizarAtivo({ ativo }: Props) {
                 custoAquisicao: dados.custoAquisicao,
                 taxaOperacional: dados.taxaOperacional,
                 periodoOperacional: dados.periodoOperacional,
-                validadeGarantida: dados.validadeGarantida,
+                dataLimite: dados.dataLimite,
                 marca: dados.marca,
                 numeroIdentificacao: dados.numeroIdentificacao,
-                dataExpiracao: dados.dataExpiracao,
                 tipo: dados.tipo,
                 grauImportancia: dados.grauImportancia,
                 tag: dados.tag,
                 status: dados.status,
-                idResponsavel: dados.idResponsavel,
-                departamento: dados.departamento,
                 local: dados.local
-            });
+            })
             setNomeAtivo(dados.nome)
             setDescricao(dados.descricao)
+            setIdResponsavel(dados.idResponsavel)
+            setDepartamento(dados.departamento)
         }
     }, [dados]);
 
+    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+    const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);
+    const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
+    const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
+    const [manutencaoData, setManutencaoData] = useState<Manutencao>({
+        id: 0,
+        idAtivo: {
+            nome: "",
+            dataAquisicao: new Date(),
+            custoAquisicao: 0,
+            taxaOperacional: 0,
+            periodoOperacional: "",
+            dataLimite: new Date(),
+            marca: "",
+            numeroIdentificacao: "",
+            //anexos: Documento[],
+            descricao: "",
+            tipo: "",
+            grauImportancia: "",
+            tag: "",
+            status: "",
+            idResponsavel: 0,
+            departamento: "",
+            local: "string"
+        },
+        tipo: '',
+        descricao: '',
+        localizacao: '',
+        custo: 0,
+        dataInicio: '',
+        dataFim: '',
+    });
+    const [manutencao, setManutencao] = useState<Manutencao[]>([]);
+    function emManutencao(): boolean {
+        if (manutencoes.length <= 0) {
+            return false;
+        }
+        return Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim);
+    }
     const [camposForm, setCamposForm] = useState({
         dataAquisicao: new Date(),
         custoAquisicao: 0,
         taxaOperacional: 0,
         periodoOperacional: '',
-        validadeGarantida: new Date(),
+        dataLimite: new Date(),
         marca: '',
         numeroIdentificacao: '',
-        dataExpiracao: new Date(),
         //anexos: [];
         tipo: '',
         grauImportancia: '',
         tag: '',
         status: '',
-        idResponsavel: 0,
-        departamento: '',
-        local: '',
+        local: ''
     })
 
     let [textoTipoOperacional, setTextoTipoOperacional] = useState('depreciação')
     const [nomeAtivo, setNomeAtivo] = useState('')
+    const [idResponsavel,setIdResponsavel] = useState(0)
+    const [departamento,setDepartamento] = useState('')
     const CampoDataAquisicao = CampoAtivoEditavel("Data Aquisição", camposForm.dataAquisicao, "date")
     const CampoCustoAquisicao = CampoAtivoEditavel("Custo Aquisição", camposForm.custoAquisicao, "number")
     const CampoTaxaOperacional = CampoAtivoEditavel(`Taxa  de ${textoTipoOperacional}`, camposForm.taxaOperacional, "number")
     const CampoPeriodoOperacional = CampoAtivoEditavel(`Periodo de ${textoTipoOperacional}`, camposForm.periodoOperacional, "string")
-    const CampoGarantia = CampoAtivoEditavel("Validade da garantia", camposForm.validadeGarantida, "date")
+    let [textoDataLimite, setTextoDataLimite] = useState('Validade da garantia')
+    //Data de Expiracao
+    const CampoDataLimite = CampoAtivoEditavel(textoDataLimite, camposForm.dataLimite, "date")
     const CampoMarca = CampoAtivoEditavel("Marca", camposForm.marca, "string")
     const [descricao, setDescricao] = useState('')
     const [editarDescricao, setEditarDescricao] = useState(true)
@@ -182,26 +257,263 @@ export default function AtualizarAtivo({ ativo }: Props) {
     const CampoImportancia = CampoAtivoEditavel("Importancia", camposForm.grauImportancia, "string")
     const CampoTag = CampoAtivoEditavel("Tag", camposForm.tag, "string")
     const CampoStatus = CampoAtivoEditavel("Status", camposForm.status, "string")
-    const CampoResponsavel = CampoAtivoEditavel("Responsavel", camposForm.idResponsavel, "string")
-    const CampoDepartamento = CampoAtivoEditavel("Deparmento", camposForm.departamento, "string")
     const CampoLocal = CampoAtivoEditavel("Local", camposForm.local, "string")
+    function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setManutencaoData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+            ativoId: prevData.idAtivo,
+        }))
+    }
+
+    function localAtivo() {
+        if (emManutencao()) {
+            return manutencoes[0].localizacao;
+        } else {
+            return departamento;
+        }
+    }
+    const [statusA, setStatusA] = useState('');
+    useEffect(() => {
+        if (departamento === '0') {
+            setStatusA('Não alocado');
+        }
+        else if (emManutencao()) {
+            setStatusA('Em manutenção');
+        } else {
+            setStatusA('Em uso');
+        }
+    }, [idResponsavel, manutencoes]);
+
+    const tipoMapping: { [key: string]: number } = {
+        "Preventiva": 1,
+        "Corretiva": 2,
+        "Preditiva": 3
+    };
+
+    const reverseTipoMapping: { [key: number]: string } = {
+        1: "Preventiva",
+        2: "Corretiva",
+        3: "Preditiva"
+    };
+
+    function toggleModal() {
+        setShowManutencaoModal(!showManutencaoModal);
+    }
+
+    function handleManutencaoSubmit() {
+        const currentDate = new Date().toISOString().split('T')[0];
+        const manutencaoDataWithDates = {
+            ...manutencaoData,
+            tipo: typeof manutencaoData.tipo === 'string' ? tipoMapping[manutencaoData.tipo] || 0 : manutencaoData.tipo,
+            dataInicio: manutencaoData.dataInicio ? new Date(manutencaoData.dataInicio).toISOString() : currentDate,
+            dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null,
+            ativo: { id: manutencaoData.idAtivo },
+        };
+
+        fetch('http://localhost:8080/manutencao/cadastro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(manutencaoDataWithDates),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Manutenção cadastrada com sucesso!', data);
+                setShowManutencaoModal(false);
+                setManutencao(prevManutencao => [...prevManutencao, data]);
+                setManutencaoData({
+                    id: 0,
+                    idAtivo: {
+                        nome: "",
+                        dataAquisicao: new Date(),
+                        custoAquisicao: 0,
+                        taxaOperacional: 0,
+                        periodoOperacional: "",
+                        dataLimite: new Date(),
+                        marca: "",
+                        numeroIdentificacao: "",
+                        //anexos: Documento[],
+                        descricao: "",
+                        tipo: "",
+                        grauImportancia: "",
+                        tag: "",
+                        status: "",
+                        idResponsavel: 0,
+                        departamento: "",
+                        local: "string"
+                    },
+                    tipo: '',
+                    descricao: '',
+                    localizacao: '',
+                    custo: 0,
+                    dataInicio: '',
+                    dataFim: '',
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
+        const userId = Number(event.target.value);
+        const user = usuarios.find(u => u.id === userId);
+        setIdResponsavel(userId)
+        if (user){
+            setDepartamento(user.departamento)
+        }
+        setSelectedUser(user || null);
+    }
+    function handleDepartamento(event: React.ChangeEvent<HTMLSelectElement>) {
+        setDepartamento(event.target.value)
+    }
+
+    function handleTextareaDataChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+        setManutencaoData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+            ativoId: prevData.idAtivo,
+        }));
+    };
+    function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
+        setManutencaoData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+            ativoId: prevData.idAtivo,
+        }));
+    }
+
+    function handleCancel() {
+        setShowManutencaoModal(false);
+    }
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         try {
             if (tipoAtivoTangivel) {
-                fetch(`http://localhost:8080/ativoIntangivel/atualizacao/${id}`)
+                fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'id': id,
+                        'ativo': {
+                            'id': id,
+                            'nome': nomeAtivo,
+                            'custoAquisicao': CampoCustoAquisicao.dados,
+                            'tipo': CampoTipo.dados,
+                            'tag': CampoTag.dados,
+                            'grauImportancia': CampoImportancia.dados,
+                            'idResponsavel': { 'id': idResponsavel},
+                            'descricao': descricao,
+                            'numeroIdentificacao': camposForm.numeroIdentificacao,
+                            'marca': CampoMarca.dados,
+                            'dataAquisicao': CampoDataAquisicao.dados
+                        },
+                        'garantia': CampoDataLimite.dados,
+                        'taxaDepreciacao': CampoTaxaOperacional.dados,
+                        'periodoDepreciacao': CampoPeriodoOperacional.dados
+                    })
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            console.log('Ativo atualizado com sucesso!');
+                        } else {
+                            console.error('Erro ao atualizar o ativo:', response.statusText);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`Erro ao processar requisição! Erro:${error}`);
+                    })
             } else {
-                fetch(`http://localhost:8080/ativoIntangivel/atualizacao/${id}`)
+                fetch(`http://localhost:8080/ativoIntangivel/atualizacao/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        'id': id,
+                        'ativo': {
+                            'id': id,
+                            'nome': nomeAtivo,
+                            'custoAquisicao': CampoCustoAquisicao.dados,
+                            'tipo': CampoTipo.dados,
+                            'tag': CampoTag.dados,
+                            'grauImportancia': CampoImportancia.dados,
+                            'idResponsavel': { 'id': idResponsavel},
+                            'descricao': descricao,
+                            'numeroIdentificacao': camposForm.numeroIdentificacao,
+                            'marca': CampoMarca.dados,
+                            'dataAquisicao': CampoDataAquisicao.dados
+                        },
+                        'dataExpiracao': CampoDataLimite.dados,
+                        'taxaAmortizacao': CampoTaxaOperacional.dados,
+                        'periodoAmortizacao': CampoPeriodoOperacional.dados
+                    })
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            console.log('Ativo atualizado com sucesso!');
+                        } else {
+                            console.error('Erro ao atualizar o ativo:', response.statusText);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`Erro ao processar requisição! Erro:${error}`);
+                    })
             }
         } catch (error) {
             setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
             setTipoResposta("Erro")
-        } 
-    }
+        }
+    };
+
     return (
         <div className="atualizarAtivo">
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
+            <Modal open={showManutencaoModal} onClose={handleManutencaoSubmit} onCancel={handleCancel} title="Pedido de manutenção">
+                <div>
+                    <div className="containerModal">
+                        <div className='modal-man'>
+                            <h3>Local</h3>
+                            <input name="localizacao" value={manutencaoData.localizacao} onChange={handleManutencaoDataChange} />
+                        </div>
+                        <div className='modal-man'>
+                            <h3>Custo</h3>
+                            <input name="custo" value={manutencaoData.custo} onChange={handleManutencaoDataChange} />
+                        </div>
+                    </div>
+                    <div className="containerModal">
+                        <div className='modal-man'>
+                            <h3>Data de envio</h3>
+                            <input type="date" name="dataInicio" value={manutencaoData.dataInicio} onChange={handleManutencaoDataChange} />
+                        </div>
+                        <div className='modal-man'>
+                            <h3>Data de retorno</h3>
+                            <input type="date" name="dataFim" value={manutencaoData.dataFim} onChange={handleManutencaoDataChange} />
+                        </div>
+                    </div>
+                    <div className="containerModal">
+                        <div className='modal-man'>
+                            <h3>Descrição</h3>
+                            <textarea className="textarea-description" name="descricao" value={manutencaoData.descricao} onChange={handleTextareaDataChange} maxLength={100} />
+                        </div>
+                        <div className='modal-man'>
+                            <h3>Tipo</h3>
+                            <select name="tipo" value={reverseTipoMapping[Number(manutencaoData.tipo)]} onChange={handleSelectDataChange}>
+                                <option value="">Selecione</option>
+                                <option value="Preventiva">Preventiva</option>
+                                <option value="Corretiva">Corretiva</option>
+                                <option value="Preditiva">Preditiva</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
             <h1 className='tituloFormsAtualizarAtivo'>{`Ativos > (${id} / ${dados?.numeroIdentificacao})`}</h1>
             <form className="formsAtualizarAtivo" onSubmit={handleSubmit}>
                 <div>
@@ -213,7 +525,7 @@ export default function AtualizarAtivo({ ativo }: Props) {
                             <div>
                                 {CampoDataAquisicao.codigo}
                                 {CampoTaxaOperacional.codigo}
-                                {CampoGarantia.codigo}
+                                {CampoDataLimite.codigo}
                             </div>
                             <div>
                                 {CampoCustoAquisicao.codigo}
@@ -243,12 +555,28 @@ export default function AtualizarAtivo({ ativo }: Props) {
                     </div>
                     <div className='divisaoFormsEditar4'>
                         <div>
-                            {CampoResponsavel.codigo}
-                            {CampoDepartamento.codigo}
+                            <label>Responsável </label>
+                            <div className='inputContainer'>
+                                <select className='input' name='responsavel' value={idResponsavel} onChange={handleUserChange}>
+                                    {usuarios.map(usuario => (
+                                        <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <div className='inputContainer'>
+                                    <select className='input' name='departamento' value={departamento || ''} onChange={handleDepartamento}>
+                                        <option value={''}>Selecione departamento</option>
+                                        <option value={'Departamento 1'}>Departamento 1</option>
+                                        <option value={'Departamento 2'}>Departamento 2</option>
+                                    </select>
+                                </div>
+                            </div>
                             {CampoLocal.codigo}
                         </div>
                         <div className='botoesFormsEditar'>
-                            <Link to={`/HistoricoManutencao/${id}`}>Adicionar<br />manutencao</Link>
+                            <Link className='button' to={`/HistoricoManutencao/${id}`}>Histórico <br />Manutenção</Link>
+                            <button className='button' onClick={toggleModal}>Adicionar pedido <br />de manutenção</button>
                             <input type="submit" placeholder='Atualizar' />
                         </div>
                     </div>

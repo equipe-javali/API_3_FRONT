@@ -90,7 +90,8 @@
 
 .divisaoFormsEditar1,
 .divisaoFormsEditar2,
-.formsAtualizarAtivo>div:last-child>div {
+.divisaoFormsEditar3,
+.divisaoFormsEditar4>div:first-child {
   background-color: var(--cor8);
   padding: 10px;
   border-radius: 5px;
@@ -119,7 +120,8 @@
   padding: 8px;
 }
 
-.botoesFormsEditar>*:first-child {
+.botoesFormsEditar>*:first-child,
+.botoesFormsEditar>*:nth-child(2) {
   background-color: var(--cor12);
 }
 

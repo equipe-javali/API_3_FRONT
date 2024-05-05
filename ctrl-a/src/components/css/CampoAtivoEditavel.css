@@ -1,0 +1,43 @@
+:root{
+    --heightCampoAtivoEditavel: 30px;
+    --paddingCampoAtivoEditavel: 8px;
+    --heightInputCampoAtivoEditavel: calc(var(--heightCampoAtivoEditavel) - 2 * var(--paddingCampoAtivoEditavel))
+}
+.campoAtivoEditavel{
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.divCampoAtivoEditavel{
+    display: flex;
+}
+
+.divCampoAtivoEditavel > input,
+.divCampoAtivoEditavel > textarea{
+    height: var(--heightInputCampoAtivoEditavel);
+    width: 100%;
+}
+
+.divCampoAtivoEditavel,
+.campoAtivoEditavel>input{
+    padding: var(--paddingCampoAtivoEditavel);
+    height: var(--heightCampoAtivoEditavel);
+    width: 100%;
+    border-radius: 8px;
+}
+
+
+.ativado,
+.ativado > input,
+.ativado > textarea{
+    background-color: var(--cor1);
+    color: var(--branco1);
+}
+
+.desativado,
+.desativado > input,
+.desativado > textarea{
+    background-color: var(--cor20);
+    color: var(--cor9);
+}
