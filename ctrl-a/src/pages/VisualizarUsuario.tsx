@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import './css/visualizarUsuario.css'
+import { Link } from 'react-router-dom';
+import RespostaSistema from '../components/respostaSistema';
 
 interface Ativo {
   id: number;
@@ -30,21 +32,33 @@ export default function VisualizarUsuario() {
   const [departamentos, setDepartamentos] = useState<string[]>([]);
   const [Pesquisa, setFilterValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [textoResposta, setTextoResposta] = useState('')
+  const [tipoResposta, setTipoResposta] = useState('')
+  function fechaPopUp() {
+    setTextoResposta('')
+    setTipoResposta('')
+  }
+  useEffect(() => {
+    if (tipoResposta === "Sucesso") {
+      const timer = setTimeout(() => {
+        fechaPopUp();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [tipoResposta]);
 
   useEffect(() => {
     fetch('http://localhost:8080/usuario/listagemTodos')
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          setTextoResposta(`Não foi possível listar os usuários! Erro:${response.status}`)
+          setTipoResposta("Erro")
         }
         return response.json();
-      })
+     })
       .then((data: Usuario[]) => {
-
         data.sort((a, b) => a.id - b.id);
         setUsuarios(data);
-        
         const uniqueDepartamentos = new Set<string>();
         data.forEach(usuario => {
           const departamento = usuario.departamento;
@@ -54,7 +68,10 @@ export default function VisualizarUsuario() {
         });
         setDepartamentos(Array.from(uniqueDepartamentos));
       })
-      .catch(error => console.error('Error:', error));
+      .catch((error) => {
+        setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
+        setTipoResposta("Erro")
+      })
   }, []);
 
   const Pesquisando = usuarios.filter(usuario => {
@@ -82,23 +99,33 @@ export default function VisualizarUsuario() {
   };
 
   const handleDelete = (id: number) => {
-    fetch(`http://localhost:8080/usuario/exclusao/${id}`, {
-      method: 'DELETE',
+    fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: 'inativo' }),
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+      .then((response) => {
+        if (response.ok) {
+          setTextoResposta("Usuário excluído com sucesso!")
+          setTipoResposta("Sucesso")
         }
-
-        console.log('Usuário excluído com sucesso!', id);
-
+        else {
+          setTextoResposta(`Não foi possível deletar! Erro:${response.status}`)
+          setTipoResposta("Erro")
+        }
         setUsuarios(usuarios.filter(usuario => usuario.id !== id));
       })
-      .catch(error => console.error('Error:', error));
+      .catch((error) => {
+        setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
+        setTipoResposta("Erro")
+      })
   };
 
   return (
     <div className='VisualizarUsuario'>
+      <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
       <div>
         <h2>Usuários</h2>
         <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
@@ -141,6 +168,7 @@ export default function VisualizarUsuario() {
                 <td>{usuario.telefone}</td>
                 <td>{usuario.email}</td>
                 <td>
+                  <Link to={`/EdicaoUsuario/${usuario.id}`} type='button' className='btnExcluir'>Editar</Link>
                   <button type='button' className='btnExcluir' onClick={() => handleDelete(usuario.id)}>Excluir</button>
                 </td>
               </tr>
@@ -148,9 +176,6 @@ export default function VisualizarUsuario() {
           </tbody>
         </table>
       </div>
-      {/* <footer>
-        <h1 className="footerText">Todos os direitos reservados à Ctrl A</h1>
-      </footer> */}
     </div>
   );
 }

@@ -1,0 +1,66 @@
+  .DivHome .home-header {
+    background-color: var(--cor21);
+    text-align: left;
+  }
+
+  .DivHome .logo {
+    width: 10%;
+    max-width: 100px;
+    margin-top: 20px;
+    margin-left: 30px;
+  }
+
+  .DivHome .login-container {
+    background-color: var(--cor20);
+    color: var(--branco);
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.DivHome .3);
+  }
+  
+  .DivHome h2 {
+    text-align: center;
+  }
+  
+  .DivHome .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .DivHome label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .DivHome input {
+    width: calc(100% - 10px);
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid var(--cor6);
+  }
+  
+  .DivHome button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--cor7);
+    color: var(--branco);
+    cursor: pointer;
+  }
+  
+  .DivHome button:hover {
+    background-color: var(--cor4);
+  }
+  
+  .DivHome .error {
+    color: var(--cor23);
+    margin-bottom: 10px;
+  }
+
+  .DivHome .home-slogan {
+    padding-top: 8%;
+    text-align: center; /* Centraliza o texto */
+    font-size: 4vh; /* Define a altura do texto como 4vh */
+  }

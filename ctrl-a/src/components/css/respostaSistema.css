@@ -1,0 +1,43 @@
+.respostaSistema {
+    align-items: center;
+    background-color: var(--cor11);
+    cursor: pointer;
+    display: flex;
+    height: 100%;
+    left: 0;
+    top: 0;
+    justify-content: space-evenly;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+}
+
+.respostaSistema>div {
+    border-radius: 15px;
+    background-color: var(--cor8);
+    cursor: default;
+    color: var(--branco1);
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    padding: 10px 50px;
+    position: absolute;
+    text-align: center;
+    z-index: 2;
+}
+
+.respostaSistema>div>img {
+    height: 120px;
+    padding: 20px;
+}
+
+
+.respostaSistema button {
+    background-color: var(--cor3);
+    border-radius: 5px;
+    cursor: pointer;
+    margin: auto;
+    width: 70px;
+    height: 35px;
+    color: var(--branco);
+}
