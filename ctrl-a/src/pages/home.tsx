@@ -1,56 +1,23 @@
 import { useState } from 'react';
 import './css/home.css';
 import logo from '../assets/icons/logo.png';
-import RespostaSistema from '../components/respostaSistema';
-import { Link } from 'react-router-dom';
 
 export default function Home() {
-  const [textoResposta, setTextoResposta] = useState('')
-  const [tipoResposta, setTipoResposta] = useState('')
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false); // Estado para controlar se a senha está visível
-  function handleLogin(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    try {
-      fetch("http://localhost:8080/login/signin", {
-        method: "POST",
-        body: JSON.stringify({
-          "email": email,
-          "senha": password
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        mode: 'cors'
-      })
-        .then((response => response.json().then(response => {
-          if (response.status === 202) {
-            localStorage.setItem("token", `${response.data.token}`)
-            window.location.href = '/ListaAtivos';
-          }
-          else {
-            setTextoResposta(`Não foi possível realizar o login! Erro:${response.status}`)
-            setTipoResposta("Erro")
-          }
-        })))
-        .catch((error) => {
-          setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
-          setTipoResposta("Erro")
-        })
-    } catch (error) {
-      setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
-      setTipoResposta("Erro")
+
+  const handleLogin = () => {
+    if (username === 'admin' && password === 'admin123') {
+      window.location.href = '/ListaAtivos';
+    } else {
+      setError('Credenciais inválidas. Por favor, tente novamente.');
     }
-  }
-  function fechaPopUp() {
-    setTextoResposta('')
-    setTipoResposta('')
-  }
+  };
+
   return (
     <div className='DivHome'>
-      <RespostaSistema tipoResposta={tipoResposta} textoResposta={textoResposta} onClose={fechaPopUp} />
       <header id="header-component">
         <img src={logo} alt="Logo" className="logo" />
       </header>
@@ -61,14 +28,15 @@ export default function Home() {
       </div>
       <div className="login-container">
         <h2>Login</h2>
-        <form onSubmit={handleLogin}>
+        {error && <p className="error">{error}</p>}
+        <form>
           <div className="form-group">
-            <label htmlFor="email">Usuário:</label>
+            <label htmlFor="username">Usuário:</label>
             <input
               type="text"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -88,9 +56,7 @@ export default function Home() {
               </span>
             </div>
           </div>
-          <input type="submit" placeholder='Entrar' />
-          <p className='pergunta'>ou <br /> Não possui cadastro ainda?</p>
-          <Link className='linkCadastrar' to={'/CadastroUsuarioAdm'}>Cadastre-se!</Link>
+          <button type="button" onClick={handleLogin}>Entrar</button>
         </form>
       </div>
     </div>
