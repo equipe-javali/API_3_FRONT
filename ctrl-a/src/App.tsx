@@ -8,19 +8,13 @@ import CadastroAtivos from './pages/cadastroAtivos';
 import CriarUsuario from './pages/criarUsuario';
 import AtualizarAtivo from './pages/atualizarAtivos';
 import HistoricoManutencao from './pages/historicoManutencaoAtivo';
-
 import AtualizarUsuario from './pages/atualizarUsuario';
-
-
 export default function App() {
   return (
-
     <BrowserRouter>
       <Routes>
-        
-      <Route index element={<Home />} />
+        <Route index element={<Home />} />
         <Route element={<BaseLateralHeader />}>
-          
           <Route path="/ListaAtivos" element={< DashboardAtivos />} />
           <Route path="/ListaUsuarios" element={< VisualizarUsuario />} />
           <Route path="/CadastroAtivo" element={< CadastroAtivos />} />
