@@ -54,6 +54,22 @@
     background-color: var(--cor4);
   }
   
+  .DivHome .pergunta {
+    text-align: center;
+    margin: 2%;
+  }
+
+  .DivHome .linkCadastrar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--cor2);
+    color: var(--branco);
+    cursor: pointer;
+  }
+
   .DivHome .error {
     color: var(--cor23);
     margin-bottom: 10px;

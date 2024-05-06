@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './css/home.css';
 import logo from '../assets/icons/logo.png';
 import RespostaSistema from '../components/respostaSistema';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const [textoResposta, setTextoResposta] = useState('')
@@ -88,6 +89,8 @@ export default function Home() {
             </div>
           </div>
           <input type="submit" placeholder='Entrar' />
+          <p className='pergunta'>ou <br /> Não possui cadastro ainda?</p>
+          <Link className='linkCadastrar' to={'/CadastroUsuarioAdm'}>Cadastre-se!</Link>
         </form>
       </div>
     </div>
