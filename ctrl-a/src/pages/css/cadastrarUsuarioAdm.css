@@ -67,7 +67,7 @@
 }
 
 .CadastroAdm button:active {
-  transform: scale(0.CadastroAdm .95); 
+  transform: scale(0.95); 
 }
 
 .CadastroAdm .legenda {

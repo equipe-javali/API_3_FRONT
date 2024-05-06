@@ -18,6 +18,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Home />} />
+        <Route path="/CadastroUsuarioAdm" element={<CriarUsuarioAdm />} />
         <Route element={<BaseLateralHeader />}>
           <Route path="/ListaAtivos" element={<DashboardAtivos />} />
           <Route path="/ListaUsuarios" element={<VisualizarUsuario />} />
@@ -25,7 +26,6 @@ export default function App() {
           <Route path="/CadastroUsuario" element={<CriarUsuario />} />
           <Route path="/AtualizarAtivo/:id" element={<AtualizarAtivo />} />
           <Route path="/HistoricoManutencao/:id_ativo" element={<HistoricoManutencao />} />
-          <Route path="/CadastroUsuarioAdm" element={<CriarUsuarioAdm />} />
           <Route path="/AtualizarAtivo/:id" element={< AtualizarAtivo />} />
           <Route path="/EdicaoUsuario/:id" element={< AtualizarUsuario />} />
           <Route path="*" element={<DashboardAtivos />} />
