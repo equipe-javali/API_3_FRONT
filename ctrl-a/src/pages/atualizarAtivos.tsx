@@ -8,11 +8,11 @@ import { Link } from 'react-router-dom';
 import Modal from '../components/modal/modal';
 interface Ativo {
     nome: string;
-    dataAquisicao: Date;
+    dataAquisicao: string;
     custoAquisicao: number;
     taxaOperacional: number;
     periodoOperacional: string;
-    dataLimite: Date;
+    dataLimite: string;
     marca: string;
     numeroIdentificacao: string;
     //anexos: Documento[];
@@ -91,11 +91,11 @@ export default function AtualizarAtivo() {
                                 console.log(data);
                                 setDados({
                                     nome: data.ativo?.nome || "",
-                                    dataAquisicao: data.ativo?.dataAquisicao || new Date(),
+                                    dataAquisicao: data.ativo?.dataAquisicao || "",
                                     custoAquisicao: data.ativo?.custoAquisicao || 0,
                                     taxaOperacional: data.taxaDepreciacao || 0,
                                     periodoOperacional: data.periodoDepreciacao || "",
-                                    dataLimite: data.dataExpiracao || new Date(),
+                                    dataLimite: data.dataExpiracao || "",
                                     marca: data.ativo?.marca || "",
                                     numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
                                     descricao: data.ativo?.descricao || "",
@@ -117,11 +117,11 @@ export default function AtualizarAtivo() {
                     console.log(data)
                     setDados({
                         nome: data.ativo?.nome || "",
-                        dataAquisicao: data.ativo?.dataAquisicao || new Date(),
+                        dataAquisicao: data.ativo?.dataAquisicao || "",
                         custoAquisicao: data.ativo?.custoAquisicao || 0,
                         taxaOperacional: data.taxaAmortizacao || 0,
                         periodoOperacional: data.periodoAmortizacao || "",
-                        dataLimite: data.garantia || new Date(),
+                        dataLimite: data.garantia || "",
                         marca: data.ativo?.marca || "",
                         numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
                         descricao: data.ativo?.descricao || "",
@@ -192,11 +192,11 @@ export default function AtualizarAtivo() {
         id: 0,
         idAtivo: {
             nome: "",
-            dataAquisicao: new Date(),
+            dataAquisicao: "",
             custoAquisicao: 0,
             taxaOperacional: 0,
             periodoOperacional: "",
-            dataLimite: new Date(),
+            dataLimite: "",
             marca: "",
             numeroIdentificacao: "",
             //anexos: Documento[],
@@ -224,11 +224,11 @@ export default function AtualizarAtivo() {
         return Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim);
     }
     const [camposForm, setCamposForm] = useState({
-        dataAquisicao: new Date(),
+        dataAquisicao: "",
         custoAquisicao: 0,
         taxaOperacional: 0,
         periodoOperacional: '',
-        dataLimite: new Date(),
+        dataLimite: "",
         marca: '',
         numeroIdentificacao: '',
         //anexos: [];
@@ -332,11 +332,11 @@ export default function AtualizarAtivo() {
                     id: 0,
                     idAtivo: {
                         nome: "",
-                        dataAquisicao: new Date(),
+                        dataAquisicao: "",
                         custoAquisicao: 0,
                         taxaOperacional: 0,
                         periodoOperacional: "",
-                        dataLimite: new Date(),
+                        dataLimite: "",
                         marca: "",
                         numeroIdentificacao: "",
                         //anexos: Documento[],
