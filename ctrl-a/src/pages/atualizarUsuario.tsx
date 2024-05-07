@@ -1,4 +1,4 @@
-import iconEditar from '../assets/icons/editar.png'
+import iconEditar from '../assets/icons/lapis.svg'
 import iconUser from '../assets/icons/visualizar_usuario.png';
 import olho from '../assets/icons/olho.png';
 import olhoCortado from '../assets/icons/olhoCortado.png';
@@ -6,7 +6,6 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import './css/atualizaUsuario.css'
 import { useParams } from 'react-router-dom';
 import RespostaSistema from '../components/respostaSistema';
-import { response } from 'express';
 
 interface UsuarioData {
     nome: string;

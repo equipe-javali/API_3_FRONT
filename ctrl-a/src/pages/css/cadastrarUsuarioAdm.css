@@ -1,0 +1,99 @@
+.CadastroAdm .titulo {
+  text-align: center;
+  color: var(--branco);
+  font-family: Arial, sans-serif;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.CadastroAdm .form-cadastro {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto; /* Centraliza o formulário na página */
+  border: 1px solid var(--cor7);
+  padding: 25px; 
+  padding-left: 50px;
+  padding-right: 50px;
+  background-color: var(--cor20);
+  border-radius: 15px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  gap: 5px;
+}
+
+.CadastroAdm .form-cadastro label {
+  align-self: flex-start; 
+  margin-bottom: 10px;
+}
+
+.CadastroAdm .form-cadastro input {
+  width: 100%; 
+  height: 25px; 
+  border-radius: 2px;
+  background-color: var(--branco1);
+}
+
+.CadastroAdm input {
+
+  padding-left: 8px; 
+}
+
+.CadastroAdm select {
+  padding: 5px;
+  width: 100%;
+  border-radius: 2px;
+  gap: 5px;
+  background-color: var(--branco1);
+}
+
+.CadastroAdm button {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  width: 24%;
+  background-color: var(--cor5);
+  color:#ffffff;
+}
+
+.CadastroAdm button:hover {
+  color:#ffffff;
+  border: 1px solid #ffffffae
+
+}
+
+.CadastroAdm button:active {
+  transform: scale(0.95); 
+}
+
+.CadastroAdm .legenda {
+  text-align: left;
+  font-size: 14px;
+}
+
+.CadastroAdm .input-container input,
+.CadastroAdm .input-container {
+  height: 25px;
+  width: 100%;
+  border-radius: 2px;
+}
+
+.CadastroAdm .input-container {
+  display: flex;
+  background-color: var(--branco1);
+  align-items: center;
+}
+
+.CadastroAdm .input-container svg{
+  color: var(--cor7);
+}
+
+.CadastroAdm .password-icon {
+  height: 100%;
+  cursor: pointer;
+  margin-right:3px;
+}

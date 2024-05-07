@@ -1,101 +1,131 @@
-.atualizarAtivo, 
-.separados, 
-.dadosGerais .linha, 
-.superiorDireito .linha, 
-.inferiorDireito,
-.botoes {
+:root {
+  --gapformsAtualizarAtivo: 20px;
+  --divisaoCampoForms1: 55%;
+  --divisaoCampoForms2: calc(100% - var(--divisaoCampoForms1));
+}
+
+
+.formsAtualizarAtivo,
+.formsAtualizarAtivo>div,
+.divisaoFormsEditar2,
+.divisaoFormsEditar2>div,
+.divisaoFormsEditar2>div:first-child>div,
+.formsAtualizarAtivo>div:last-child>div,
+.formsAtualizarAtivo>div:last-child>div>div {
   display: flex;
-}
-
-.atualizarAtivo{
-  flex-direction: column;
   width: 100%;
+  gap: 8px;
 }
 
-.titulo {
-  margin-top: 2%;
-  margin-left: 1%;
-  width: 100%;
-}
-
-.separados{
-  width: 100%;
-}
-
-.ladoEsquerdo{
-  width: 50%;
-  margin: 0 5% 0 1%;
-}
-
-.nomeAtivo, 
-.dadosGerais, 
-.superiorDireito, 
-.inferiorDireito .coluna{
-  margin-top: 5%;
-  padding: 2%;
-  background-color: var(--cor8);
-}
-
-.campoInput{
-  margin-bottom: 10%;
-}
-
-.dadosGerais{
-  height: 80%;
-}
-
-.dadosGerais .linha, .superiorDireito .linha{
-  justify-content: space-around;
-  align-items: center;
-}
-
-.campoInput .input{
-  width: 100%;
-  padding: 2%;
-  margin-top: 1%;
-  color: var(--branco1);
-  background-color: var(--cor20);
-}
-
-.descricao {
-  margin-top: 2%;
-  height: 100%;
-  padding: 2%;
-}
-
-.descricaoText {
-  resize: none;
-  width: 100%;
-  height: 90px;
-  color: var(--branco1);
-  background-color: var(--cor20);
-}
-
-.inferiorDireito{
+.divisaoFormsEditar2>div:first-child>div,
+.divisaoFormsEditar3>div,
+.divisaoFormsEditar4>div:first-child {
   justify-content: space-between;
 }
 
-.botoes{
-  margin-top: 5%;
-  margin-right: 2%;
-  padding: 2%;
+.formsAtualizarAtivo>div,
+.divisaoFormsEditar2,
+.divisaoFormsEditar2>div:first-child>div,
+.formsAtualizarAtivo>div:last-child>div>div {
   flex-direction: column;
-  justify-content: space-around;
 }
 
-.botoes .button{
-  all: unset;
-  width: auto;
-  padding: 0.5vw;
-  margin-top: 5%;
-  cursor: pointer;
+.formsAtualizarAtivo>div:first-child {
+  flex: var(--divisaoCampoForms1);
+}
+
+.formsAtualizarAtivo>div:last-child {
+  flex: var(--divisaoCampoForms2);
+}
+
+.atualizarAtivo {
+  padding: 10px;
+}
+
+.atualizarAtivo>h1 {
+  padding-bottom: 20px;
+}
+
+
+.formsAtualizarAtivo>div>div {
+  flex: 1;
+}
+
+
+.formsAtualizarAtivo>div:first-child {
+  flex: var(--divisaoCampoForms1)
+}
+
+.formsAtualizarAtivo>div:last-child {
+  flex: var(--divisaoCampoForms2);
+}
+
+.atualizarAtivo {
+  width: 100%;
+  height: calc(100vh - var(--heightHeader));
+}
+
+.formsAtualizarAtivo {
+  height: calc(100% - 50px);
+}
+
+.tituloFormsAtualizarAtivo {
+  height: 50px;
+}
+
+.divisaoFormsEditar1 {
+  max-height: 70px;
+  background-color: var(--cor8);
+}
+
+.divisaoFormsEditar2>div:last-child,
+.divisaoFormsEditar3 {
+  flex: 1;
+}
+
+.divisaoFormsEditar2>div:first-child,
+.divisaoFormsEditar4 {
+  flex: 2;
+}
+
+.divisaoFormsEditar1,
+.divisaoFormsEditar2,
+.divisaoFormsEditar3,
+.divisaoFormsEditar4>div:first-child {
+  background-color: var(--cor8);
+  padding: 10px;
   border-radius: 5px;
-  background-color: var(--verde1);
-  color: var(--branco1);
-  font-size: 16px;
-  text-align: center;
 }
 
-#btnSubmit{
-  background-color: var(--cor4);
+.divisaoFormsEditar1>input {
+  width: 100%;
+  background: inherit;
+  color: var(--branco1);
+  font-size: 30px;
+}
+
+.botoesFormsEditar {
+  justify-content: space-around;
+  gap: 5px;
+  padding: 15px;
+}
+
+.botoesFormsEditar>* {
+  text-align: center;
+  color: var(--branco1);
+  font-size: 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.botoesFormsEditar>*:first-child,
+.botoesFormsEditar>*:nth-child(2) {
+  background-color: var(--cor12);
+}
+
+
+.botoesFormsEditar>*:last-child {
+  background-color: var(--cor5);
 }

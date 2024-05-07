@@ -18,3 +18,7 @@
 
     width: 100%;
 }
+
+#app-content-tb:last-child{    
+  padding-left: var(--widthSideMenu);
+}

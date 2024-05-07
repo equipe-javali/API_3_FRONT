@@ -77,8 +77,6 @@
     gap: var(--gapDivRadioButton);
 }
 
-
-
 .inputRadioFormsAtivo>span {
     margin-left: var(--marginLeftSpanRadioButton)
 }

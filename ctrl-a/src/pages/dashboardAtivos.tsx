@@ -2,8 +2,8 @@ import React, { useEffect, useState, ChangeEvent } from 'react';
 import './css/dashboardAtivos.css';
 import Modal from '../components/modal/modal';
 import RespostaSistema from '../components/respostaSistema';
-import { FaWrench, FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { FaWrench, FaPencilAlt, FaTrash } from 'react-icons/fa';
 
 type AtivoProps = {
     id: number;
@@ -55,6 +55,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     const [showModal, setShowModal] = useState<boolean>(false);
     const [manutencoes, setManutencoes] = useState<ManutencaoProps[]>([]);
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
+    const [isHovered, setIsHovered] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UsuarioProps | null>(null);
 
     function handleCancel() {
@@ -73,15 +74,33 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     }
 
     function localAtivo() {
-        if (emManutencao()) {
-            return <>{manutencoes[0].localizacao}</>;
-        } else if (idResponsavel?.departamento) {
-            return <>{idResponsavel.departamento}</>;
+        if (emManutencao() && !isHovered) {
+            return (
+                <>{manutencoes[0].localizacao}</>
+            );
+        } else if (idResponsavel?.departamento && !isHovered) {
+            return (
+                <>{idResponsavel.departamento}</>
+            );
         } else {
-            return <div><button type="button" className="btnAtribuir" onClick={toggleModal}>Atribuir</button></div>;
+            return (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    {!idResponsavel && <button type='button' className='btnAtribuir' onClick={toggleModal}>Atribuir</button>}
+                    {isHovered &&
+                        <div style={{ display: 'flex', justifyContent: 'space-around', width: '50%' }}>
+                            <button type='button' className='btnIcon' onClick={handleExcluir}><i className="bi bi-trash-fill"></i></button>
+                            <Link to={`/HistoricoManutencao/${id}`}>
+                                <button type='button' className='btnIcon'><i className="bi bi-wrench"></i></button>
+                            </Link>
+                            <Link to={`/AtualizarAtivo/${id}`}>
+                                <button type='button' className='btnIcon'><i className="bi bi-pencil-fill"></i></button>
+                            </Link>
+                        </div>
+                    }
+                </div>
+            );
         }
     }
-
     useEffect(() => {
         fetch('http://localhost:8080/usuario/listagemTodos')
             .then(response => {
@@ -160,9 +179,16 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
         const user = usuarios.find(u => u.id === userId);
         setSelectedUser(user || null);
     }
-
+    useEffect(() => {
+        if (!showModal && selectedUser) {
+            window.location.reload();
+        }
+    }, [showModal, selectedUser]);
     return (
-        <div className="linhaAtv">
+        <div className="linhaAtv"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}>
+            {/* onClick={() => window.location.href = `/AtualizarAtivo/${id}`}> */}
             <p className="id">{id}</p>
             <p className="nome">{nome}</p>
             <p className="responsavel">{idResponsavel ? idResponsavel.nome : 'Não definido'}</p>
@@ -172,16 +198,16 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             <div className="iconContainerAtv">
                 <Link to={`/HistoricoManutencao/${id}`}>
                     <button type="button" className="btnIcon">
-                        <FaWrench /> 
+                        <FaWrench />
                     </button>
                 </Link>
                 <Link to={`/AtualizarAtivo/${id}`}>
                     <button type="button" className="btnIcon">
-                        <FaPencilAlt /> 
+                        <FaPencilAlt />
                     </button>
                 </Link>
                 <button type="button" className="btnIcon" onClick={handleExcluir}>
-                    <FaTrash /> 
+                    <FaTrash />
                 </button>
             </div>
             <Modal open={showModal} onClose={toggleModal} onCancel={handleCancel} title="Atribua seu ativo">
@@ -255,14 +281,12 @@ export default function DashboardAtivos() {
     }, [tipoResposta]);
 
     const sortedAtivos = [...ativos].sort((a, b) => a.id - b.id);
-
     const [Pesquisa, setPesquisa] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
         setPesquisa(event.target.value);
     };
-
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
@@ -298,11 +322,10 @@ export default function DashboardAtivos() {
             })
             .then(data => setAtivos((data as AtivoProps[])))
             .catch(error => {
-                setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+                setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
                 setTipoResposta('Erro');
             });
     }, []);
-
     return (
         <div className="dashboardAtv">
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={handleResponseTimeout} />
@@ -329,4 +352,4 @@ export default function DashboardAtivos() {
             <TabelaAtivos ativos={sortedAtivos} excluirAtivo={excluirAtivo} setTextoResposta={setTextoResposta} setTipoResposta={setTipoResposta} />
         </div>
     );
-}
+};
