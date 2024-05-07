@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './css/home.css';
 import logo from '../assets/icons/logo.png';
+import { Link } from 'react-router-dom'; 
 
 export default function Home() {
   const [username, setUsername] = useState('');
@@ -57,6 +58,10 @@ export default function Home() {
             </div>
           </div>
           <button type="button" onClick={handleLogin}>Entrar</button>
+          <p className='pergunta'> Não possui cadastro ainda?
+          <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>
+          </p>
+          
         </form>
       </div>
     </div>

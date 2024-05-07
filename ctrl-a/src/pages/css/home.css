@@ -54,20 +54,23 @@
     background-color: var(--cor4);
   }
   
-  .DivHome .pergunta {
-    text-align: center;
-    margin: 2%;
+  
+  .DivHome .linkCadastro {
+    all: unset;
+    margin-left: 2%;
+    color: var(--cor5);
+    cursor: pointer;
+    text-decoration: underline;
   }
 
-  .DivHome .linkCadastrar {
+  .DivHome .pergunta{
     display: flex;
     justify-content: center;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--cor2);
+    padding: 10px;       
     color: var(--branco);
-    cursor: pointer;
+    text-align: center;
+    margin: 2%;
+    font-size: 12px;
   }
 
   .DivHome .error {
