@@ -6,6 +6,7 @@ import CampoAtivoEditavel from '../components/CampoAtivoEditavel';
 import lapis from "../assets/icons/lapis.svg"
 import { Link } from 'react-router-dom';
 import Modal from '../components/modal/modal';
+import getLocalToken from '../utils/getLocalToken';
 interface Ativo {
     nome: string;
     dataAquisicao: string;
@@ -63,9 +64,14 @@ export default function AtualizarAtivo() {
         setTextoResposta('')
         setTipoResposta('')
     }
+    const token = getLocalToken();
     useEffect(() => {
         try {
-            fetch(`http://localhost:8080/ativoIntangivel/listagem/${id}`)
+            fetch(`http://localhost:8080/ativoIntangivel/listagem/${id}`, {
+                headers: {
+                    "Authorization": token
+                }
+            })
                 .then(response => {
                     if (response.status === 200) {
                         setTextoTipoOperacional("amortização")
@@ -142,7 +148,11 @@ export default function AtualizarAtivo() {
             setTipoResposta("Erro")
         }
         try {
-            fetch('http://localhost:8080/usuario/listagemTodos')
+            fetch('http://localhost:8080/usuario/listagemTodos', {
+                headers: {
+                    "Authorization": token
+                }
+            })
                 .then(response => {
                     if (!response.ok) {
                         setTextoResposta(`Não foi possível listar os ativo! Erro:${response.status}`)
@@ -241,8 +251,8 @@ export default function AtualizarAtivo() {
 
     let [textoTipoOperacional, setTextoTipoOperacional] = useState('depreciação')
     const [nomeAtivo, setNomeAtivo] = useState('')
-    const [idResponsavel,setIdResponsavel] = useState(0)
-    const [departamento,setDepartamento] = useState('')
+    const [idResponsavel, setIdResponsavel] = useState(0)
+    const [departamento, setDepartamento] = useState('')
     const CampoDataAquisicao = CampoAtivoEditavel("Data Aquisição", camposForm.dataAquisicao, "date")
     const CampoCustoAquisicao = CampoAtivoEditavel("Custo Aquisição", camposForm.custoAquisicao, "number")
     const CampoTaxaOperacional = CampoAtivoEditavel(`Taxa  de ${textoTipoOperacional}`, camposForm.taxaOperacional, "number")
@@ -315,6 +325,7 @@ export default function AtualizarAtivo() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": token
             },
             body: JSON.stringify(manutencaoDataWithDates),
         })
@@ -364,7 +375,7 @@ export default function AtualizarAtivo() {
         const userId = Number(event.target.value);
         const user = usuarios.find(u => u.id === userId);
         setIdResponsavel(userId)
-        if (user){
+        if (user) {
             setDepartamento(user.departamento)
         }
         setSelectedUser(user || null);
@@ -399,7 +410,8 @@ export default function AtualizarAtivo() {
                 fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        "Authorization": token
                     },
                     body: JSON.stringify({
                         'id': id,
@@ -410,7 +422,7 @@ export default function AtualizarAtivo() {
                             'tipo': CampoTipo.dados,
                             'tag': CampoTag.dados,
                             'grauImportancia': CampoImportancia.dados,
-                            'idResponsavel': { 'id': idResponsavel},
+                            'idResponsavel': { 'id': idResponsavel },
                             'descricao': descricao,
                             'numeroIdentificacao': camposForm.numeroIdentificacao,
                             'marca': CampoMarca.dados,
@@ -434,7 +446,10 @@ export default function AtualizarAtivo() {
             } else {
                 fetch(`http://localhost:8080/ativoIntangivel/atualizacao/${id}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": token
+                    },
                     body: JSON.stringify({
                         'id': id,
                         'ativo': {
@@ -444,7 +459,7 @@ export default function AtualizarAtivo() {
                             'tipo': CampoTipo.dados,
                             'tag': CampoTag.dados,
                             'grauImportancia': CampoImportancia.dados,
-                            'idResponsavel': { 'id': idResponsavel},
+                            'idResponsavel': { 'id': idResponsavel },
                             'descricao': descricao,
                             'numeroIdentificacao': camposForm.numeroIdentificacao,
                             'marca': CampoMarca.dados,

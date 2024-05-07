@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './css/cadastrarUsuarioAdm.css';
+import getLocalToken from "../utils/getLocalToken";
 
 export default function CriarUsuarioAdm() {
   const [nome, setNome] = useState('');
@@ -44,16 +45,16 @@ export default function CriarUsuarioAdm() {
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  if (!emailRegex.test(email)) {
-    console.log('Email inválido');
-    return;
-  }
-  
+    if (!emailRegex.test(email)) {
+      console.log('Email inválido');
+      return;
+    }
+
     if (senha !== confirmarSenha) {
       alert('As senhas não correspondem!');
       return;
     }
-  
+
     const userData = {
       nome,
       cpf,
@@ -63,35 +64,41 @@ export default function CriarUsuarioAdm() {
       telefone,
       status: 'ativo'
     };
-  
+
+    const token = getLocalToken();
+
     try {
       const userResponse = await fetch('http://localhost:8080/usuario/cadastro', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "Authorization": token
         },
-        body: JSON.stringify(userData)
+        body: JSON.stringify({
+          usuario: userData
+        })
       });
-  
+
       if (userResponse.ok) {
         const userData = await userResponse.json();
         const { id } = userData;
-  
+
         const loginData = {
           usuario: {
             id,
           },
           senha
         };
-  
+
         const loginResponse = await fetch('http://localhost:8080/usuarioLogin/cadastro', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": token
           },
           body: JSON.stringify(loginData)
         });
-  
+
         if (loginResponse.ok) {
           setAviso("Usuário cadastrado com sucesso!");
           setTimeout(() => {
@@ -108,23 +115,23 @@ export default function CriarUsuarioAdm() {
         const userResponseData = await userResponse.json();
         console.log(userResponseData);
         setAviso("Falha ao cadastrar usuário!");
-          setTimeout(() => {
-            setAviso('');
-          }, 2000);
+        setTimeout(() => {
+          setAviso('');
+        }, 2000);
       }
     } catch (error) {
       console.error(error);
     }
-  
-  setNome('');
-  setCpf('');
-  setNascimento('');
-  setDepartamento('');
-  setEmail('');
-  setTelefone('');
-  setSenha('');
-  setConfirmarSenha('');
-};
+
+    setNome('');
+    setCpf('');
+    setNascimento('');
+    setDepartamento('');
+    setEmail('');
+    setTelefone('');
+    setSenha('');
+    setConfirmarSenha('');
+  };
 
   return (
     <div className="CadastroAdm">

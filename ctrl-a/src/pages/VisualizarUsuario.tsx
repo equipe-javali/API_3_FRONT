@@ -3,6 +3,7 @@ import './css/visualizarUsuario.css'
 import RespostaSistema from '../components/respostaSistema';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import getLocalToken from '../utils/getLocalToken';
 
 interface Ativo {
   id: number;
@@ -47,8 +48,14 @@ export default function VisualizarUsuario() {
     }
   }, [tipoResposta]);
 
+  const token = getLocalToken();
+
   useEffect(() => {
-    fetch('http://localhost:8080/usuario/listagemTodos')
+    fetch('http://localhost:8080/usuario/listagemTodos', {
+      headers: {
+        "Authorization": token
+      }
+    })
       .then((response) => {
         if (!response.ok) {
           setTextoResposta(`Não foi possível listar os usuários! Erro:${response.status}`)
@@ -103,6 +110,7 @@ export default function VisualizarUsuario() {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        "Authorization": token
       },
       body: JSON.stringify({ status: 'inativo' }),
     })

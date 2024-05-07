@@ -4,6 +4,7 @@ import Modal from '../components/modal/modal';
 import RespostaSistema from '../components/respostaSistema';
 import { Link } from 'react-router-dom';
 import { FaWrench, FaPencilAlt, FaTrash } from 'react-icons/fa';
+import getLocalToken from '../utils/getLocalToken';
 
 type AtivoProps = {
     id: number;
@@ -101,8 +102,15 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             );
         }
     }
+    const token = getLocalToken();
+
     useEffect(() => {
-        fetch('http://localhost:8080/usuario/listagemTodos')
+        fetch('http://localhost:8080/usuario/listagemTodos', {
+            method: "GET",
+            headers: {
+                "Authorization": token
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     setTextoResposta(`Não foi possível listar os ativos! Erro: ${response.status}`);
@@ -116,7 +124,12 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                 setTipoResposta("Erro");
             });
 
-        fetch(`http://localhost:8080/manutencao/listagem/${id}`)
+        fetch(`http://localhost:8080/manutencao/listagem/${id}`, {
+            method: "GET",
+            headers: {
+                "Authorization": token
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     console.error(`Não foi possível listar as manutenções do ativo! Erro: ${response.status}`);
@@ -139,6 +152,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    "Authorization": token
                 },
                 body: JSON.stringify(selectedUser.id),
             })
@@ -290,10 +304,15 @@ export default function DashboardAtivos() {
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
+    const token = getLocalToken();
 
     const excluirAtivo = (ativoId: number) => {
         fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, {
             method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": token
+            }
         })
             .then(response => {
                 if (response.ok) {
@@ -312,7 +331,13 @@ export default function DashboardAtivos() {
     };
 
     useEffect(() => {
-        fetch('http://localhost:8080/ativo/listagemTodos')
+        fetch('http://localhost:8080/ativo/listagemTodos', {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": token
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     setTextoResposta(`Não foi possível listar os ativos! Erro: ${response.status}`);

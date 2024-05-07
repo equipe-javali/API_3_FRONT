@@ -6,6 +6,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import './css/atualizaUsuario.css'
 import { useParams } from 'react-router-dom';
 import RespostaSistema from '../components/respostaSistema';
+import getLocalToken from '../utils/getLocalToken';
 
 interface UsuarioData {
     nome: string;
@@ -57,9 +58,15 @@ export default function AtualizarUsuario() {
         fetchUserData();
     }, []);
 
+    const token = getLocalToken();
+
     const fetchUserData = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/usuario/listagem/${id}`);
+            const response = await fetch(`http://localhost:8080/usuario/listagem/${id}`, {
+                headers: {
+                    "Authorization": token
+                }
+            });
             if (response.ok) {
                 const userData: UsuarioData = await response.json();
                 const permissao = userData.usuariologin ? 'Administrador' : 'Usuario';
@@ -113,7 +120,10 @@ export default function AtualizarUsuario() {
     const excluirUsuarioLogin = async () => {
         try {
             const excluir = await fetch(`http://localhost:8080/usuarioLogin/exclusao/${id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    "Authorization": token
+                }
             });
             if (excluir.ok) {
                 console.log('Login excluído com sucesso!');
@@ -129,7 +139,10 @@ export default function AtualizarUsuario() {
         try {
             const novoLogin = await fetch(`http://localhost:8080/usuarioLogin/cadastro`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": token
+                },
                 body: JSON.stringify({
                     'usuario': {"id" : id},
                     'senha': formData.usuariologin?.senha
@@ -155,7 +168,8 @@ export default function AtualizarUsuario() {
                 const respLogin = await fetch(`http://localhost:8080/usuarioLogin/atualizacao/${id}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        "Authorization": token
                     },
                     body: JSON.stringify({
                         'usuario': {"id" : id},
@@ -171,7 +185,8 @@ export default function AtualizarUsuario() {
             const response = await fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": token
                 },
                 body: JSON.stringify({
                     'nome': formData.nome,

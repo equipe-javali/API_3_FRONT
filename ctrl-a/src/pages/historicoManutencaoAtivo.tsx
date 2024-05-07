@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import './css/historicoManutencao.css'
 import Modal from '../components/modal/modal';
 import { useParams } from 'react-router-dom';
+import getLocalToken from '../utils/getLocalToken';
 
 interface ManutencaoData {
     id: number;
@@ -164,6 +165,7 @@ export default function HistoricoManutencao() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                "Authorization": token
             },
             body: JSON.stringify(manutencaoDataWithDates),
         })
@@ -190,12 +192,16 @@ export default function HistoricoManutencao() {
             })
             .catch(error => console.error('Error:', error));
     }
-
+    const token = getLocalToken();
 
     useEffect(() => {
         console.log('Fetching manutencoes...');
 
-        fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`)
+        fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`,{
+            headers: {
+                "Authorization": token
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);

@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import './css/criarUsuario.css';
 import RespostaSistema from "../components/respostaSistema";
+import getLocalToken from "../utils/getLocalToken";
 
 export default function CriarUsuario() {
   const [nome, setNome] = useState('');
@@ -60,14 +61,19 @@ export default function CriarUsuario() {
       telefone
     };
 
+    const token = getLocalToken();
+
     try {
       console.log(data);
       fetch('http://localhost:8080/usuario/cadastro', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "Authorization": token
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({
+          usuario: data
+        })
       })
         .then((response) => {
           if (response.ok) {

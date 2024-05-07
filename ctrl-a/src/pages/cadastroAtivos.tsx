@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import CadastroAtivosTangiveis from './cadastroAtivosTangiveis'
 import CadastroAtivosIntangiveis from './cadastroAtivosIntangiveis'
 import RespostaSistema from '../components/respostaSistema'
+import getLocalToken from '../utils/getLocalToken'
 
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
@@ -30,6 +31,9 @@ export default function CadastroAtivos() {
             return () => clearTimeout(timer);
         }
     }, [tipoResposta]);
+
+    const token = getLocalToken();
+
     const tipo = CampoAtivoPadrao("Tipo", "text", "Exemplo: automóvel, mobília...")
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -55,7 +59,8 @@ export default function CadastroAtivos() {
                     }),
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        "Authorization": token
                     },
                     mode: 'cors'
                 })
@@ -94,7 +99,8 @@ export default function CadastroAtivos() {
                     }),
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        "Authorization": token
                     },
                     mode: 'cors'
                 })
