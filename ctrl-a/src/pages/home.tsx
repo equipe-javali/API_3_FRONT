@@ -3,6 +3,7 @@ import './css/home.css';
 import logo from '../assets/icons/logo.png';
 import RespostaSistema from '../components/respostaSistema';
 import getLocalToken from '../utils/getLocalToken';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const [textoResposta, setTextoResposta] = useState('')
@@ -85,7 +86,10 @@ export default function Home() {
               </span>
             </div>
           </div>
-          <input type="submit" placeholder='Entrar' />
+          <button type="submit">Entrar</button>
+          <p className='pergunta'> Não possui cadastro ainda?
+          <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>
+          </p>
         </form>
       </div>
     </div>
