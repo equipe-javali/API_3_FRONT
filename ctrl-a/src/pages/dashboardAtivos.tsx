@@ -178,7 +178,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
 
     const [statusA, setStatusA] = useState<string>(status);
     useEffect(() => {
-        if (idResponsavel?.departamento === null) {
+        if (idResponsavel === null) {
             setStatusA('Não alocado');
         }
         else if (emManutencao()) {
@@ -202,7 +202,6 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
         <div className="linhaAtv"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}>
-            {/* onClick={() => window.location.href = `/AtualizarAtivo/${id}`}> */}
             <p className="id">{id}</p>
             <p className="nome">{nome}</p>
             <p className="responsavel">{idResponsavel ? idResponsavel.nome : 'Não definido'}</p>

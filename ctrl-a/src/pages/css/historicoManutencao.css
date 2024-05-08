@@ -30,7 +30,7 @@ tr.linhaMan td {
     padding: var(--paddingDashboardMan);
 }
 
-.buscaFiltro {
+.dashboardMan .buscaFiltro {
     visibility: visible;
 }
 

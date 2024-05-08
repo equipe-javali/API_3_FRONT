@@ -27,7 +27,7 @@
     padding: var(--paddingDasboardAtv);
 }
 
-.buscaFiltro {
+.dashboardAtv .buscaFiltro {
     visibility: hidden;
 }
 

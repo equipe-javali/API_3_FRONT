@@ -17,6 +17,8 @@
     --fontSizeCampoAtivo: 25px;
     --fontSizeInputCampoAtivo: 25px;
     --gapDivInput: 5px;
+    --heightCampoAtivoReadOnly: 30px;
+    --paddingCampoAtivoReadOnly: 8px;
 }
 
 /* 
@@ -61,6 +63,20 @@
     padding: var(--paddingInputHorizontalCampoAtivo) var(--paddingInputVerticalCampoAtivo);
 }
 
+.campoAtivoReadOnly{
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.campoAtivoReadOnly>input {
+    padding: var(--paddingCampoAtivoReadOnly);
+    height: var(--heightCampoAtivoReadOnly);
+    width: 100%;
+    border-radius: 8px;
+    background-color: var(--cor20);
+    color: var(--cor9);
+}
 
 /* 
 ====================

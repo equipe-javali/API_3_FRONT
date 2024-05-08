@@ -7,6 +7,8 @@ import lapis from "../assets/icons/lapis.svg"
 import { Link } from 'react-router-dom';
 import Modal from '../components/modal/modal';
 import getLocalToken from '../utils/getLocalToken';
+import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
+import CampoAtivoReadOnly from '../components/CampoAtivoReadOnly';
 interface Ativo {
     nome: string;
     dataAquisicao: string;
@@ -68,7 +70,7 @@ export default function AtualizarAtivo() {
     useEffect(() => {
         DadosAtivo();
         DadosUsuario();
-    }, [id])
+    }, [])
     async function DadosAtivo() {
         try {
             let response = await fetch(`http://localhost:8080/ativoIntangivel/listagem/${id}`, {
@@ -97,8 +99,8 @@ export default function AtualizarAtivo() {
                         grauImportancia: data.ativo?.grauImportancia || "",
                         tag: data.ativo?.tag || "",
                         status: data.ativo?.status || "",
-                        idResponsavel: responsavel.id || 0,
-                        departamento: responsavel.departamento || 0,
+                        idResponsavel: responsavel?.id || 0,
+                        departamento: responsavel?.departamento || 0,
                         local: data.ativo?.local || "",
                     });
                 })
@@ -137,8 +139,8 @@ export default function AtualizarAtivo() {
                         grauImportancia: data.ativo?.grauImportancia || "",
                         tag: data.ativo?.tag || "",
                         status: data.ativo?.status || "",
-                        idResponsavel: responsavel.id || 0,
-                        departamento: responsavel.departamento || "",
+                        idResponsavel: responsavel?.id || 0,
+                        departamento: responsavel?.departamento || "",
                         local: data.ativo?.local || "",
                     });
                 })
@@ -186,14 +188,23 @@ export default function AtualizarAtivo() {
                 grauImportancia: dados.grauImportancia,
                 tag: dados.tag,
                 status: dados.status,
-                local: dados.local
             })
             setNomeAtivo(dados.nome)
             setDescricao(dados.descricao)
             setIdResponsavel(dados.idResponsavel)
             setDepartamento(dados.departamento)
+            mudaLocal()
         }
     }, [dados]);
+    function mudaLocal() {
+        if (emManutencao()) {
+            setLocal(String(manutencoes[0].localizacao))
+        } else if (departamento) {
+            return (
+                setLocal(departamento)
+            );
+        }
+    }
 
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);
@@ -247,13 +258,33 @@ export default function AtualizarAtivo() {
         grauImportancia: '',
         tag: '',
         status: '',
-        local: ''
     })
+
+    const [idResponsavel, setIdResponsavel] = useState(0)
+    const [departamento, setDepartamento] = useState('')
+    const [local, setLocal] = useState('')
+
+    function localAtivo() {
+        if (emManutencao()) {
+            return manutencoes[0].localizacao;
+        } else {
+            return departamento;
+        }
+    }
+    const [statusA, setStatusA] = useState('');
+    useEffect(() => {
+        if (idResponsavel != 0) {
+            setStatusA('Em uso');
+        }
+        else if (emManutencao()) {
+            setStatusA('Em manutenção');
+        } else {
+            setStatusA('Não alocado');
+        }
+    }, [idResponsavel, manutencoes]);
 
     let [textoTipoOperacional, setTextoTipoOperacional] = useState('depreciação')
     const [nomeAtivo, setNomeAtivo] = useState('')
-    const [idResponsavel, setIdResponsavel] = useState(0)
-    const [departamento, setDepartamento] = useState('')
     const CampoDataAquisicao = CampoAtivoEditavel("Data Aquisição", camposForm.dataAquisicao, "date")
     const CampoCustoAquisicao = CampoAtivoEditavel("Custo Aquisição", camposForm.custoAquisicao, "number")
     const CampoTaxaOperacional = CampoAtivoEditavel(`Taxa  de ${textoTipoOperacional}`, camposForm.taxaOperacional, "number")
@@ -266,8 +297,8 @@ export default function AtualizarAtivo() {
     const CampoTipo = CampoAtivoEditavel("Tipo", camposForm.tipo, "string")
     const CampoImportancia = CampoAtivoEditavel("Importancia", camposForm.grauImportancia, "string")
     const CampoTag = CampoAtivoEditavel("Tag", camposForm.tag, "string")
-    const CampoStatus = CampoAtivoEditavel("Status", camposForm.status, "string")
-    const CampoLocal = CampoAtivoEditavel("Local", camposForm.local, "string")
+    const CampoStatus = CampoAtivoReadOnly("Status", statusA, "string")
+    const CampoLocal = CampoAtivoReadOnly("Local", local, "string")
     function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
         setManutencaoData(prevData => ({
             ...prevData,
@@ -275,25 +306,6 @@ export default function AtualizarAtivo() {
             ativoId: prevData.idAtivo,
         }))
     }
-
-    function localAtivo() {
-        if (emManutencao()) {
-            return manutencoes[0].localizacao;
-        } else {
-            return departamento;
-        }
-    }
-    const [statusA, setStatusA] = useState('');
-    useEffect(() => {
-        if (departamento === '0') {
-            setStatusA('Não alocado');
-        }
-        else if (emManutencao()) {
-            setStatusA('Em manutenção');
-        } else {
-            setStatusA('Em uso');
-        }
-    }, [idResponsavel, manutencoes]);
 
     const tipoMapping: { [key: string]: number } = {
         "Preventiva": 1,
@@ -373,12 +385,13 @@ export default function AtualizarAtivo() {
 
     function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
         const userId = Number(event.target.value);
-        const user = usuarios.find(u => u.id === userId);
+        const user = usuarios.find(u => u?.id === userId);
         setIdResponsavel(userId)
         if (user) {
             setDepartamento(user.departamento)
         }
         setSelectedUser(user || null);
+        localAtivo()
     }
     function handleDepartamento(event: React.ChangeEvent<HTMLSelectElement>) {
         setDepartamento(event.target.value)
@@ -529,7 +542,7 @@ export default function AtualizarAtivo() {
                     </div>
                 </div>
             </Modal>
-            <h1 className='tituloFormsAtualizarAtivo'>{`Ativos > (${id} / ${dados?.numeroIdentificacao})`}</h1>
+            <h1 className='tituloFormsAtualizarAtivo'>{`Ativos > (ID: ${id} / Número Identificador: ${dados?.numeroIdentificacao})`}</h1>
             <form className="formsAtualizarAtivo" onSubmit={handleSubmit}>
                 <div>
                     <div className='divisaoFormsEditar1'>
@@ -574,11 +587,12 @@ export default function AtualizarAtivo() {
                             <div className='inputContainer'>
                                 <select className='input' name='responsavel' value={idResponsavel} onChange={handleUserChange}>
                                     {usuarios.map(usuario => (
-                                        <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
+                                        <option key={usuario?.id} value={usuario?.id}>{usuario?.nome}</option>
                                     ))}
                                 </select>
                             </div>
                             <div>
+                                <label>Departamento </label>
                                 <div className='inputContainer'>
                                     <select className='input' name='departamento' value={departamento || ''} onChange={handleDepartamento}>
                                         <option value={''}>Selecione departamento</option>
