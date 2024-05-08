@@ -124,6 +124,7 @@ export default function HistoricoManutencao() {
     const tipos = ["Corretiva", "Preventiva", "Preditiva"];
     const [searchTerm, setSearchTerm] = useState('');
     const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
+    const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
     const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setFilterValue(event.target.value);
     };
