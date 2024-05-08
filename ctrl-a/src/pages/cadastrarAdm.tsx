@@ -10,7 +10,6 @@ export default function CriarUsuarioAdm() {
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [departamento, setDepartamento] = useState('');
   const [aviso, setAviso] = useState("")
@@ -47,11 +46,6 @@ export default function CriarUsuarioAdm() {
 
     if (!emailRegex.test(email)) {
       console.log('Email inválido');
-      return;
-    }
-
-    if (senha !== confirmarSenha) {
-      alert('As senhas não correspondem!');
       return;
     }
 
@@ -130,7 +124,6 @@ export default function CriarUsuarioAdm() {
     setEmail('');
     setTelefone('');
     setSenha('');
-    setConfirmarSenha('');
   };
 
   return (
@@ -153,8 +146,6 @@ export default function CriarUsuarioAdm() {
           <input type={showPassword ? "text" : "password"} value={senha} onChange={handleSenhaChange} required />
           {showPassword ? <FaEyeSlash className="password-icon" onClick={() => setShowPassword(!showPassword)} /> : <FaEye className="password-icon" onClick={() => setShowPassword(!showPassword)} />}
         </div>
-        {/* <label>Confirme a senha: *</label>
-        <input type="password" value={confirmarSenha} onChange={handleConfirmarSenhaChange} required /> */}
         <label>Selecione o Departamento: *</label>
         <select name="departamento" value={departamento} onChange={event => setDepartamento(event.target.value)} required>
           <option value="">Selecione...</option>
