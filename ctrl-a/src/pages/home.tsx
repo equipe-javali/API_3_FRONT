@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './css/home.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from '../assets/icons/logo.png';
 import RespostaSistema from '../components/respostaSistema';
-import getLocalToken from '../utils/getLocalToken';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
@@ -10,8 +10,7 @@ export default function Home() {
   const [tipoResposta, setTipoResposta] = useState('')
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Estado para controlar se a senha está visível
-  const token = getLocalToken();
+  const [showPassword, setShowPassword] = useState(false);
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     try {
@@ -23,13 +22,13 @@ export default function Home() {
         }),
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          "Authorization": token
+          'Accept': 'application/json'
         },
         mode: 'cors'
       });
       const responseData = await response.json();
       if (response.status === 202) {
+        localStorage.clear()
         localStorage.setItem("token", `${responseData.token}`)
         window.location.href = '/ListaAtivos';
       }
@@ -71,24 +70,14 @@ export default function Home() {
           </div>
           <div className="form-group">
             <label htmlFor="password">Senha:</label>
-            <div className="password-input-container">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <span
-                className="password-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? 'Ocultar' : 'Mostrar'}
-              </span>
+            <div className="input-container">
+              <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required />
+              {showPassword ? <FaEyeSlash className="password-icon" onClick={() => setShowPassword(!showPassword)} /> : <FaEye className="password-icon" onClick={() => setShowPassword(!showPassword)} />}
             </div>
           </div>
           <button type="submit">Entrar</button>
           <p className='pergunta'> Não possui cadastro ainda?
-          <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>
+            <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>
           </p>
         </form>
       </div>
