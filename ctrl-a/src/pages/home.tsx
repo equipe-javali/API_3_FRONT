@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './css/home.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import logo from '../assets/icons/logo.png';
+import logoHome from '../assets/icons/logoHome.jpeg';
 import RespostaSistema from '../components/respostaSistema';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     try {
       const response = await fetch("http://localhost:8080/login/signin", {
@@ -46,40 +46,48 @@ export default function Home() {
     setTipoResposta('')
   }
   return (
-    <div className='DivHome'>
+    <div className='divHome'>
       <RespostaSistema tipoResposta={tipoResposta} textoResposta={textoResposta} onClose={fechaPopUp} />
-      <header id="header-component">
-        <img src={logo} alt="Logo" className="logo" />
-      </header>
-      <div className="home-content">
-        <div className="home-left-content">
-          <p className="home-slogan">Dê um Ctrl A e controle seus ativos com facilidade!</p>
+      <div>
+        <div>
+          <img src={logoHome} alt="Logo-Home" />
+          <p className="home-slogan">Dê um Ctrl A e controle seus ativos com facilidade! </p>
         </div>
-      </div>
-      <div className="login-container">
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
-            <label htmlFor="email">Usuário:</label>
-            <input
-              type="text"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Senha:</label>
-            <div className="input-container">
-              <input type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required />
-              {showPassword ? <FaEyeSlash className="password-icon" onClick={() => setShowPassword(!showPassword)} /> : <FaEye className="password-icon" onClick={() => setShowPassword(!showPassword)} />}
+        <div>
+          <form onSubmit={handleSubmit} className='formLogin'>
+            <h1>Login</h1>
+            <div className='divEmailLogin'>
+              <span> Email do Usuário:</span>
+              <input
+                type='text'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
-          </div>
-          <button type="submit">Entrar</button>
-          <p className='pergunta'> Não possui cadastro ainda?
-            <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>
-          </p>
-        </form>
+            <div className='divSenhaLogin'>
+              <span> Senha</span>
+              <div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                {showPassword ? <FaEyeSlash onClick={() => setShowPassword(!showPassword)} /> : <FaEye onClick={() => setShowPassword(!showPassword)} />}
+              </div>
+            </div>
+            <input
+              className='botaoLogin'
+              type='submit'
+              placeholder='Entrar'
+            />
+            <p className='pergunta'>
+              Não possui cadastro ainda?
+              <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
