@@ -66,67 +66,69 @@ export default function AtualizarAtivo() {
     }
     const token = getLocalToken();
     useEffect(() => {
+        DadosAtivo();
+        DadosUsuario();
+    }, [id])
+    async function DadosAtivo() {
         try {
-            fetch(`http://localhost:8080/ativoIntangivel/listagem/${id}`, {
+            let response = await fetch(`http://localhost:8080/ativoIntangivel/listagem/${id}`, {
                 headers: {
                     "Authorization": token
                 }
             })
-                .then(response => {
-                    if (response.status === 200) {
-                        setTextoTipoOperacional("amortização")
-                        setTextoDataLimite("Data de Expiracao")
-                        setTipoAtivoTangivel(false)
-                        return response.json();
-                    } else if (response.status !== 404) {
-                        setTextoResposta(`Erro ao procurar ativo! Erro:${response.status}`);
-                        setTipoResposta('Erro');
-                    } else {
-                        fetch(`http://localhost:8080/ativoTangivel/listagem/${id}`)
-                            .then(response => {
-                                if (response.status === 404) {
-                                    setTextoResposta(`Ativo não existe!`);
-                                    setTipoResposta('Erro');
-                                } else if (response.status !== 200) {
-                                    setTextoResposta(`Erro ao procurar ativo! Erro:${response.status}`);
-                                    setTipoResposta('Erro');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                console.log(data);
-                                setDados({
-                                    nome: data.ativo?.nome || "",
-                                    dataAquisicao: data.ativo?.dataAquisicao || "",
-                                    custoAquisicao: data.ativo?.custoAquisicao || 0,
-                                    taxaOperacional: data.taxaDepreciacao || 0,
-                                    periodoOperacional: data.periodoDepreciacao || "",
-                                    dataLimite: data.dataExpiracao || "",
-                                    marca: data.ativo?.marca || "",
-                                    numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
-                                    descricao: data.ativo?.descricao || "",
-                                    tipo: data.ativo?.tipo || "",
-                                    grauImportancia: data.ativo?.grauImportancia || "",
-                                    tag: data.ativo?.tag || "",
-                                    status: data.ativo?.status || "",
-                                    idResponsavel: data.ativo?.idResponsavel.nome || 0,
-                                    departamento: data.ativo?.idResponsavel.departamento || "",
-                                    local: data.ativo?.local || "",
-                                })
-                            })
-                            .catch(error => {
-                                console.error(`Erro ao processar requisição! Erro:${error}`);
-                            })
-                    }
-                })
-                .then(data => {
+            if (response.status === 200) {
+                setTextoTipoOperacional("amortização")
+                setTextoDataLimite("Data de expiracao")
+                setTipoAtivoTangivel(false)
+                return response.json().then(data => {
                     console.log(data)
+                    const responsavel = data.ativo.idResponsavel
                     setDados({
                         nome: data.ativo?.nome || "",
                         dataAquisicao: data.ativo?.dataAquisicao || "",
                         custoAquisicao: data.ativo?.custoAquisicao || 0,
                         taxaOperacional: data.taxaAmortizacao || 0,
                         periodoOperacional: data.periodoAmortizacao || "",
+                        dataLimite: data.dataExpiracao || "",
+                        marca: data.ativo?.marca || "",
+                        numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
+                        descricao: data.ativo?.descricao || "",
+                        tipo: data.ativo?.tipo || "",
+                        grauImportancia: data.ativo?.grauImportancia || "",
+                        tag: data.ativo?.tag || "",
+                        status: data.ativo?.status || "",
+                        idResponsavel: responsavel.id || 0,
+                        departamento: responsavel.departamento || 0,
+                        local: data.ativo?.local || "",
+                    });
+                })
+            } else if (response.status !== 404) {
+                setTextoResposta(`Erro ao procurar ativo! Erro:${response.status}`);
+                setTipoResposta('Erro');
+                return
+            } else {
+                response = await fetch(`http://localhost:8080/ativoTangivel/listagem/${id}`, {
+                    headers: {
+                        "Authorization": token
+                    }
+                })
+                if (response.status === 404) {
+                    setTextoResposta(`Ativo não existe!`);
+                    setTipoResposta('Erro');
+                } else if (response.status !== 200) {
+                    setTextoResposta(`Erro ao procurar ativo! Erro:${response.status}`);
+                    setTipoResposta('Erro');
+                    return
+                }
+                return response.json().then(data => {
+                    console.log(data)
+                    const responsavel = data.ativo.idResponsavel
+                    setDados({
+                        nome: data.ativo?.nome || "",
+                        dataAquisicao: data.ativo?.dataAquisicao || "",
+                        custoAquisicao: data.ativo?.custoAquisicao || 0,
+                        taxaOperacional: data.taxaDepreciacao || 0,
+                        periodoOperacional: data.periodoDepreciacao || "",
                         dataLimite: data.garantia || "",
                         marca: data.ativo?.marca || "",
                         numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
@@ -135,31 +137,30 @@ export default function AtualizarAtivo() {
                         grauImportancia: data.ativo?.grauImportancia || "",
                         tag: data.ativo?.tag || "",
                         status: data.ativo?.status || "",
-                        idResponsavel: data.ativo?.idResponsavel || 0,
-                        departamento: data.ativo?.departamento || "",
+                        idResponsavel: responsavel.id || 0,
+                        departamento: responsavel.departamento || "",
                         local: data.ativo?.local || "",
-                    })
+                    });
                 })
-                .catch(error => {
-                    console.error(`Erro ao processar requisição! Erro:${error}`);
-                })
+            }
         } catch (error) {
             setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
             setTipoResposta("Erro")
         }
+    }
+    async function DadosUsuario() {
         try {
-            fetch('http://localhost:8080/usuario/listagemTodos', {
+            const response = await fetch('http://localhost:8080/usuario/listagemTodos', {
                 headers: {
                     "Authorization": token
                 }
             })
-                .then(response => {
-                    if (!response.ok) {
-                        setTextoResposta(`Não foi possível listar os ativo! Erro:${response.status}`)
-                        setTipoResposta("Erro")
-                    }
-                    return response.json();
-                })
+            if (!response.ok) {
+                setTextoResposta(`Não foi possível listar os ativo! Erro:${response.status}`)
+                setTipoResposta("Erro")
+                return
+            }
+            return response.json()
                 .then(data => setUsuarios(data))
                 .catch(error => {
                     setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
@@ -169,7 +170,7 @@ export default function AtualizarAtivo() {
             setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
             setTipoResposta("Erro");
         }
-    }, [id])
+    }
 
     useEffect(() => {
         if (dados) {
@@ -258,7 +259,6 @@ export default function AtualizarAtivo() {
     const CampoTaxaOperacional = CampoAtivoEditavel(`Taxa  de ${textoTipoOperacional}`, camposForm.taxaOperacional, "number")
     const CampoPeriodoOperacional = CampoAtivoEditavel(`Periodo de ${textoTipoOperacional}`, camposForm.periodoOperacional, "string")
     let [textoDataLimite, setTextoDataLimite] = useState('Validade da garantia')
-    //Data de Expiracao
     const CampoDataLimite = CampoAtivoEditavel(textoDataLimite, camposForm.dataLimite, "date")
     const CampoMarca = CampoAtivoEditavel("Marca", camposForm.marca, "string")
     const [descricao, setDescricao] = useState('')
