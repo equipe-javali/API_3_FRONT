@@ -2,7 +2,7 @@
   background-color: var(--cor21);
 }
 
-.divHome>div {
+.divHome>div:last-child{
   display: flex;
   min-width: 100vw;
   min-height: 100vh;
@@ -10,18 +10,18 @@
   flex-wrap: wrap;
 }
 
-.divHome>div>div{
-  min-height: 300px;
+.divHome>div:last-child>div{
+  min-height: 300px;  
   align-self: center;
   margin: 0 auto;
 }
-.divHome>div>div:first-child {
+.divHome>div:last-child>div:first-child {
   flex: 1;
   text-align: center;
   font-size: calc(18px + 0.5vw);
 }
 
-.divHome>div>div:first-child>img {
+.divHome>div:last-child>div:first-child>img {
   border-radius: 100%;
   height: 45vh;
   min-height: 200px;
@@ -29,7 +29,7 @@
   padding-top: 0;
 }
 
-.divHome>div>div:last-child {
+.divHome>div:last-child>div:last-child {
   flex: 1;
   height: 100%;
   display: flex;
