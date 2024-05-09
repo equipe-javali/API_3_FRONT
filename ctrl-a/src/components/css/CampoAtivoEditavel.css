@@ -9,14 +9,30 @@
     flex-direction: column;
 }
 
-.divCampoAtivoEditavel{
+.divCampoAtivoEditavel, .divTextaareaEditavel{
     display: flex;
 }
 
-.divCampoAtivoEditavel > input,
-.divCampoAtivoEditavel > textarea{
+.divCampoAtivoEditavel > input{
     height: var(--heightInputCampoAtivoEditavel);
     width: 100%;
+}
+
+.divTextaareaEditavel{
+    border-radius: 8px;
+    padding: var(--paddingCampoAtivoEditavel);
+}
+
+.divTextaareaEditavel > textarea{
+    resize: none;
+    height: 100px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.divTextaareaEditavel>img{
+    align-self: start;
+    width: 3%;
 }
 
 .divCampoAtivoEditavel,

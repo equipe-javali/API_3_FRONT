@@ -13,6 +13,7 @@
 .formsAtualizarAtivo>div:last-child>div,
 .formsAtualizarAtivo>div:last-child>div>div {
   display: flex;
+  justify-content: space-around;
   width: 100%;
   gap: 8px;
 }

@@ -21,7 +21,7 @@ interface Ativo {
     //anexos: Documento[];
     descricao: string;
     tipo: string;
-    grauImportancia: string;
+    grauImportancia: number;
     tag: string;
     status: string;
     idResponsavel: number;
@@ -70,6 +70,7 @@ export default function AtualizarAtivo() {
     useEffect(() => {
         DadosAtivo();
         DadosUsuario();
+        ListagemManutencao();
     }, [])
     async function DadosAtivo() {
         try {
@@ -96,7 +97,7 @@ export default function AtualizarAtivo() {
                         numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
                         descricao: data.ativo?.descricao || "",
                         tipo: data.ativo?.tipo || "",
-                        grauImportancia: data.ativo?.grauImportancia || "",
+                        grauImportancia: data.ativo?.grauImportancia || 0,
                         tag: data.ativo?.tag || "",
                         status: data.ativo?.status || "",
                         idResponsavel: responsavel?.id || 0,
@@ -136,7 +137,7 @@ export default function AtualizarAtivo() {
                         numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
                         descricao: data.ativo?.descricao || "",
                         tipo: data.ativo?.tipo || "",
-                        grauImportancia: data.ativo?.grauImportancia || "",
+                        grauImportancia: data.ativo?.grauImportancia || 0,
                         tag: data.ativo?.tag || "",
                         status: data.ativo?.status || "",
                         idResponsavel: responsavel?.id || 0,
@@ -158,7 +159,7 @@ export default function AtualizarAtivo() {
                 }
             })
             if (!response.ok) {
-                setTextoResposta(`Não foi possível listar os ativo! Erro:${response.status}`)
+                setTextoResposta(`Não foi possível listar os usuários! Erro:${response.status}`)
                 setTipoResposta("Erro")
                 return
             }
@@ -172,6 +173,29 @@ export default function AtualizarAtivo() {
             setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
             setTipoResposta("Erro");
         }
+    }
+    async function ListagemManutencao() {
+        try {
+            const resp = await fetch(`http://localhost:8080/manutencao/listagem/${id}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": token
+                }
+            }).then(resp => {
+                if (!resp.ok) {
+                    console.error(`Não foi possível listar as manutenções do ativo! Erro: ${resp.status}`);
+                }
+                return resp.json();
+            })
+                .then(data => {
+                    setManutencoes(
+                        (data as Manutencao[]).sort((a, b) => Date.parse(a.dataInicio) - Date.parse(b.dataInicio))
+                    )
+                })
+        } catch (error) {
+            setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+            setTipoResposta("Erro");
+        };
     }
 
     useEffect(() => {
@@ -193,6 +217,7 @@ export default function AtualizarAtivo() {
             setDescricao(dados.descricao)
             setIdResponsavel(dados.idResponsavel)
             setDepartamento(dados.departamento)
+            setImportancia(dados.grauImportancia)
             mudaLocal()
         }
     }, [dados]);
@@ -224,7 +249,7 @@ export default function AtualizarAtivo() {
             //anexos: Documento[],
             descricao: "",
             tipo: "",
-            grauImportancia: "",
+            grauImportancia: 0,
             tag: "",
             status: "",
             idResponsavel: 0,
@@ -239,12 +264,7 @@ export default function AtualizarAtivo() {
         dataFim: '',
     });
     const [manutencao, setManutencao] = useState<Manutencao[]>([]);
-    function emManutencao(): boolean {
-        if (manutencoes.length <= 0) {
-            return false;
-        }
-        return Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim);
-    }
+
     const [camposForm, setCamposForm] = useState({
         dataAquisicao: "",
         custoAquisicao: 0,
@@ -255,7 +275,7 @@ export default function AtualizarAtivo() {
         numeroIdentificacao: '',
         //anexos: [];
         tipo: '',
-        grauImportancia: '',
+        grauImportancia: 0,
         tag: '',
         status: '',
     })
@@ -264,20 +284,29 @@ export default function AtualizarAtivo() {
     const [departamento, setDepartamento] = useState('')
     const [local, setLocal] = useState('')
 
+    function emManutencao(): boolean {
+        if (manutencoes.length <= 0) {
+            return false;
+        }
+        return Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim);
+    }
+
     function localAtivo() {
         if (emManutencao()) {
             return manutencoes[0].localizacao;
         } else {
+            setLocal(departamento)
             return departamento;
         }
     }
+
     const [statusA, setStatusA] = useState('');
     useEffect(() => {
-        if (idResponsavel != 0) {
-            setStatusA('Em uso');
-        }
-        else if (emManutencao()) {
+        if (emManutencao()) {
             setStatusA('Em manutenção');
+        }
+        else if (idResponsavel != 0) {
+            setStatusA('Em uso');
         } else {
             setStatusA('Não alocado');
         }
@@ -294,8 +323,9 @@ export default function AtualizarAtivo() {
     const CampoMarca = CampoAtivoEditavel("Marca", camposForm.marca, "string")
     const [descricao, setDescricao] = useState('')
     const [editarDescricao, setEditarDescricao] = useState(true)
-    const CampoTipo = CampoAtivoEditavel("Tipo", camposForm.tipo, "string")
-    const CampoImportancia = CampoAtivoEditavel("Importancia", camposForm.grauImportancia, "string")
+    const CampoTipo = CampoAtivoEditavel("Categoria", camposForm.tipo, "string")
+    const [importancia, setImportancia] = useState(0)
+    // const CampoImportancia = CampoAtivoEditavel("Importancia", camposForm.grauImportancia, "string")
     const CampoTag = CampoAtivoEditavel("Tag", camposForm.tag, "string")
     const CampoStatus = CampoAtivoReadOnly("Status", statusA, "string")
     const CampoLocal = CampoAtivoReadOnly("Local", local, "string")
@@ -365,7 +395,7 @@ export default function AtualizarAtivo() {
                         //anexos: Documento[],
                         descricao: "",
                         tipo: "",
-                        grauImportancia: "",
+                        grauImportancia: 0,
                         tag: "",
                         status: "",
                         idResponsavel: 0,
@@ -397,6 +427,23 @@ export default function AtualizarAtivo() {
         setDepartamento(event.target.value)
     }
 
+    function handleImportancia(event: React.ChangeEvent<HTMLSelectElement>) {
+        setImportancia(Number(event.target.value));
+        textoImportancia()
+    }
+
+    function textoImportancia() {
+        if (importancia === 1) {
+            return 'Baixo';
+        } else if (importancia === 2) {
+            return 'Médio';
+        } else if (importancia === 3) {
+            return 'Alto';
+        } else {
+            return 'Selecione grau de importância';
+        }
+    }
+
     function handleTextareaDataChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
         setManutencaoData(prevData => ({
             ...prevData,
@@ -416,11 +463,11 @@ export default function AtualizarAtivo() {
         setShowManutencaoModal(false);
     }
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         try {
             if (tipoAtivoTangivel) {
-                fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
+                const resp = await fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -434,7 +481,7 @@ export default function AtualizarAtivo() {
                             'custoAquisicao': CampoCustoAquisicao.dados,
                             'tipo': CampoTipo.dados,
                             'tag': CampoTag.dados,
-                            'grauImportancia': CampoImportancia.dados,
+                            'grauImportancia': importancia,
                             'idResponsavel': { 'id': idResponsavel },
                             'descricao': descricao,
                             'numeroIdentificacao': camposForm.numeroIdentificacao,
@@ -471,7 +518,7 @@ export default function AtualizarAtivo() {
                             'custoAquisicao': CampoCustoAquisicao.dados,
                             'tipo': CampoTipo.dados,
                             'tag': CampoTag.dados,
-                            'grauImportancia': CampoImportancia.dados,
+                            'grauImportancia': importancia,
                             'idResponsavel': { 'id': idResponsavel },
                             'descricao': descricao,
                             'numeroIdentificacao': camposForm.numeroIdentificacao,
@@ -486,8 +533,20 @@ export default function AtualizarAtivo() {
                     .then(response => {
                         if (response.status === 200) {
                             console.log('Ativo atualizado com sucesso!');
+                            setTextoResposta('Ativo atualizado com sucesso!');
+                            setTipoResposta('Sucesso');
                         } else {
+                            setTextoResposta(`Erro ao atualizar ativo! Erro:${response.status}`);
+                            setTipoResposta('Erro');
                             console.error('Erro ao atualizar o ativo:', response.statusText);
+                            console.log(`id: ${id}; nome: ${nomeAtivo};
+                                        custo: ${CampoCustoAquisicao.dados}; tipo: ${CampoTipo.dados};
+                                        tag: ${CampoTag.dados}; importancia: ${importancia};
+                                        responsavel: ${idResponsavel}; descricao: ${descricao};
+                                        identificador: ${camposForm.numeroIdentificacao};
+                                        marca: ${CampoMarca.dados}; aquisicao: ${CampoDataAquisicao.dados};
+                                        expiracao: ${CampoDataLimite.dados}; taxaAm: ${CampoTaxaOperacional.dados};
+                                        peridoAmo: ${CampoPeriodoOperacional.dados}`)
                         }
                     })
                     .catch(error => {
@@ -561,10 +620,10 @@ export default function AtualizarAtivo() {
                                 {CampoMarca.codigo}
                             </div>
                         </div>
-                        <div className="campoAtivoEditavel campoDescricaoEditavel">
+                        <div className="campoAtivoEditavel">
                             <span>Descrição</span>
-                            <div className={`divCampoAtivoEditavel ${editarDescricao ? 'desativado' : 'ativado'}`}>
-                                <textarea placeholder='Digite a descrição...' disabled={editarDescricao} value={descricao} onChange={(e) => setDescricao(e.target.value)} />
+                            <div className={`divTextaareaEditavel ${editarDescricao ? 'desativado' : 'ativado'}`}>
+                                <textarea className='campoDescricaoEditavel' placeholder='Digite a descrição...' disabled={editarDescricao} value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                                 <img src={lapis} alt="Editar" className="lapisEditar" onClick={() => setEditarDescricao(!editarDescricao)} />
                             </div>
                         </div>
@@ -574,7 +633,17 @@ export default function AtualizarAtivo() {
                     <div className='divisaoFormsEditar3'>
                         <div>
                             {CampoTipo.codigo}
-                            {CampoImportancia.codigo}
+                            <div>
+                                <label>Importância </label>
+                                <div className='inputContainer'>
+                                    <select className='input' name='importancia' value={importancia} onChange={handleImportancia}>
+                                        <option value={0} disabled>Selecione grau de importância</option>
+                                        <option value={3}>Alto</option>
+                                        <option value={2}>Média</option>
+                                        <option value={1}>Baixo</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div>
                             {CampoTag.codigo}
@@ -583,13 +652,15 @@ export default function AtualizarAtivo() {
                     </div>
                     <div className='divisaoFormsEditar4'>
                         <div>
-                            <label>Responsável </label>
-                            <div className='inputContainer'>
-                                <select className='input' name='responsavel' value={idResponsavel} onChange={handleUserChange}>
-                                    {usuarios.map(usuario => (
-                                        <option key={usuario?.id} value={usuario?.id}>{usuario?.nome}</option>
-                                    ))}
-                                </select>
+                            <div>
+                                <label>Responsável </label>
+                                <div className='inputContainer'>
+                                    <select className='input' name='responsavel' value={idResponsavel} onChange={handleUserChange}>
+                                        {usuarios.map(usuario => (
+                                            <option key={usuario?.id} value={usuario?.id}>{usuario?.nome}</option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
                             <div>
                                 <label>Departamento </label>
