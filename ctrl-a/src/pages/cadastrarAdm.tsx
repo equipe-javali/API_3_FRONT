@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './css/cadastrarUsuarioAdm.css';
 import getLocalToken from "../utils/getLocalToken";
+import { Link } from "react-router-dom";
 
 export default function CriarUsuarioAdm() {
   const [nome, setNome] = useState('');
@@ -128,8 +129,8 @@ export default function CriarUsuarioAdm() {
 
   return (
     <div className="CadastroAdm">
-
       <form onSubmit={handleSubmit} className="form-cadastro">
+        <Link className="retornarLogin" to={'/'}>◀ Voltar</Link>
         <h1 className="titulo">Cadastrar Adm</h1>
         <label>Insira o nome: *</label>
         <input type="text" value={nome} onChange={handleNomeChange} required />

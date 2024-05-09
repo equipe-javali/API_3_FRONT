@@ -24,6 +24,18 @@
   gap: 5px;
 }
 
+.CadastroAdm .retornarLogin{
+  all: unset;
+  align-self: flex-start;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.CadastroAdm .retornarLogin:hover{
+  background-color: #ffffffae;
+  border-radius: 5px;
+}
+
 .CadastroAdm .form-cadastro label {
   align-self: flex-start; 
   margin-bottom: 10px;
