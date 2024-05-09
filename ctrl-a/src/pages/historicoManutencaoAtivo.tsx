@@ -17,7 +17,7 @@ export default function HistoricoManutencao() {
         dataFim: string;
         ativoId: number;
     }
-    
+
     interface TabelaManutencaoProps {
         manutencao: ManutencaoData[];
     }
@@ -26,17 +26,17 @@ export default function HistoricoManutencao() {
         "Corretiva": 2,
         "Preditiva": 3
     };
-    
+
     const reverseTipoMapping: { [key: number]: string } = {
         1: "Preventiva",
         2: "Corretiva",
         3: "Preditiva"
     };
-    
-    
+
+
     function LinhaManutencao({ id, tipo, descricao, localizacao, custo, dataInicio, dataFim }: ManutencaoData) {
         const [isHovered, setIsHovered] = useState(false);
-    
+
         function aparecerBotaoDeMudarDataRetorno() {
             if (dataFim && !isHovered) {
                 return (
@@ -44,13 +44,19 @@ export default function HistoricoManutencao() {
                 )
             } else {
                 return (
-                    <button type="button" className="btnIcon" onClick={toggleAtualizacaoModal}>
+                    <button type="button" className="btnIcon" onClick={() => {
+                        toggleAtualizacaoModal()
+                        setManutencaoData(prevData => ({
+                            ...prevData,
+                            id: id
+                        }))
+                    }}>
                         <FaPencilAlt />
                     </button>
                 )
             }
         }
-    
+
         return (
             <tr className="linhaMan"
                 onMouseEnter={() => setIsHovered(true)}
@@ -64,10 +70,10 @@ export default function HistoricoManutencao() {
                 <td className="dataEnvio">{new Date(dataInicio).toLocaleDateString()}</td>
                 <td className="dataRetorno">{aparecerBotaoDeMudarDataRetorno()}</td>
             </tr>
-    
+
         )
     }
-    
+
     function TabelaManutencao({ manutencao, filtro }: TabelaManutencaoProps & { filtro: string }) {
         const linhas = manutencao
             .filter(man => filtro ? reverseTipoMapping[Number(man.tipo)] === filtro : true)
@@ -86,7 +92,7 @@ export default function HistoricoManutencao() {
                     />
                 );
             });
-    
+
         return (
             <table className="tabelaMan">
                 <thead>
@@ -97,6 +103,7 @@ export default function HistoricoManutencao() {
                         <th className="local"><h3>Local</h3></th>
                         <th className="custo"><h3>Custo</h3></th>
                         <th className="dataEnvio"><h3>Data de envio</h3></th>
+                        <th className="dataEnvio"><h3>Data de Retorno</h3></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -246,6 +253,43 @@ export default function HistoricoManutencao() {
             .catch(error => console.error('Error:', error));
     }, [id_ativo, update]);
 
+    const handleAtualizacaoAtualizar = () => {
+        const data = {
+            dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null
+        }
+
+        fetch(`http://localhost:8080/manutencao/atualizacao/${manutencaoData.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": token
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data de retorno atualizada com sucesso!', data);
+                toggleAtualizacaoModal();
+                setManutencaoData({
+                    id: 0,
+                    ativoId: Number(id_ativo),
+                    tipo: '',
+                    descricao: '',
+                    localizacao: '',
+                    custo: '',
+                    dataInicio: '',
+                    dataFim: '',
+                });
+            })
+            .catch(error => console.error('Error:', error));
+
+    }
+
 
     return (
         <div className="dashboardMan">
@@ -292,7 +336,7 @@ export default function HistoricoManutencao() {
                     </div>
                 </div>
             </Modal>
-            <Modal open={showManutencaoAtualizacaoModal} onClose={toggleAtualizacaoModal} onCancel={handleCancelAtualizacao} title="Mudança de data de retorno">
+            <Modal open={showManutencaoAtualizacaoModal} onClose={handleAtualizacaoAtualizar} onCancel={handleCancelAtualizacao} title="Mudança de data de retorno">
                 <div>
                     <div className="containerModal">
                         <div className='modal-man'>
