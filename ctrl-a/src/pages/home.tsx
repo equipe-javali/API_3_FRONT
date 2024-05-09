@@ -30,6 +30,7 @@ export default function Home() {
       if (response.status === 202) {
         localStorage.clear()
         localStorage.setItem("token", `${responseData.token}`)
+        localStorage.setItem("id", `${responseData.usuario.id}`)
         window.location.href = '/ListaAtivos';
       }
       else {
