@@ -79,8 +79,17 @@
     margin-bottom: auto;
 }
 
+.selectImportanciaAtivo{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 25px;
+}
 
-
+.selectImportanciaAtivo>select {
+    height: 38px;
+    background-color: var(--branco1);
+}
 /* 
 =========================
 = Descrições Formulário =

@@ -79,7 +79,7 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
             return (
                 <>{manutencoes[0].localizacao}</>
             );
-        } else if (idResponsavel?.departamento && !isHovered) {
+        } else if (idResponsavel?.departamento) {
             return (
                 <>{idResponsavel.departamento}</>
             );
