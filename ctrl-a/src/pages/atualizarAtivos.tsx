@@ -677,7 +677,7 @@ export default function AtualizarAtivo() {
                         <div className='botoesFormsEditar'>
                             <Link className='button' to={`/HistoricoManutencao/${id}`}>Histórico <br />Manutenção</Link>
                             <button className='button' onClick={toggleModal}>Adicionar pedido <br />de manutenção</button>
-                            <input type="submit" placeholder='Atualizar' />
+                            <input type="submit" value='Atualizar' />
                         </div>
                     </div>
                 </div>

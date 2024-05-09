@@ -294,7 +294,7 @@ export default function HistoricoManutencao() {
     return (
         <div className="dashboardMan">
             <div className="tituloMan tituloBotao">
-                <h1>Manutenção do Ativo ID </h1>
+                <h1>Manutenção do Ativo ID {id_ativo} </h1>
                 <button className='btnManutencao' onClick={toggleModal}>Adicionar pedido de manutenção</button>
             </div>
             <Modal open={showManutencaoModal} onClose={handleManutencaoSubmit} onCancel={handleCancel} title="Pedido de manutenção">

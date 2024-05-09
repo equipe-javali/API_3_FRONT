@@ -81,7 +81,7 @@ export default function Home() {
             <input
               className='botaoLogin'
               type='submit'
-              placeholder='Entrar'
+              value='Entrar'
             />
             <p className='pergunta'>
               Não possui cadastro ainda?
