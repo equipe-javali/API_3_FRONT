@@ -4,86 +4,114 @@ import './css/historicoManutencao.css'
 import Modal from '../components/modal/modal';
 import { useParams } from 'react-router-dom';
 import getLocalToken from '../utils/getLocalToken';
+import { FaPencilAlt } from 'react-icons/fa';
 
-interface ManutencaoData {
-    id: number;
-    tipo: string | number;
-    descricao: string;
-    localizacao: string;
-    custo: string;
-    dataInicio: string;
-    dataFim: string;
-    ativoId: number;
-}
-
-interface TabelaManutencaoProps {
-manutencao: ManutencaoData[];
-}
-const tipoMapping: { [key: string]: number } = {
-    "Preventiva": 1,
-    "Corretiva": 2,
-    "Preditiva": 3
-};
-
-const reverseTipoMapping: { [key: number]: string } = {
-    1: "Preventiva",
-    2: "Corretiva",
-    3: "Preditiva"
-};
-function LinhaManutencao({ id, tipo, descricao, localizacao,custo, dataInicio, dataFim }: ManutencaoData) {
-    return (
-        <tr className="linhaMan">
-            <td className="id">{id}</td>
-            <td className="tipo">{reverseTipoMapping[Number(tipo)]}</td>
-            <td className="descricao">{descricao}</td>
-            <td className="local">{localizacao}</td>
-            <td className="custo">{custo}</td>
-            <td className="dataEnvio">{new Date(dataInicio).toLocaleDateString()}</td>
-            <td className="dataRetorno">{dataFim ? new Date(dataFim).toLocaleDateString() : ''}</td>
-        </tr>
-
-    )
-}
-
-function TabelaManutencao({ manutencao, filtro }: TabelaManutencaoProps & { filtro: string }) {
-    const linhas = manutencao
-        .filter(man => filtro ? reverseTipoMapping[Number(man.tipo)] === filtro : true)
-        .map((man: ManutencaoData) => {
-            return (
-                <LinhaManutencao
-                    key={man.id}
-                    id={man.id}
-                    ativoId={man.ativoId}
-                    tipo={man.tipo}
-                    descricao={man.descricao}
-                    localizacao={man.localizacao}
-                    custo={man.custo}
-                    dataInicio={man.dataInicio}
-                    dataFim={man.dataFim}
-                />
-            );
-        });
-
-    return (
-        <table className="tabelaMan">
-            <thead>
-                <tr className="linhaMan" id="cabecalho">
-                    <th className="id"><h3>ID</h3></th>
-                    <th className="nome"><h3>Tipo</h3></th>
-                    <th className="descricao"><h3>Descricão</h3></th>
-                    <th className="local"><h3>Local</h3></th>
-                    <th className="custo"><h3>Custo</h3></th>
-                    <th className="dataEnvio"><h3>Data de envio</h3></th>
-                    <th className="DataRetorno"><h3>Data de retorno</h3></th>
-                </tr>
-            </thead>
-            <tbody>
-                {linhas}
-            </tbody>
-        </table>
-    )
-}
 export default function HistoricoManutencao() {
+    interface ManutencaoData {
+        id: number;
+        tipo: string | number;
+        descricao: string;
+        localizacao: string;
+        custo: string;
+        dataInicio: string;
+        dataFim: string;
+        ativoId: number;
+    }
+
+    interface TabelaManutencaoProps {
+        manutencao: ManutencaoData[];
+    }
+    const tipoMapping: { [key: string]: number } = {
+        "Preventiva": 1,
+        "Corretiva": 2,
+        "Preditiva": 3
+    };
+
+    const reverseTipoMapping: { [key: number]: string } = {
+        1: "Preventiva",
+        2: "Corretiva",
+        3: "Preditiva"
+    };
+
+
+    function LinhaManutencao({ id, tipo, descricao, localizacao, custo, dataInicio, dataFim }: ManutencaoData) {
+        const [isHovered, setIsHovered] = useState(false);
+
+        function aparecerBotaoDeMudarDataRetorno() {
+            if (dataFim && !isHovered) {
+                return (
+                    <>{new Date(dataFim).toLocaleDateString()}</>
+                )
+            } else {
+                return (
+                    <button type="button" className="btnIcon" onClick={() => {
+                        toggleAtualizacaoModal()
+                        setManutencaoData(prevData => ({
+                            ...prevData,
+                            id: id
+                        }))
+                    }}>
+                        <FaPencilAlt />
+                    </button>
+                )
+            }
+        }
+
+        return (
+            <tr className="linhaMan"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                <td className="id">{id}</td>
+                <td className="tipo">{reverseTipoMapping[Number(tipo)]}</td>
+                <td className="descricao">{descricao}</td>
+                <td className="local">{localizacao}</td>
+                <td className="custo">{custo}</td>
+                <td className="dataEnvio">{new Date(dataInicio).toLocaleDateString()}</td>
+                <td className="dataRetorno">{aparecerBotaoDeMudarDataRetorno()}</td>
+            </tr>
+
+        )
+    }
+
+    function TabelaManutencao({ manutencao, filtro }: TabelaManutencaoProps & { filtro: string }) {
+        const linhas = manutencao
+            .filter(man => filtro ? reverseTipoMapping[Number(man.tipo)] === filtro : true)
+            .map((man: ManutencaoData) => {
+                return (
+                    <LinhaManutencao
+                        key={man.id}
+                        id={man.id}
+                        ativoId={man.ativoId}
+                        tipo={man.tipo}
+                        descricao={man.descricao}
+                        localizacao={man.localizacao}
+                        custo={man.custo}
+                        dataInicio={man.dataInicio}
+                        dataFim={man.dataFim}
+                    />
+                );
+            });
+
+        return (
+            <table className="tabelaMan">
+                <thead>
+                    <tr className="linhaMan" id="cabecalho">
+                        <th className="id"><h3>ID</h3></th>
+                        <th className="nome"><h3>Tipo</h3></th>
+                        <th className="descricao"><h3>Descricão</h3></th>
+                        <th className="local"><h3>Local</h3></th>
+                        <th className="custo"><h3>Custo</h3></th>
+                        <th className="dataEnvio"><h3>Data de envio</h3></th>
+                        <th className="dataEnvio"><h3>Data de Retorno</h3></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {linhas}
+                </tbody>
+            </table>
+        )
+    }
     const { id_ativo } = useParams();
     const [manutencaoData, setManutencaoData] = useState<ManutencaoData>({
         id: 0,
@@ -103,6 +131,7 @@ export default function HistoricoManutencao() {
     const tipos = ["Corretiva", "Preventiva", "Preditiva"];
     const [searchTerm, setSearchTerm] = useState('');
     const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
+    const [showManutencaoAtualizacaoModal, setShowManutencaoAtualizacaoModal] = useState<boolean>(false);
     const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setFilterValue(event.target.value);
     };
@@ -125,16 +154,21 @@ export default function HistoricoManutencao() {
     });
     function toggleModal() {
         setShowManutencaoModal(!showManutencaoModal);
-   }
-   function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setManutencaoData(prevData => ({
-        ...prevData,
-        [event.target.name]: event.target.value,
-        ativoId: prevData.ativoId,
-    }));
-}
+    }
 
-    function handleTextareaDataChange (event: React.ChangeEvent<HTMLTextAreaElement>) {
+    const toggleAtualizacaoModal = () => {
+        setShowManutencaoAtualizacaoModal(!showManutencaoAtualizacaoModal);
+    }
+
+    function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setManutencaoData(prevData => ({
+            ...prevData,
+            [event.target.name]: event.target.value,
+            ativoId: prevData.ativoId,
+        }));
+    }
+
+    function handleTextareaDataChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
         setManutencaoData(prevData => ({
             ...prevData,
             [event.target.name]: event.target.value,
@@ -150,6 +184,10 @@ export default function HistoricoManutencao() {
     }
     function handleCancel() {
         setShowManutencaoModal(false);
+    }
+
+    function handleCancelAtualizacao() {
+        setShowManutencaoAtualizacaoModal(false);
     }
     function handleManutencaoSubmit() {
         const currentDate = new Date().toISOString().split('T')[0];
@@ -197,7 +235,7 @@ export default function HistoricoManutencao() {
     useEffect(() => {
         console.log('Fetching manutencoes...');
 
-        fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`,{
+        fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`, {
             headers: {
                 "Authorization": token
             }
@@ -214,6 +252,43 @@ export default function HistoricoManutencao() {
             })
             .catch(error => console.error('Error:', error));
     }, [id_ativo, update]);
+
+    const handleAtualizacaoAtualizar = () => {
+        const data = {
+            dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null
+        }
+
+        fetch(`http://localhost:8080/manutencao/atualizacao/${manutencaoData.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": token
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data de retorno atualizada com sucesso!', data);
+                toggleAtualizacaoModal();
+                setManutencaoData({
+                    id: 0,
+                    ativoId: Number(id_ativo),
+                    tipo: '',
+                    descricao: '',
+                    localizacao: '',
+                    custo: '',
+                    dataInicio: '',
+                    dataFim: '',
+                });
+            })
+            .catch(error => console.error('Error:', error));
+
+    }
 
 
     return (
@@ -260,24 +335,67 @@ export default function HistoricoManutencao() {
                         </div>
                     </div>
                 </div>
-            </Modal>                        
-            <div className="buscaFiltro">            
-            <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
-                <option value="">Filtro</option>
-                {tipos.map(tipo => (
-                    <option key={tipo} value={tipo}>
-                        {tipo}
-                    </option>
-                ))}
-            </select>
+            </Modal>
+            <Modal open={showManutencaoAtualizacaoModal} onClose={handleAtualizacaoAtualizar} onCancel={handleCancelAtualizacao} title="Mudança de data de retorno">
+                <div>
+                    <div className="containerModal">
+                        <div className='modal-man'>
+                            <h3>Local</h3>
+                            <input name="localizacao" value={manutencaoData.localizacao} onChange={handleManutencaoDataChange}
+                                disabled />
+                        </div>
+                        <div className='modal-man'>
+                            <h3>Custo</h3>
+                            <input name="custo" value={manutencaoData.custo} onChange={handleManutencaoDataChange}
+                                disabled />
+                        </div>
+                    </div>
+                    <div className="containerModal">
+                        <div className='modal-man'>
+                            <h3>Data de envio</h3>
+                            <input type="date" name="dataInicio" value={manutencaoData.dataInicio} onChange={handleManutencaoDataChange}
+                                disabled />
+                        </div>
+                        <div className='modal-man'>
+                            <h3>Data de retorno</h3>
+                            <input type="date" name="dataFim" value={manutencaoData.dataFim} onChange={handleManutencaoDataChange} />
+                        </div>
+                    </div>
+                    <div className="containerModal">
+                        <div className='modal-man'>
+                            <h3>Descrição</h3>
+                            <textarea className="textarea-description" name="descricao" value={manutencaoData.descricao} onChange={handleTextareaDataChange} maxLength={100}
+                                disabled />
+                        </div>
+                        <div className='modal-man'>
+                            <h3>Tipo</h3>
+                            <select name="tipo" value={reverseTipoMapping[Number(manutencaoData.tipo)]} onChange={handleSelectDataChange} disabled>
+                                <option value="">Selecione</option>
+                                <option value="Preventiva">Preventiva</option>
+                                <option value="Corretiva">Corretiva</option>
+                                <option value="Preditiva">Preditiva</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+            <div className="buscaFiltro">
+                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
+                    <option value="">Filtro</option>
+                    {tipos.map(tipo => (
+                        <option key={tipo} value={tipo}>
+                            {tipo}
+                        </option>
+                    ))}
+                </select>
                 <input
-                type="text"
-                placeholder="Buscar por manutenção"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className='myInput'
+                    type="text"
+                    placeholder="Buscar por manutenção"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className='myInput'
                 />
-            </div>            
+            </div>
             <TabelaManutencao manutencao={Pesquisando} filtro={Pesquisa} />
         </div >
     );
