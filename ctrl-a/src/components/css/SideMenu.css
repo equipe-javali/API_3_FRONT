@@ -1,31 +1,34 @@
 :root {
     /* Sizemenu */
-    --widthSideMenu: 175px;
+    --widthSideMenuClosed: 100px;
+    --widthSideMenu: 125px;
     --minHeightSideMenu: 100vh;
-    --paddingSideMenu: 50px 5px;
-    --gapSideMenu: 25px;
+    --paddingSideMenu: 0px 0px 50px 0px;
+    --gapSideMenu: 15px;
 
     /* Links Sizemenu */
     --widthSideMenuLink: 50px;
-    --paddingSideMenuLink: 5px;
+    --paddingSideMenuLink: 1px;
     --borderRadiusSideMenuLink: 5px;
+}
 
-    /* Sizemenu-divisor */
-    --widthSideMenuDivisor: 80%;
-    --heightSideMenuDivisor: 10px;
-    --borderRadiusSideMenuDivisor: 5px;
+.logo {
+    margin-top: -15px;
+    width: 90%;
 }
 
 #sidemenu-component {
     position: fixed;
-    background-color: var(--cor22);
+    background-color: var(--cor20);
     width: var(--widthSideMenu);
+    /* width: var(--widthSideMenuClosed); */
     min-height: var(--minHeightSideMenu);
     padding: var(--paddingSideMenu);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--gapSideMenu);
+    transition: 0.5s;
 }
 
 .sidemenu-link {
@@ -41,9 +44,22 @@
     height: 100%;
 }
 
-.sidemenu {
-    background-color: var(--cor21);
-    height: var(--heightSideMenuDivisor);
-    width: var(--widthSideMenuDivisor);
-    border-radius: var(--borderRadiusSideMenuDivisor);
+.sidemenu-divisor{
+    background-color: var(--cor7);
+
+    height: 2px;
+    width: 80%;
+
+    border-radius: 5px;
+}
+
+.sidemenu-cap {
+    width: var(--widthSideMenu);
+    text-align: center;
+    transition: 0.5s;
+}
+#sidemenu-component:hover > .sidemenu-cap {
+    width: var(--widthSideMenu);
+    color: var(--branco);
+    transition: 0.5s;
 }
