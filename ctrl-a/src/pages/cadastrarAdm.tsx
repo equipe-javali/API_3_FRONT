@@ -57,7 +57,10 @@ export default function CriarUsuarioAdm() {
       departamento,
       email,
       telefone,
-      status: 'ativo'
+      status: 'ativo',
+      usuariologin: {
+        senha: senha
+      }
     };
 
     const token = getLocalToken();
