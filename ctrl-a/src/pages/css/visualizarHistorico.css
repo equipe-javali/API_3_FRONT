@@ -1,3 +1,12 @@
+.uia-timeline__container{
+   display: var(--uia-timeline-display, grid);
+ }
+ 
+ .uia-timeline__groups{
+   display: var(--uia-timeline-groups-display, grid);;
+   gap: var(--uia-timeline-groups-gap, 1rem);
+ }
+
 [data-uia-timeline-skin="4"]{
    --_uia-timeline-line-color_default: #222;
    --_uia-timeline-space: var(--uia-timeline-space, .5rem);
@@ -82,4 +91,3 @@
     --uia-card-border-color: var(--uia-timeline-point-border-color, var(--_uia-timeline-line-color_default));	
    --uia-card-background-color: var(--uia-timeline-point-background-color);  
  }
- 

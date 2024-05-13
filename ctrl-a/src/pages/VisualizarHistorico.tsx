@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../css/visualizarHistorico.css"
+import './css/visualizarHistorico.css'
 
 interface EventoHistorico {
   id: number;
@@ -23,7 +23,7 @@ export default function VisualizarHistorico() {
     },
     {
       id: 2,
-      ano: 2008,
+      ano: 2009,
       evento: "University of Pennsylvania",
       data: "2 de Setembro",
       descricao:
@@ -42,7 +42,6 @@ export default function VisualizarHistorico() {
         <div className="uia-timeline__container">
           <div className="uia-timeline__line"></div>
           <div className="uia-timeline__annual-sections">
-            {/* Mapeando os dados do histórico */}
             {historico.map((evento) => (
               <div key={evento.id} className="uia-timeline__groups">
                 <section className="uia-timeline__group">
