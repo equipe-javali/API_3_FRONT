@@ -8,7 +8,7 @@
 
     /* Ícone */
     --widthHeaderIcon: 30px;
-    --paddingHeaderIcon: 5px;
+    --paddingHeaderIcon: 1px;
 }
 
 #header-component {
@@ -19,6 +19,8 @@
     align-items: center;
     justify-content: flex-start;
     gap: var(--gapHeader);
+
+    padding-left: calc(0 - 2 * var(--widthSideMenu));
 }
 
 #header-app-title {
@@ -41,7 +43,7 @@
 }
 
 #user-icon-holder {
-    background-color: var(--cor3);
+    background-color: var(--cor5);
     padding: var(--paddingHeaderIcon);
     border-radius: 100%;
 }
@@ -51,11 +53,4 @@
     width: 100%;
     height: 100%;
     margin: auto;
-}
-
-.logo {
-    width: 10%;
-    max-width: 100px;
-    margin-top: 20px;
-    margin-left: 30px;
 }

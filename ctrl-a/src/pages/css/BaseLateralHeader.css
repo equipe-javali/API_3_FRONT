@@ -1,24 +1,15 @@
-/* #app-content{
-    height: 100%;
-
+#app-content-lr {
     display: flex;
     flex-direction: row;
-} */
-
-#app-content-lr{
-    display: flex;
-    flex-direction: row;
-
     width: 100%;
 }
 
-#app-content-tb{
+#app-content-tb {
     display: flex;
     flex-direction: column;
-
     width: 100%;
 }
 
-#app-content-tb:last-child{    
-  padding-left: var(--widthSideMenu);
+#app-content-tb:last-child {
+    padding-left: var(--widthSideMenu);
 }
