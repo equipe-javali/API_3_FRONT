@@ -10,6 +10,7 @@ import AtualizarAtivo from './pages/atualizarAtivos';
 import CriarUsuarioAdm from './pages/cadastrarAdm';
 import Home from './pages/home';
 import HistoricoManutencao from './pages/historicoManutencaoAtivo';
+import VisualizarHistorico from './pages/VisualizarHistorico'
 import AtualizarUsuario from './pages/atualizarUsuario';
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/HistoricoManutencao/:id_ativo" element={<HistoricoManutencao />} />
           <Route path="/AtualizarAtivo/:id" element={< AtualizarAtivo />} />
           <Route path="/EdicaoUsuario/:id" element={< AtualizarUsuario />} />
+          <Route path="/Historico/:id" element={< VisualizarHistorico />} />
           <Route path="*" element={<DashboardAtivos />} />
         </Route>
         <Route path="*" element={<Home />} />
