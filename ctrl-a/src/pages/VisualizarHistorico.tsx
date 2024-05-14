@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import './css/visualizarHistorico.css'
+import './css/visualizarHistorico.css';
 
 interface EventoHistorico {
   id: number;
@@ -33,11 +33,23 @@ export default function VisualizarHistorico() {
         const dadosAtivo: DadosAtivo = await response.json();
         setNomeAtivo(dadosAtivo.nome);
         const historicoOrdenado = dadosAtivo.historico.sort((a: EventoHistorico, b: EventoHistorico) => {
-          const dataA: Date = new Date(a.ano, meses.indexOf(a.data.split(" ")[1]));
-          const dataB: Date = new Date(b.ano, meses.indexOf(b.data.split(" ")[1]));
-    
-          if (dataA < dataB) return -1;
-          if (dataA > dataB) return 1;
+          if (a.ano !== b.ano) {
+            return b.ano - a.ano;
+          }
+
+          const [diaA, mesA] = a.data.split(" ");
+          const [diaB, mesB] = b.data.split(" ");
+          
+          const indexMesA = meses.indexOf(mesA);
+          const indexMesB = meses.indexOf(mesB);
+          if (indexMesA !== indexMesB) {
+            return indexMesB - indexMesA; 
+          }
+
+          if (parseInt(diaA) !== parseInt(diaB)) {
+            return parseInt(diaB) - parseInt(diaA); 
+          }
+
           return 0;
         });
         setHistorico(historicoOrdenado);
@@ -58,7 +70,7 @@ export default function VisualizarHistorico() {
             <div className="uia-timeline__container">
               <div className="uia-timeline__line"></div>
               <div className="uia-timeline__annual-sections">
-                {historico.slice().reverse().map((evento) => (
+                {historico.slice().map((evento) => (
                   <div key={evento.id} className="uia-timeline__groups">
                     <span className="uia-timeline__year" aria-hidden="true">{evento.ano}</span>
                     <section className="uia-timeline__group">
