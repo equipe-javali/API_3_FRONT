@@ -9,50 +9,49 @@ interface EventoHistorico {
   descricao: string;
 }
 
+interface DadosAtivo {
+  nome: string;
+  historico: EventoHistorico[];
+}
+
 const meses = [
   "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
   "Jul", "Ago", "Set", "Out", "Nov", "Dez"
 ];
 
 export default function VisualizarHistorico() {
+  const [nomeAtivo, setNomeAtivo] = useState<string>('');
   const [historico, setHistorico] = useState<EventoHistorico[]>([]);
 
-  const dadosDoFetch: EventoHistorico[] = [
-    {
-      id: 1,
-      ano: 2008,
-      evento: "Philadelphia Museum School of Industrial Art",
-      data: "02 Fev",
-      descricao:
-        "Attends the Philadelphia Museum School of Industrial Art. Studies design with Alexey Brodovitch, art director at Harper's Bazaar, and works as his assistant."
-    },
-    {
-      id: 2,
-      ano: 2009,
-      evento: "University of Pennsylvania",
-      data: "02 Set",
-      descricao:
-        "Started from University of Pennsylvania. This is an important stage of my career. Here I worked in the local magazine. The experience greatly affected me."
-    }
-  ];
-
   useEffect(() => {
-    const historicoOrdenado = dadosDoFetch.sort((a, b) => {
-      const dataA: Date = new Date(a.ano, meses.indexOf(a.data.split(" ")[1]));
-      const dataB: Date = new Date(b.ano, meses.indexOf(b.data.split(" ")[1]));
+    async function fetchHistorico() {
+      try {
+        const response = await fetch('http://localhost:8080/visualizarhistorico/${id_ativo}');
+        if (!response.ok) {
+          throw new Error('Erro ao carregar dados');
+        }
+        const dadosAtivo: DadosAtivo = await response.json();
+        setNomeAtivo(dadosAtivo.nome);
+        const historicoOrdenado = dadosAtivo.historico.sort((a: EventoHistorico, b: EventoHistorico) => {
+          const dataA: Date = new Date(a.ano, meses.indexOf(a.data.split(" ")[1]));
+          const dataB: Date = new Date(b.ano, meses.indexOf(b.data.split(" ")[1]));
+    
+          if (dataA < dataB) return -1;
+          if (dataA > dataB) return 1;
+          return 0;
+        });
+        setHistorico(historicoOrdenado);
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+      }
+    }    
 
-      if (dataA < dataB) return -1;
-      if (dataA > dataB) return 1;
-      return 0;
-    });
-
-    setHistorico(historicoOrdenado);
+    fetchHistorico();
   }, []);
-
 
   return (
     <div className="VisualizarHistorico">
-      <h1> Histórico do ativo</h1>
+      <h1> Histórico do {nomeAtivo}</h1>
       <div className="Caixa_Historico">
         <div className="page" data-uia-timeline-skin="4" data-uia-timeline-adapter-skin-4="uia-card-skin-#1">
           <div className="uia-timeline">
@@ -69,7 +68,7 @@ export default function VisualizarHistorico() {
                             <h3 className="ra-heading">{evento.evento}</h3>
                             <span className="uia-card__time">
                               <time dateTime={evento.ano.toString()}>
-                                <span className="uia-card__day">{evento.data.split(" ")[0]}</span>
+                                <span className="uia-card__day">{evento.data.split(" ")[0]}</span>{" "}
                                 <span>{evento.data.split(" ")[1]}</span>
                               </time>
                             </span>
