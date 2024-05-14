@@ -9,6 +9,11 @@ interface EventoHistorico {
   descricao: string;
 }
 
+const meses = [
+  "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+  "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+];
+
 export default function VisualizarHistorico() {
   const [historico, setHistorico] = useState<EventoHistorico[]>([]);
 
@@ -17,7 +22,7 @@ export default function VisualizarHistorico() {
       id: 1,
       ano: 2008,
       evento: "Philadelphia Museum School of Industrial Art",
-      data: "2 de Fevereiro",
+      data: "02 Fev",
       descricao:
         "Attends the Philadelphia Museum School of Industrial Art. Studies design with Alexey Brodovitch, art director at Harper's Bazaar, and works as his assistant."
     },
@@ -25,16 +30,25 @@ export default function VisualizarHistorico() {
       id: 2,
       ano: 2009,
       evento: "University of Pennsylvania",
-      data: "2 de Setembro",
+      data: "02 Set",
       descricao:
         "Started from University of Pennsylvania. This is an important stage of my career. Here I worked in the local magazine. The experience greatly affected me."
     }
   ];
 
   useEffect(() => {
-    setHistorico(dadosDoFetch);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const historicoOrdenado = dadosDoFetch.sort((a, b) => {
+      const dataA: Date = new Date(a.ano, meses.indexOf(a.data.split(" ")[1]));
+      const dataB: Date = new Date(b.ano, meses.indexOf(b.data.split(" ")[1]));
+
+      if (dataA < dataB) return -1;
+      if (dataA > dataB) return 1;
+      return 0;
+    });
+
+    setHistorico(historicoOrdenado);
   }, []);
+
 
   return (
     <div className="page" data-uia-timeline-skin="4" data-uia-timeline-adapter-skin-4="uia-card-skin-#1">
@@ -42,8 +56,9 @@ export default function VisualizarHistorico() {
         <div className="uia-timeline__container">
           <div className="uia-timeline__line"></div>
           <div className="uia-timeline__annual-sections">
-            {historico.map((evento) => (
+            {historico.slice().reverse().map((evento) => (
               <div key={evento.id} className="uia-timeline__groups">
+                <span className="uia-timeline__year" aria-hidden="true">{evento.ano}</span>
                 <section className="uia-timeline__group">
                   <div className="uia-timeline__point uia-card" data-uia-card-skin="1" data-uia-card-mod="1">
                     <div className="uia-card__container">
@@ -51,8 +66,8 @@ export default function VisualizarHistorico() {
                         <h3 className="ra-heading">{evento.evento}</h3>
                         <span className="uia-card__time">
                           <time dateTime={evento.ano.toString()}>
-                            <span className="uia-card__day">{evento.data}</span>
-                            <span>{evento.ano}</span>
+                            <span className="uia-card__day">{evento.data.split(" ")[0]}</span>
+                            <span>{evento.data.split(" ")[1]}</span>
                           </time>
                         </span>
                       </div>
