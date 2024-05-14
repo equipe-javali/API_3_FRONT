@@ -1,5 +1,32 @@
-/* UIA-TIMELINE */
+/* Usuarios */
 
+.VisualizarHistorico {
+  padding-top: 2%;
+  padding-bottom: 3%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--branco);
+  height: 100vh;
+}
+
+.VisualizarHistorico h1 {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 4vh;
+  font-family: Arial, sans-serif;
+  color: var(--branco);
+  text-align: left;
+  padding-left: 2%;
+}
+
+.Caixa_Historico{
+ background-color: var(--cor20);
+ border-radius: 10px;
+ margin-left: 5%;
+ margin-right: 5%;
+}
+
+/* UIA-TIMELINE */
 
 .uia-timeline__container{
   display: var(--uia-timeline-display, grid);
@@ -34,7 +61,7 @@
   position: absolute;
   inset-block-start: 0;
   transform: translate(-300%);
-  z-index: -1;
+
 }
 
 

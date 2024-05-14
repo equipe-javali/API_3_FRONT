@@ -51,36 +51,41 @@ export default function VisualizarHistorico() {
 
 
   return (
-    <div className="page" data-uia-timeline-skin="4" data-uia-timeline-adapter-skin-4="uia-card-skin-#1">
-      <div className="uia-timeline">
-        <div className="uia-timeline__container">
-          <div className="uia-timeline__line"></div>
-          <div className="uia-timeline__annual-sections">
-            {historico.slice().reverse().map((evento) => (
-              <div key={evento.id} className="uia-timeline__groups">
-                <span className="uia-timeline__year" aria-hidden="true">{evento.ano}</span>
-                <section className="uia-timeline__group">
-                  <div className="uia-timeline__point uia-card" data-uia-card-skin="1" data-uia-card-mod="1">
-                    <div className="uia-card__container">
-                      <div className="uia-card__intro">
-                        <h3 className="ra-heading">{evento.evento}</h3>
-                        <span className="uia-card__time">
-                          <time dateTime={evento.ano.toString()}>
-                            <span className="uia-card__day">{evento.data.split(" ")[0]}</span>
-                            <span>{evento.data.split(" ")[1]}</span>
-                          </time>
-                        </span>
-                      </div>
-                      <div className="uia-card__body">
-                        <div className="uia-card__description">
-                          <p>{evento.descricao}</p>
+    <div className="VisualizarHistorico">
+      <h1> Histórico do ativo</h1>
+      <div className="Caixa_Historico">
+        <div className="page" data-uia-timeline-skin="4" data-uia-timeline-adapter-skin-4="uia-card-skin-#1">
+          <div className="uia-timeline">
+            <div className="uia-timeline__container">
+              <div className="uia-timeline__line"></div>
+              <div className="uia-timeline__annual-sections">
+                {historico.slice().reverse().map((evento) => (
+                  <div key={evento.id} className="uia-timeline__groups">
+                    <span className="uia-timeline__year" aria-hidden="true">{evento.ano}</span>
+                    <section className="uia-timeline__group">
+                      <div className="uia-timeline__point uia-card" data-uia-card-skin="1" data-uia-card-mod="1">
+                        <div className="uia-card__container">
+                          <div className="uia-card__intro">
+                            <h3 className="ra-heading">{evento.evento}</h3>
+                            <span className="uia-card__time">
+                              <time dateTime={evento.ano.toString()}>
+                                <span className="uia-card__day">{evento.data.split(" ")[0]}</span>
+                                <span>{evento.data.split(" ")[1]}</span>
+                              </time>
+                            </span>
+                          </div>
+                          <div className="uia-card__body">
+                            <div className="uia-card__description">
+                              <p>{evento.descricao}</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </section>
                   </div>
-                </section>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
