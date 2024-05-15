@@ -7,14 +7,24 @@ import { FaBell } from 'react-icons/fa';
 import Notificacao from './Notificacao';
 
 
-export default class Header extends Component<{}> {
+export default class Header extends Component<{}, { showNotification: boolean }>{
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            showNotification: false
+        };
+    }
+
+    handleBellClick = () => {
+        this.setState(prevState => ({ showNotification: !prevState.showNotification }));
+    }
     render() {
         return (
             <header id="header-component">
                 <div id="header-right-side">
-                    <div id="bell-icon-holder">
+                    <div id="bell-icon-holder" onClick={this.handleBellClick}>
                         <FaBell />
-                        <Notificacao />
+                        {this.state.showNotification && <Notificacao />}
                     </div>
                     <Link to="/" onClick={() => {localStorage.clear()}}>
                         <div id="logout-icon-holder">
