@@ -75,6 +75,7 @@
 }
 
 .divFormsAtivo>form {
+    border-radius: 10px;
     margin: auto;
     background-color: var(--cor8);
     display: flex;
@@ -87,7 +88,7 @@
 .divFormsAtivo>form>* {
     margin-top: auto;
     gap: 10px;
-    margin-bottom: auto;
+    margin-bottom: 1%;
 }
 
 .selectImportanciaAtivo{

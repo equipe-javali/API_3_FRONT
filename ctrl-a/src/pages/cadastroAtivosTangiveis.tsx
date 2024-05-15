@@ -33,9 +33,9 @@ export default function CadastroAtivosTangiveis() {
                 </div>
                 <div className='colunaFormsAtivo'>
                     <div className='selectImportanciaAtivo'>
-                        <label>Importância </label>
+                        <label>Importância: </label>
                         <select className='input' name='importancia' value={importancia} onChange={handleImportancia}>
-                            <option value={0} disabled>Selecione grau de importância</option>
+                            <option value={0} disabled>Selecione o grau de importância</option>
                             <option value={3}>Alto</option>
                             <option value={2}>Média</option>
                             <option value={1}>Baixo</option>
