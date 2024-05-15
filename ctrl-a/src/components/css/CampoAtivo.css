@@ -1,6 +1,5 @@
 :root {
     --minWidthDivCampoAtivo: 250px;
-    --maxWidthDivCampoAtivo: 300px;
     --gapDivCampoAtivo: 5px;
     --minHeightInputCampoAtivo: calc(35px - 10px);
     --paddingInputVerticalCampoAtivo: 10px;
@@ -134,5 +133,5 @@
 */
 .divCampoAtivo>input,
 .descricaoFormsAtivo>textarea {
-    background-color: var(--branco1);
+    background-color: var(--cor20);
 }

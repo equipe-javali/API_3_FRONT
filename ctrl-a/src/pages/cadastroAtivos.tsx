@@ -9,7 +9,7 @@ import getLocalToken from '../utils/getLocalToken'
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
     const paginaAtivosIntangiveis = CadastroAtivosIntangiveis()
-    const nome = CampoAtivoPadrao("Nome do ativo", "text", "Digite o nome...")
+    const nome = CampoAtivoPadrao("Nome do ativo", "text", "Insira o nome")
     const custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "number", "R$00,00")
     const [tipoAtivo, setTipoAtivo] = useState(0)
     const marca = CampoAtivoPadrao("Marca", "text", "Digite a marca...")
