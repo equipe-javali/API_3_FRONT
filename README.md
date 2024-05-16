@@ -30,3 +30,4 @@ Cada branch é referente a uma tarefa ou um conjunto de tarefas para gerar cada 
 - 4: Implementação da função de notificação - Katiane
 - 10: Implemetação da função de atualizar manutenção de um ativo - Caique
 - 16: Legendas no menu lateral, atualização dos ícones e estilização da página
+- ArrumandoCSS: branch para arrumar os css das páginas para ficarem padronizadas - Silmara
