@@ -42,7 +42,7 @@ export default function CampoAtivoDropdown(
                         />
                         <span />
                     </label>
-                    <span>Possui {palavraChave}?</span>
+                    <span>Possuí {palavraChave}?</span>
                 </div>
             </div>
         )
