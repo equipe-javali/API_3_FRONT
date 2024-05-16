@@ -5,13 +5,19 @@ interface State {
     ativosExpirando: { id: number, expiryDate: string }[];
 }
 
-export default class Notificacao extends Component<{}, State> {
-    constructor(props: {}) {
+interface Props {
+    onUpdate: (count: number) => void;
+    className?: string;
+}
+
+
+export default class Notificacao extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             ativosExpirando: []
         };
-    }   
+    }
 
     componentDidMount() {
         const token = getLocalToken(); 
@@ -47,7 +53,9 @@ export default class Notificacao extends Component<{}, State> {
                 const expiryDate = new Date(ativo.garantia);
                 return { id: ativo.id, expiryDate: expiryDate.toISOString() };
             });
-            this.setState({ ativosExpirando });
+            this.setState({ ativosExpirando }, () => {
+                this.props.onUpdate(this.state.ativosExpirando.length);
+            });
         })
         .catch(error => {
             console.error('Houve um erro ao buscar os dados da garantia:', error);
@@ -62,7 +70,7 @@ export default class Notificacao extends Component<{}, State> {
         }
     
         return (
-            <div>
+            <div className={this.props.className}>
                 {ativosExpirando.map((ativo: { id: number, expiryDate: string }, index: number) => {
                     const today = new Date();
                     const expiryDate = new Date(ativo.expiryDate);

@@ -40,12 +40,14 @@
 #logout-icon-holder{
     width: var(--widthHeaderIcon);
     height: var(--widthHeaderIcon);
+    margin-right: 10px;
 }
 
 #user-icon-holder {
     background-color: var(--cor5);
     padding: var(--paddingHeaderIcon);
     border-radius: 100%;
+    
 }
 
 #user-icon-holder img,
@@ -53,12 +55,30 @@
     width: 100%;
     height: 100%;
     margin: auto;
+    
 }
 
 #bell-icon-holder {
     justify-content: center;    
     align-items: center; 
-    font-size: 21px;  
-    margin-top: auto;     
+    font-size: 22px;  
+    margin-top: auto;  
+    margin-right: 10px;   
+    position: relative;
 
+}
+
+.notification-count {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 0.8px 4px;
+    font-size: 0.7em;
+    position: absolute;
+    top: 10px;
+    right: -8px;
+}
+
+.notificacao-oculta {
+    display: none;
 }
