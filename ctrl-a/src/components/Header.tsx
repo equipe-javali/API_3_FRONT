@@ -5,6 +5,7 @@ import logout from '../assets/icons/logout.svg';
 import { Link } from "react-router-dom";
 import { FaBell } from 'react-icons/fa';
 import Notificacao from './Notificacao';
+import ModalNotificacao from './modal/modalNotificacao';
 
 export default class Header extends Component<{}, { showNotification: boolean, notificationCount: number }> {
     constructor(props: {}) {
@@ -31,20 +32,25 @@ export default class Header extends Component<{}, { showNotification: boolean, n
                         <FaBell />
                         {this.state.notificationCount > 0 && 
                             <span className="notification-count">{this.state.notificationCount}</span>}
-                        <Notificacao 
-                            onUpdate={this.handleNotificationUpdate} 
-                            className={this.state.showNotification ? '' : 'notificacao-oculta'} 
-                        />
+                        <ModalNotificacao 
+                            open={this.state.showNotification} 
+                            onClose={this.handleBellClick}
+                            onCancel={this.handleBellClick}
+                            title="Avisos"
+                        >
+                            <Notificacao 
+                                onUpdate={this.handleNotificationUpdate} 
+                            />
+                        </ModalNotificacao>
                     </div>
-                    <Link to="/" onClick={() => {localStorage.clear()}}>
-                        <div id="logout-icon-holder">
-                            <img src={logout} alt="Ícone de Logout" />
-                        </div>
-                    </Link>
-                    
                     <Link to={`/EdicaoUsuario/${localStorage.getItem("id")}`}>
                         <div id="user-icon-holder">
                             <img src={user_png} alt="Ícone de usuário" />
+                        </div>
+                    </Link>
+                    <Link to="/" onClick={() => {localStorage.clear()}}>
+                        <div id="logout-icon-holder">
+                            <img src={logout} alt="Ícone de Logout" />
                         </div>
                     </Link>
                 </div>

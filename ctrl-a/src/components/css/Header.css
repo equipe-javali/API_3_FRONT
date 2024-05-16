@@ -41,10 +41,11 @@
     width: var(--widthHeaderIcon);
     height: var(--widthHeaderIcon);
     margin-right: 10px;
+    cursor: pointer;
 }
 
 #user-icon-holder {
-    background-color: var(--cor5);
+    /* background-color: var(--cor5); */
     padding: var(--paddingHeaderIcon);
     border-radius: 100%;
     
@@ -61,10 +62,11 @@
 #bell-icon-holder {
     justify-content: center;    
     align-items: center; 
-    font-size: 22px;  
+    font-size: 20px;  
     margin-top: auto;  
     margin-right: 10px;   
     position: relative;
+    cursor: pointer;
 
 }
 
