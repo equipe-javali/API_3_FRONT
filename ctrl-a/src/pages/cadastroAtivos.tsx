@@ -9,12 +9,12 @@ import getLocalToken from '../utils/getLocalToken'
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
     const paginaAtivosIntangiveis = CadastroAtivosIntangiveis()
-    let nome = CampoAtivoPadrao("Nome do ativo", "text", "Digite o nome...")
-    let custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "number", "R$00,00")
+    const nome = CampoAtivoPadrao("Nome do ativo:", "text", "Insira o nome")
+    const custoAquisicao = CampoAtivoPadrao("Custo da aquisição:", "number", "R$00,00")
     const [tipoAtivo, setTipoAtivo] = useState(0)
-    let marca = CampoAtivoPadrao("Marca", "text", "Digite a marca...")
-    let identificador = CampoAtivoPadrao("Número identificador:", "text", "###")
-    let dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
+    const marca = CampoAtivoPadrao("Marca:", "text", "Digite a marca...")
+    const identificador = CampoAtivoPadrao("Número identificador:", "text", "###")
+    const dataAquisicao = CampoAtivoPadrao("Data da aquisição:", "date", "dd/mm/aaaa")
     const [descricao, setDescricao] = useState('')
     const [proximo, setProximo] = useState(1)
     const [textoResposta, setTextoResposta] = useState('')
@@ -34,7 +34,7 @@ export default function CadastroAtivos() {
 
     const token = getLocalToken();
 
-    const tipo = CampoAtivoPadrao("Tipo", "text", "Exemplo: automóvel, mobília...")
+    const tipo = CampoAtivoPadrao("Tipo:", "text", "Exemplo: automóvel, mobília...")
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         try {
@@ -149,7 +149,7 @@ export default function CadastroAtivos() {
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <div className='divFormsAtivo'>
                 <div>
-                    <h1> Cadastrar {tipoAtivo === 1 ? <>Ativo Tangível</> : tipoAtivo === 2 ? <> Ativo Intangível</> : <> Ativo</>}</h1>
+                    <h1> Cadastrar {tipoAtivo === 1 ? <>Ativo Tangível</> : tipoAtivo === 2 ? <> Ativo Intangível</> : <> ativo</>}</h1>
                 </div>
                 <form
                     onSubmit={handleSubmit}
@@ -198,7 +198,7 @@ export default function CadastroAtivos() {
                         </div>
                         <div className='colunaFormsAtivo'>
                             <div className='divInputRadioFormsAtivo'>
-                                <span>Tipo do ativo</span>
+                                <span>Tipo do ativo:</span>
                                 <div>
                                     <div className='inputRadioFormsAtivo'>
                                         <input
@@ -228,8 +228,8 @@ export default function CadastroAtivos() {
                         </div>
                         <div className='colunaFormsAtivo'>
                             <div className='descricaoFormsAtivo'>
-                                <span>Descrição</span>
-                                <textarea placeholder='Digite a descrição...' value={descricao} onChange={(e) => setDescricao(e.target.value)} />
+                                <span>Descrição:</span>
+                                <textarea placeholder='Insira a descrição...' value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                             </div>
                         </div>
                         <div className='divBotaoForms'>
@@ -237,7 +237,7 @@ export default function CadastroAtivos() {
                             <button
                                 onClick={() => setTipoAtivo(proximo)}
                             >
-                                Proximo <span>▶</span>
+                                Próximo <span>▶</span>
                             </button>
                         </div>
                     </>}
