@@ -23,6 +23,13 @@ export default function CadastroAtivosIntangiveis() {
             "periodoAmortizacao": periodoAmortizacao.dados,
             "taxaAmortizacao": taxaAmortizacao.dados,
         },
+        'setDados' : {
+            "setTag": tag.setDados,
+            "setImportancia": setImportancia,
+            "setExpiracao": expiracao.setDados,
+            "setPeriodoAmortizacao": periodoAmortizacao.setDados,
+            "setTaxaAmortizacao": taxaAmortizacao.setDados
+        },
         'código': (
             <>
                 <div className='colunaFormsAtivo'>

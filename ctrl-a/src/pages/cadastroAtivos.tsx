@@ -9,12 +9,12 @@ import getLocalToken from '../utils/getLocalToken'
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
     const paginaAtivosIntangiveis = CadastroAtivosIntangiveis()
-    const nome = CampoAtivoPadrao("Nome do ativo", "text", "Digite o nome...")
-    const custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "number", "R$00,00")
+    let nome = CampoAtivoPadrao("Nome do ativo", "text", "Digite o nome...")
+    let custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "number", "R$00,00")
     const [tipoAtivo, setTipoAtivo] = useState(0)
-    const marca = CampoAtivoPadrao("Marca", "text", "Digite a marca...")
-    const identificador = CampoAtivoPadrao("Número identificador:", "text", "###")
-    const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
+    let marca = CampoAtivoPadrao("Marca", "text", "Digite a marca...")
+    let identificador = CampoAtivoPadrao("Número identificador:", "text", "###")
+    let dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa")
     const [descricao, setDescricao] = useState('')
     const [proximo, setProximo] = useState(1)
     const [textoResposta, setTextoResposta] = useState('')
@@ -123,6 +123,26 @@ export default function CadastroAtivos() {
             setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
             setTipoResposta("Erro")
         }
+
+        nome.setDados("")
+        custoAquisicao.setDados("")
+        marca.setDados("")
+        identificador.setDados("")
+        dataAquisicao.setDados("")
+        tipo.setDados("")
+        setDescricao("")
+
+        paginaAtivosIntangiveis.setDados.setTag("")
+        paginaAtivosIntangiveis.setDados.setExpiracao("")
+        paginaAtivosIntangiveis.setDados.setImportancia(0)
+        paginaAtivosIntangiveis.setDados.setPeriodoAmortizacao("")
+        paginaAtivosIntangiveis.setDados.setTaxaAmortizacao("")
+
+        paginaAtivosTangiveis.setDados.setTag("")
+        paginaAtivosTangiveis.setDados.setGarantia("")
+        paginaAtivosTangiveis.setDados.setImportancia(0)
+        paginaAtivosTangiveis.setDados.setPeriodoDepreciacao("")
+        paginaAtivosTangiveis.setDados.setTaxaDepreciacao("")
     }
     return (
         <>

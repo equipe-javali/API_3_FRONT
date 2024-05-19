@@ -23,6 +23,13 @@ export default function CadastroAtivosTangiveis() {
             "periodoDepreciacao": periodoDepreciacao.dados,
             "taxaDepreciacao": taxaDepreciacao.dados,
         },
+        'setDados': {
+            "setTag": tag.setDados,
+            "setImportancia": setImportancia,
+            "setGarantia": garantia.setDados,
+            "setPeriodoDepreciacao": periodoDepreciacao.setDados,
+            "setTaxaDepreciacao": taxaDepreciacao.setDados
+        },
         'código': (
             <>
 

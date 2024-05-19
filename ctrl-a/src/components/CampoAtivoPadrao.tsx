@@ -8,6 +8,7 @@ export default function CampoAtivoPadrao(
     let [descAtivo, setDescAtivo] = useState('')
     return {
         "dados": descAtivo,
+        "setDados": setDescAtivo,
         "codigo": (
             <div className='divCampoAtivo'>
                 <span>{tituloAtivo}</span>

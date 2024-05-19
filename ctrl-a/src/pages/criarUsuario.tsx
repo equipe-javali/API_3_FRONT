@@ -93,6 +93,13 @@ export default function CriarUsuario() {
       setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
       setTipoResposta("Erro")
     }
+
+    setNome('')
+    setCpf('')
+    setDepartamento('')
+    setEmail('')
+    setNascimento('')
+    setTelefone('')
   };
 
   return (
