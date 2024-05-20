@@ -2,13 +2,13 @@ import { useState } from 'react';
 import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
 
 export default function CadastroAtivosTangiveis() {
-    const tag = CampoAtivoPadrao("Tag:", "text", "Insira as tags...")
+    const tag = CampoAtivoPadrao("Tag", "text", "Insira as tags...", false)
     const [importancia, setImportancia] = useState(0);
     // const importancia = CampoAtivoPadrao("Grau de importância", "text", "Insira o grau de importância...")
-    const garantia = CampoAtivoPadrao("Validade de garantia:", "date", "dd/mm/aaaa")
+    const garantia = CampoAtivoPadrao("Validade de garantia", "date", "dd/mm/aaaa", true)
     // const anexo = CampoAtivoPadrao("Anexo", "file", "insira o anexo")
-    const periodoDepreciacao = CampoAtivoPadrao("Período de depreciação:", "text", "anos, meses...")
-    const taxaDepreciacao = CampoAtivoPadrao("Taxa de depreciação:", "number", "00%")
+    const periodoDepreciacao = CampoAtivoPadrao("Período de depreciação", "text", "anos, meses...", false)
+    const taxaDepreciacao = CampoAtivoPadrao("Taxa de depreciação", "number", "00%", false)
 
     function handleImportancia(event: React.ChangeEvent<HTMLSelectElement>) {
         setImportancia(Number(event.target.value));

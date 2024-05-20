@@ -50,7 +50,7 @@ export default function CriarUsuario() {
   };
 
 
-  const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = {
       nome,
@@ -108,37 +108,46 @@ export default function CriarUsuario() {
       <div>
         <h2>Cadastrar usuário</h2>
       </div>
-      <div className="primeira-parte">
+      <form onSubmit={handleSubmit} className="primeira-parte">
         <div>
-          <label>Nome:</label>
-          <input type="text" value={nome} onChange={handleNomeChange} />
+          <label>Nome <span className="inputObrigatorio">*</span></label>
+          <input type="text" value={nome} onChange={handleNomeChange} placeholder="Digite o nome do usuário..." required 
+          onInvalid={e => (e.target as HTMLInputElement).setCustomValidity('Por favor informe o nome do usuário')}
+          onInput={e => e.currentTarget.setCustomValidity('')}/>
         </div>
         <div>
-          <label>CPF:</label>
-          <input type="text" value={cpf} onChange={handleCPFChange} />
+          <label>CPF <span className="inputObrigatorio">*</span></label>
+          <input type="text" value={cpf} onChange={handleCPFChange} placeholder="000.000.000-00" required
+          onInvalid={e => (e.target as HTMLInputElement).setCustomValidity('Por favor informe o cpf do usuário')}
+          onInput={e => e.currentTarget.setCustomValidity('')}/>
         </div>
         <div>
-          <label>Data de Nascimento:</label>
+          <label>Data de Nascimento</label>
           <input type="date" value={nascimento} onChange={handleNascimentoChange} />
         </div>
         <div>
-          <label>Telefone:</label>
-          <input type="text" value={telefone} onChange={handleTelefoneChange} />
+          <label>Telefone</label>
+          <input type="text" value={telefone} onChange={handleTelefoneChange} placeholder="12981111111"/>
         </div>
         <div>
-          <label>Departamento:</label>
-          <select value={departamento} onChange={handleDepartamentoChange}>
+          <label>Departamento <span className="inputObrigatorio">*</span></label>
+          <select value={departamento} onChange={handleDepartamentoChange} required 
+          onInvalid={e => (e.target as HTMLInputElement).setCustomValidity('Por favor informe o departamento do usuário')}
+          onInput={e => e.currentTarget.setCustomValidity('')}>
             <option value="">Selecione...</option>
             <option value="Departamento 1">Departamento 1</option>
             <option value="Departamento 2">Departamento 2</option>
           </select>
         </div>
         <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={handleEmailChange} />
+          <label>Email <span className="inputObrigatorio">*</span></label>
+          <input type="email" value={email} onChange={handleEmailChange} required placeholder="exemplo@email.com"
+          onInvalid={e => (e.target as HTMLInputElement).setCustomValidity('Por favor informe o email do usuário')}
+          onInput={e => e.currentTarget.setCustomValidity('')}/>
         </div>
-        <button onClick={handleSubmit}>Cadastrar</button>
-      </div>
+        <p className="inputObrigatorio">* Campo de preenchimento obrigatório</p>
+        <button type="submit">Cadastrar</button>
+      </form>
     </div>
   );
 }
