@@ -1,6 +1,5 @@
 :root {
     --minWidthDivCampoAtivo: 250px;
-    --maxWidthDivCampoAtivo: 300px;
     --gapDivCampoAtivo: 5px;
     --minHeightInputCampoAtivo: calc(35px - 10px);
     --paddingInputVerticalCampoAtivo: 10px;
@@ -15,7 +14,7 @@
 
     /* Campos */
     --fontSizeCampoAtivo: 25px;
-    --fontSizeInputCampoAtivo: 25px;
+    --fontSizeInputCampoAtivo: 20px;
     --gapDivInput: 5px;
     --heightCampoAtivoReadOnly: 30px;
     --paddingCampoAtivoReadOnly: 8px;
@@ -73,7 +72,7 @@
     padding: var(--paddingCampoAtivoReadOnly);
     height: var(--heightCampoAtivoReadOnly);
     width: 100%;
-    border-radius: 8px;
+    border-radius: 10%;
     background-color: var(--cor20);
     color: var(--cor9);
 }
@@ -89,6 +88,7 @@
 }
 
 .divInputRadioFormsAtivo>div {
+    padding-bottom: 1%;
     display: flex;
     gap: var(--gapDivRadioButton);
 }
@@ -134,5 +134,6 @@
 */
 .divCampoAtivo>input,
 .descricaoFormsAtivo>textarea {
-    background-color: var(--branco1);
+    background-color: var(--cor20);
+    border-radius: 10px;
 }
