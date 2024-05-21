@@ -1,15 +1,12 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import './css/criarUsuario.css';
 import RespostaSistema from "../components/respostaSistema";
 import getLocalToken from "../utils/getLocalToken";
+import CampoPadrao from "../components/CampoPadrao";
+import CampoData from "../components/CampoData";
+import CampoDropdown from "../components/CampoDropdown";
 
 export default function CriarUsuario() {
-  const [nome, setNome] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [nascimento, setNascimento] = useState('');
-  const [departamento, setDepartamento] = useState('');
-  const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
   const [textoResposta, setTextoResposta] = useState('')
   const [tipoResposta, setTipoResposta] = useState('')
   function fechaPopUp() {
@@ -24,114 +21,148 @@ export default function CriarUsuario() {
       return () => clearTimeout(timer);
     }
   }, [tipoResposta]);
+  const [avisoNome, setAvisoNome] = useState<string | undefined>(undefined);
+  const campoNome = CampoPadrao(
+    "Nome:",
+    "text",
+    "Insira o nome do usuário",
+    "Nome",
+    avisoNome
+  )
 
-  const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNome(event.target.value);
-  };
+  const [avisoCPF, setAvisoCPF] = useState<string | undefined>(undefined);
+  const campoCPF = CampoPadrao(
+    "CPF:",
+    "text",
+    "Insira o cpf do usuário",
+    "CPF",
+    avisoCPF
+  )
 
-  const handleCPFChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCpf(event.target.value);
-  };
+  const [avisoTelefone, setAvisoTelefone] = useState<string | undefined>(undefined);
+  const campoTelefone = CampoPadrao(
+    "Telefone:",
+    "text",
+    "insira o telefone do usuário",
+    "Telefone",
+    avisoTelefone
+  )
 
-  const handleNascimentoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNascimento(event.target.value);
-  };
+  const [avisoEmail, setAvisoEmail] = useState<string | undefined>(undefined);
+  const campoEmail = CampoPadrao(
+    "Email:",
+    "email",
+    "Insira o email do usuário",
+    "Email",
+    avisoEmail
+  )
+  const [avisoNascimento, setAvisoNascimento] = useState<string | undefined>(undefined);
+  const campoNascimento = CampoData(
+    "Data Nascimento:",
+    "Nascimento",
+    avisoNascimento
+  )
 
-  const handleDepartamentoChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDepartamento(event.target.value);
-  };
+  const [avisoDepartamento, setAvisoDepartamento] = useState<string | undefined>(undefined);
+  const campoDepartamento = CampoDropdown(
+    "Departamento:",
+    ["Departamento 1", "Departamento 2"],
+    "Escolha um departamento",
+    avisoDepartamento
+  )
 
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handleTelefoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTelefone(event.target.value);
-  };
-
-
-  const handleSubmit = async (event: FormEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const data = {
-      nome,
-      cpf,
-      nascimento,
-      departamento,
-      email,
-      telefone
-    };
-
-    const token = getLocalToken();
-
-    try {
-      console.log(data);
-      fetch('http://localhost:8080/usuario/cadastro', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": token
-        },
-        body: JSON.stringify({
-          usuario: data
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    let certo = true
+    if (campoNome.dado === '' || !campoNome.dado) {
+      setAvisoNome("Insira algo no nome!")
+      certo = false
+    }
+    if (campoCPF.dado === '') {
+      setAvisoCPF("Insira o cpf!")
+      certo = false
+    } else if (campoCPF.dado.length) {
+      setAvisoCPF("Insira um cpf válido!")
+      certo = false
+    }
+    if (campoEmail.dado === '') {
+      setAvisoEmail("Insira um email!")
+      certo = false
+    }
+    if (campoTelefone.dado === '') {
+      setAvisoTelefone("Insira um telefone!")
+      certo = false
+    }
+    if (campoNascimento.dado === '') {
+      setAvisoNascimento("Insira uma data!")
+      certo = false
+    }
+    if (campoDepartamento.dado === '') {
+      setAvisoDepartamento("Escolha um departamento!")
+      certo = false
+    }    
+    if (certo) {
+      const data = {
+        campoNome,
+        campoCPF,
+        campoNascimento,
+        campoDepartamento,
+        campoEmail,
+        campoTelefone
+      };
+      const token = getLocalToken();
+      try {
+        console.log(data);
+        fetch('http://localhost:8080/usuario/cadastro', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": token
+          },
+          body: JSON.stringify({
+            usuario: data
+          })
         })
-      })
-        .then((response) => {
-          if (response.ok) {
-            setTextoResposta("Usuário cadastrado com sucesso!")
-            setTipoResposta("Sucesso")
-          }
-          else {
-            setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
+          .then((response) => {
+            if (response.ok) {
+              setTextoResposta("Usuário cadastrado com sucesso!")
+              setTipoResposta("Sucesso")
+            } else if (response.status === 400) {
+              setAvisoEmail("Email já cadastrado!")
+            } else {
+              setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
+              setTipoResposta("Erro")
+            }
+          })
+          .catch((error) => {
+            setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
             setTipoResposta("Erro")
-          }
-        })
-        .catch((error) => {
-          setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
-          setTipoResposta("Erro")
-        })
-    } catch (error) {
-      setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
-      setTipoResposta("Erro")
+          })
+      } catch (error) {
+        setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
+        setTipoResposta("Erro")
+      }
     }
   };
 
   return (
     <div className="cadastroUsuário">
       <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
-      <div>
-        <h2>Cadastrar usuário</h2>
-      </div>
-      <div className="primeira-parte">
-        <div>
-          <label>Nome:</label>
-          <input type="text" value={nome} onChange={handleNomeChange} />
+      <h2>Cadastrar usuário</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="FormsCadastroUsuario"
+      >
+        <div className="primeira-parte">
+          {campoNome.codigo}
+          {campoCPF.codigo}
+          {campoTelefone.codigo}
+          {campoEmail.codigo}
+          {campoDepartamento.codigo}
+          {campoNascimento.codigo}
+          <input type="submit" value="Cadastrar" />
         </div>
-        <div>
-          <label>CPF:</label>
-          <input type="text" value={cpf} onChange={handleCPFChange} />
-        </div>
-        <div>
-          <label>Data de Nascimento:</label>
-          <input type="date" value={nascimento} onChange={handleNascimentoChange} />
-        </div>
-        <div>
-          <label>Telefone:</label>
-          <input type="text" value={telefone} onChange={handleTelefoneChange} />
-        </div>
-        <div>
-          <label>Departamento:</label>
-          <select value={departamento} onChange={handleDepartamentoChange}>
-            <option value="">Selecione...</option>
-            <option value="Departamento 1">Departamento 1</option>
-            <option value="Departamento 2">Departamento 2</option>
-          </select>
-        </div>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={handleEmailChange} />
-        </div>
-        <button onClick={handleSubmit}>Cadastrar</button>
-      </div>
+      </form>
     </div>
   );
 }
