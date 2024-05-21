@@ -1,6 +1,6 @@
 import CampoAtivoPadrao from '../components/CampoAtivoPadrao'
 import './css/cadastroAtivos.css'
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import CadastroAtivosTangiveis from './cadastroAtivosTangiveis'
 import CadastroAtivosIntangiveis from './cadastroAtivosIntangiveis'
 import RespostaSistema from '../components/respostaSistema'
@@ -9,20 +9,25 @@ import getLocalToken from '../utils/getLocalToken'
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
     const paginaAtivosIntangiveis = CadastroAtivosIntangiveis()
-    const nome = CampoAtivoPadrao("Nome do ativo:", "text", "Insira o nome")
-    const custoAquisicao = CampoAtivoPadrao("Custo da aquisição:", "number", "R$00,00")
+    const nome = CampoAtivoPadrao("Nome", "text", "Insira o nome", true)
+    const custoAquisicao = CampoAtivoPadrao("Custo da aquisição", "number", "R$00,00", true)
     const [tipoAtivo, setTipoAtivo] = useState(0)
-    const marca = CampoAtivoPadrao("Marca:", "text", "Digite a marca...")
-    const identificador = CampoAtivoPadrao("Número identificador:", "text", "###")
-    const dataAquisicao = CampoAtivoPadrao("Data da aquisição:", "date", "dd/mm/aaaa")
+    const marca = CampoAtivoPadrao("Marca", "text", "Digite a marca...", false)
+    const identificador = CampoAtivoPadrao("Número identificador", "text", "###", false)
+    const dataAquisicao = CampoAtivoPadrao("Data da aquisição", "date", "dd/mm/aaaa", true)
     const [descricao, setDescricao] = useState('')
     const [proximo, setProximo] = useState(1)
     const [textoResposta, setTextoResposta] = useState('')
     const [tipoResposta, setTipoResposta] = useState('')
+    const tipo = CampoAtivoPadrao("Categoria", "text", "Exemplo: automóvel, mobília...", false)
+
+    const formRef = useRef<HTMLFormElement>(null)
+    
     function fechaPopUp() {
         setTextoResposta('')
         setTipoResposta('')
     }
+    
     useEffect(() => {
         if (tipoResposta === "Sucesso") {
             const timer = setTimeout(() => {
@@ -34,7 +39,14 @@ export default function CadastroAtivos() {
 
     const token = getLocalToken();
 
-    const tipo = CampoAtivoPadrao("Tipo:", "text", "Exemplo: automóvel, mobília...")
+    const handleNext = () => {
+        if (formRef.current?.checkValidity()){
+            setTipoAtivo(proximo)
+        } else {
+            formRef.current?.checkValidity()
+        }
+    }
+
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
         try {
@@ -123,15 +135,36 @@ export default function CadastroAtivos() {
             setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
             setTipoResposta("Erro")
         }
+
+        nome.setDados("")
+        custoAquisicao.setDados("")
+        marca.setDados("")
+        identificador.setDados("")
+        dataAquisicao.setDados("")
+        tipo.setDados("")
+        setDescricao("")
+
+        paginaAtivosIntangiveis.setDados.setTag("")
+        paginaAtivosIntangiveis.setDados.setExpiracao("")
+        paginaAtivosIntangiveis.setDados.setImportancia(0)
+        paginaAtivosIntangiveis.setDados.setPeriodoAmortizacao("")
+        paginaAtivosIntangiveis.setDados.setTaxaAmortizacao("")
+
+        paginaAtivosTangiveis.setDados.setTag("")
+        paginaAtivosTangiveis.setDados.setGarantia("")
+        paginaAtivosTangiveis.setDados.setImportancia(0)
+        paginaAtivosTangiveis.setDados.setPeriodoDepreciacao("")
+        paginaAtivosTangiveis.setDados.setTaxaDepreciacao("")
     }
     return (
         <>
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <div className='divFormsAtivo'>
                 <div>
-                    <h1> Cadastrar {tipoAtivo === 1 ? <>Ativo Tangível</> : tipoAtivo === 2 ? <> Ativo Intangível</> : <> ativo</>}</h1>
+                    <h1> Cadastrar {tipoAtivo === 1 ? <>ativo tangível</> : tipoAtivo === 2 ? <> ativo intangível</> : <> ativo</>}</h1>
                 </div>
                 <form
+                    ref={formRef}
                     onSubmit={handleSubmit}
                 >
                     {tipoAtivo === 1 ? <>
@@ -178,7 +211,7 @@ export default function CadastroAtivos() {
                         </div>
                         <div className='colunaFormsAtivo'>
                             <div className='divInputRadioFormsAtivo'>
-                                <span>Tipo do ativo:</span>
+                                <span>Tipo do ativo: <span className='inputObrigatorio'>*</span> </span>
                                 <div>
                                     <div className='inputRadioFormsAtivo'>
                                         <input
@@ -215,7 +248,7 @@ export default function CadastroAtivos() {
                         <div className='divBotaoForms'>
                             <div />
                             <button
-                                onClick={() => setTipoAtivo(proximo)}
+                                onClick={handleNext}
                             >
                                 Próximo <span>▶</span>
                             </button>
