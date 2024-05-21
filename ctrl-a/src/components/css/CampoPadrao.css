@@ -19,16 +19,18 @@
     gap: 5px;
 }
 
-.divCampoPadrao input {
+.divCampoPadrao input,
+.divCampoPadrao select {
     width: 100%;
     border-radius: 6px;
     padding: 4px;
     border-style: solid;
     border-width: 1.8px;
-    background-color: inherit;
+    background-color: var(--cor20);
     color: var(--branco1);
 }
 
+.divCampoPadrao input[type="date"],
 .divCampoPadrao input::placeholder {
     color: var(--branco1);
 }
