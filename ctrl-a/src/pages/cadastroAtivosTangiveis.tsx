@@ -2,13 +2,13 @@ import { useState } from 'react';
 import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
 
 export default function CadastroAtivosTangiveis() {
-    const tag = CampoAtivoPadrao("Tag", "text", "Insira as tags...")
+    const tag = CampoAtivoPadrao("Tag", "text", "Insira as tags...", false)
     const [importancia, setImportancia] = useState(0);
     // const importancia = CampoAtivoPadrao("Grau de importância", "text", "Insira o grau de importância...")
-    const garantia = CampoAtivoPadrao("Validade de garantia", "date", "dd/mm/aaaa")
+    const garantia = CampoAtivoPadrao("Validade de garantia", "date", "dd/mm/aaaa", true)
     // const anexo = CampoAtivoPadrao("Anexo", "file", "insira o anexo")
-    const periodoDepreciacao = CampoAtivoPadrao("Período de depreciação", "text", "anos, meses...")
-    const taxaDepreciacao = CampoAtivoPadrao("Taxa de depreciação", "number", "00%")
+    const periodoDepreciacao = CampoAtivoPadrao("Período de depreciação", "text", "anos, meses...", false)
+    const taxaDepreciacao = CampoAtivoPadrao("Taxa de depreciação", "number", "00%", false)
 
     function handleImportancia(event: React.ChangeEvent<HTMLSelectElement>) {
         setImportancia(Number(event.target.value));
@@ -23,6 +23,13 @@ export default function CadastroAtivosTangiveis() {
             "periodoDepreciacao": periodoDepreciacao.dados,
             "taxaDepreciacao": taxaDepreciacao.dados,
         },
+        'setDados': {
+            "setTag": tag.setDados,
+            "setImportancia": setImportancia,
+            "setGarantia": garantia.setDados,
+            "setPeriodoDepreciacao": periodoDepreciacao.setDados,
+            "setTaxaDepreciacao": taxaDepreciacao.setDados
+        },
         'código': (
             <>
 
@@ -33,9 +40,9 @@ export default function CadastroAtivosTangiveis() {
                 </div>
                 <div className='colunaFormsAtivo'>
                     <div className='selectImportanciaAtivo'>
-                        <label>Importância </label>
+                        <label>Importância: </label>
                         <select className='input' name='importancia' value={importancia} onChange={handleImportancia}>
-                            <option value={0} disabled>Selecione grau de importância</option>
+                            <option value={0} disabled>Selecione o grau de importância</option>
                             <option value={3}>Alto</option>
                             <option value={2}>Média</option>
                             <option value={1}>Baixo</option>

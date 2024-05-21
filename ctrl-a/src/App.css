@@ -17,6 +17,7 @@
   --branco: #FFFFFF;
   --branco1: #DDD8D8;
   --verde1: #19756A;
+  --vermelho1: #fe43439b;
 }
 
 * {
@@ -26,6 +27,9 @@
   box-sizing: border-box;
 }
 
+.inputObrigatorio{
+  color: var(--vermelho1);
+}
 
 .App-logo {
   height: 40vmin;
