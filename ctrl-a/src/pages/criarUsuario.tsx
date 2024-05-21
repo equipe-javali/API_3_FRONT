@@ -81,7 +81,7 @@ export default function CriarUsuario() {
     if (campoCPF.dado === '') {
       setAvisoCPF("Insira o cpf!")
       certo = false
-    } else if (campoCPF.dado.length) {
+    } else if (campoCPF.dado.length !== 14) {
       setAvisoCPF("Insira um cpf válido!")
       certo = false
     }
@@ -92,6 +92,9 @@ export default function CriarUsuario() {
     if (campoTelefone.dado === '') {
       setAvisoTelefone("Insira um telefone!")
       certo = false
+    } else if (![14, 15].includes(campoTelefone.dado.length)) {
+      setAvisoTelefone("Insira um telefone válido!")
+      certo = false
     }
     if (campoNascimento.dado === '') {
       setAvisoNascimento("Insira uma data!")
@@ -100,15 +103,15 @@ export default function CriarUsuario() {
     if (campoDepartamento.dado === '') {
       setAvisoDepartamento("Escolha um departamento!")
       certo = false
-    }    
+    }
     if (certo) {
       const data = {
-        campoNome,
-        campoCPF,
-        campoNascimento,
-        campoDepartamento,
-        campoEmail,
-        campoTelefone
+        "nome": campoNome.dado,
+        "cpf": campoCPF.dado.replace(/\D/g, ''),
+        "nascimento": campoNascimento.dado,
+        "departamento": campoDepartamento.dado,
+        "telefone": campoTelefone.dado.replace(/\D/g, ''),
+        "email": campoEmail.dado
       };
       const token = getLocalToken();
       try {
