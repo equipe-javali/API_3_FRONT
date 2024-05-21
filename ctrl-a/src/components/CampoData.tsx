@@ -4,6 +4,7 @@ import "./css/CampoPadrao.css";
 export default function CampoData(
     titulo: string,
     palavraChave: string,
+    obrigatorio: boolean, /* UTILIZE ISSO PARA COLOCAR O ASTERÍSTICO*/
     aviso?: string
 ) {
     const [dataCampo, setDataCampo] = useState('');

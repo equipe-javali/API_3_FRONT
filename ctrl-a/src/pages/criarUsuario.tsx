@@ -27,6 +27,7 @@ export default function CriarUsuario() {
     "text",
     "Insira o nome do usuário",
     "Nome",
+    true,
     avisoNome
   )
 
@@ -36,6 +37,7 @@ export default function CriarUsuario() {
     "text",
     "Insira o cpf do usuário",
     "CPF",
+    true,
     avisoCPF
   )
 
@@ -45,6 +47,7 @@ export default function CriarUsuario() {
     "text",
     "insira o telefone do usuário",
     "Telefone",
+    true,
     avisoTelefone
   )
 
@@ -54,12 +57,14 @@ export default function CriarUsuario() {
     "email",
     "Insira o email do usuário",
     "Email",
+    true,
     avisoEmail
   )
   const [avisoNascimento, setAvisoNascimento] = useState<string | undefined>(undefined);
   const campoNascimento = CampoData(
     "Data Nascimento:",
     "Nascimento",
+    true,
     avisoNascimento
   )
 
@@ -68,6 +73,7 @@ export default function CriarUsuario() {
     "Departamento:",
     ["Departamento 1", "Departamento 2"],
     "Escolha um departamento",
+    true,
     avisoDepartamento
   )
 

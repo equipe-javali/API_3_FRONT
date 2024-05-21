@@ -6,6 +6,7 @@ export default function CampoPadrao(
     tipo: string,
     placeholder: string,
     palavraChave: string,
+    obrigatorio: boolean, /* UTILIZE ISSO PARA COLOCAR O ASTERÍSTICO*/
     aviso?: string
 ) {
     const [descricaoCampo, setDescricaoCampo] = useState('');
