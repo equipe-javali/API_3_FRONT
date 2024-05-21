@@ -33,3 +33,4 @@ Cada branch é referente a uma tarefa ou um conjunto de tarefas para gerar cada 
 - 16: Legendas no menu lateral, atualização dos ícones e estilização da página - Rafael
 - 17: Mascara nos inputs (email, cpf, telefone) - Bruno
 - ArrumandoCSS: branch para arrumar os css das páginas para ficarem padronizadas - Silmara
+- Merge: branch usada para fazer o merge das branchs antes de fazer na main - Geral
