@@ -91,9 +91,12 @@ export default function CriarUsuario() {
       setAvisoCPF("Insira um cpf válido!")
       certo = false
     }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (campoEmail.dado === '') {
       setAvisoEmail("Insira um email!")
       certo = false
+    } else if (!emailRegex.test(campoEmail.dado)) {
+      setAvisoEmail("Insira um email válido!")
     }
     if (campoTelefone.dado === '') {
       setAvisoTelefone("Insira um telefone!")
