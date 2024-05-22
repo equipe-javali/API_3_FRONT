@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 
 interface EventoHistorico {
   idAtivo: number,
+  idAtivoTangivel?: number,
+  idAtivoIntangivel?: number,
   dataAlteracao: string,
   nomeAtivo: string,
   nomeUsuario: string,
@@ -33,27 +35,71 @@ export default function VisualizarHistorico() {
 
   async function fetchHistorico() {
     try {
-      const response = await fetch('http://localhost:8080/historicoAtivoTangivel/listagemTodos', {
+      let tangivel = await fetch('http://localhost:8080/historicoAtivoTangivel/listagemTodos', {
         headers: {
           "Authorization": token
         }
       });
-      
-      if (response.ok) {
-        const data: EventoHistorico[] = await response.json();
-        const historicoFiltrado = data.filter(e => Number(e?.idAtivo) === Number(id))
+      const data: EventoHistorico[] = await tangivel.json();
+      const historicoFiltrado = data.filter(e => Number(e?.idAtivo) === Number(id))
 
-
+      if (tangivel.ok) {
         if (historicoFiltrado.length > 0) {
-          setHistorico(historicoFiltrado);
-          setNomeAtivo(historicoFiltrado[0].nomeAtivo);
-          console.log('historico FILTRADO: ', historicoFiltrado)
-          console.log('historico: ', historico)
-        } else {
-          console.log('Caiu pra fora');
+          if (historicoFiltrado[0].idAtivoTangivel) {
+            setHistorico(historicoFiltrado);
+            setNomeAtivo(historicoFiltrado[0].nomeAtivo);
+            console.log('historico FILTRADO: ', historicoFiltrado)
+
+          } else if (historicoFiltrado[0].idAtivoIntangivel) {
+            const intangivel = await fetch('http://localhost:8080/historicoAtivoIntangivel/listagemTodos', {
+              headers: {
+                "Authorization": token
+              }
+            })
+            if (intangivel.ok) {
+              const dataIntangivel: EventoHistorico[] = await intangivel.json()
+              const historicoIntangivel = dataIntangivel.filter(e => Number(e?.idAtivo) === Number(id))
+
+              console.log('Caiu pra fora do tangivel')
+              try {
+                setHistorico(historicoIntangivel);
+                setNomeAtivo(historicoIntangivel[0].nomeAtivo)
+                console.log('historico: ', historicoIntangivel)
+              } catch(error){
+                setHistorico([]);
+                console.log('historico: ', historicoIntangivel)
+                console.log('num tem aqui não >:(')
+              }
+            }
+          } else {
+            console.log('status n ok')
           }
+          
+        } else {
+          const intangivel = await fetch('http://localhost:8080/historicoAtivoIntangivel/listagemTodos', {
+            headers: {
+              "Authorization": token
+            }
+          })
+          console.log('entrou')
+
+          if (intangivel.ok) {
+            const dataIntangivel: EventoHistorico[] = await intangivel.json()
+            const historicoIntangivel = dataIntangivel.filter(e => Number(e?.idAtivo) === Number(id))
+            try {
+              setHistorico(historicoIntangivel);
+              setNomeAtivo(historicoIntangivel[0].nomeAtivo)
+              console.log('historico: ', historicoIntangivel)
+            } catch(error){
+              setHistorico([]);
+              console.log('historico: ', historicoIntangivel)
+              console.log('num tem aqui não >:(')
+            }
+          }
+        }
+
       } else {
-        throw new Error('Erro na solicitação fetch');
+        console.log("Não tem")
       }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
