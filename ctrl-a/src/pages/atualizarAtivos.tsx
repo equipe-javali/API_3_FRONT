@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './css/atualizarAtivo.css'; // Certifique-se de ajustar o nome do seu arquivo CSS
+import './css/atualizarAtivo.css'; 
 import { useParams } from 'react-router-dom';
 import RespostaSistema from '../components/respostaSistema';
 import CampoAtivoEditavel from '../components/CampoAtivoEditavel';
