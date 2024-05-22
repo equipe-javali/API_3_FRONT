@@ -1,0 +1,97 @@
+:root {
+    --fontSizeTituloCampoPadrao: 15px;
+    --fontSizeInputCampoPadrao: 13px;
+    --minHeightDivCampoPadrao: 30px;
+    --gapInputTitulo: 30px;
+
+    --corTituloCampo: var(--branco1);
+    --corTextInput: var(--cor10);
+    --corBackgroundInput: var(--cor20);
+}
+
+.divCampoPadrao,
+.divCampoSenha {
+    min-height: var(--minHeightDivCampoPadrao);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: var(--corTituloCampo);
+}
+
+.divCampoPadrao>div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.inputCampoSenha {
+    display: flex;
+    align-items: center;
+    background-color: var(--corBackgroundInput);
+    border-radius: 6px;
+    width: 100%;
+}
+
+.divCampoPadrao input,
+.inputCampoSenha input,
+.divCampoPadrao select {
+    width: 100%;
+    padding: 4px;
+    background-color: var(--corBackgroundInput);
+    color: var(--corTextInput);
+    border-radius: 6px;
+}
+
+.inputObrigatorio {
+    color: var(--vermelho1);
+}
+
+.inputCampoSenha,
+.divCampoPadrao input,
+.divCampoPadrao select {
+    border-style: solid;
+    border-width: 1.8px;
+}
+
+.divCampoPadrao input[type="date"],
+.inputCampoSenha input::placeholder,
+.divCampoPadrao input::placeholder {
+    color: var(--corTextInput);
+}
+
+.erroCampo {
+    color: var(--vermelho1);
+    font-size: var(--fontSizeInputCampoPadrao);
+}
+
+.divCampoPadrao.alertaCampoErrado input,
+.divCampoSenha.alertaCampoErrado .inputCampoSenha,
+.divCampoPadrao.alertaCampoErrado select {
+    border-color: var(--vermelho1);
+}
+
+.divCampoPadrao.semAlertaCampo input,
+.divCampoSenha.semAlertaCampo .inputCampoSenha,
+.divCampoPadrao.semAlertaCampo select {
+    border-color: var(--corBackgroundInput);
+}
+
+.divCampoPadrao.alertaCampoErrado .erroCampo {
+    display: block;
+}
+
+
+.divCampoPadrao input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0) saturate(100%) invert(42%) sepia(92%) saturate(0%) hue-rotate(177deg) brightness(99%) contrast(97%);
+    /* cor10 */
+}
+
+.inputCampoSenha svg {
+    color: var(--corTextInput);
+}
+
+.inputCampoSenha .password-icon {
+    height: 100%;
+    cursor: pointer;
+    margin-right: 5px;
+}

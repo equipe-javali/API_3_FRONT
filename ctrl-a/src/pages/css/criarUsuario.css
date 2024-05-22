@@ -46,6 +46,9 @@
   padding: 20px;
   box-shadow: 0 4px 6px #0000001a;
   font-size: 2vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .cadastroUsuário .primeira-parte label {
@@ -66,22 +69,22 @@
 .cadastroUsuário .primeira-parte select {
   width: 98%;
   padding: 10px;
-  margin-bottom: 20px;
   border: 1px solid var(--cor10);
   border-radius: 5px;
 }
 
-.cadastroUsuário .primeira-parte button {
+.cadastroUsuário .primeira-parte input[type="submit"] {
   padding: 10px 20px;
   background-color: var(--cor5);
   color: var(--branco);
   border: none;
+  width: auto;
   border-radius: 5px;
   font-size: 3vh;
   cursor: pointer;
 }
 
-.cadastroUsuário .primeira-parte button {
+.cadastroUsuário .primeira-parte input[type="submit"] {
   display: block;
   margin: 20px auto 0;
 }
@@ -90,15 +93,13 @@
 .cadastroUsuário .primeira-parte input,
 .cadastroUsuário select {
   width: 98%;
-  padding: 8px;
   margin-left: 10px;
   border-radius: 4px;
   background-color: var(--cor20);
   color: var(--branco);
 }
 
-
-.cadastroUsuário .primeira-parte button:hover {
+.cadastroUsuário .primeira-parte input[type="submit"]:hover {
   background-color: var(--cor20);
 }
 

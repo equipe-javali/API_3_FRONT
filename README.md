@@ -29,6 +29,8 @@ Cada branch é referente a uma tarefa ou um conjunto de tarefas para gerar cada 
 - 3: Fazer a página do histórico de um ativo - Silmara.
 - 4: Implementação da função de notificação - Katiane
 - 10: Implemetação da função de atualizar manutenção de um ativo - Caique
-- 4: Implementação da função de notificação - Katiane
-- 16: Legendas no menu lateral, atualização dos ícones e estilização da página
+- 14: Implentação nos formulários de cadastro limpe os dados após enviar - Mariana
+- 16: Legendas no menu lateral, atualização dos ícones e estilização da página - Rafael
+- 17: Mascara nos inputs (email, cpf, telefone) - Bruno
 - ArrumandoCSS: branch para arrumar os css das páginas para ficarem padronizadas - Silmara
+- Merge: branch usada para fazer o merge das branchs antes de fazer na main - Geral
