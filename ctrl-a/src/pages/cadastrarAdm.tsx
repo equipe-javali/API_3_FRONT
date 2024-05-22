@@ -1,162 +1,205 @@
 import { FormEvent, useState } from "react";
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './css/cadastrarUsuarioAdm.css';
 import getLocalToken from "../utils/getLocalToken";
 import { Link } from "react-router-dom";
+import CampoDropdown from "../components/CampoDropdown";
+import CampoData from "../components/CampoData";
+import CampoPadrao from "../components/CampoPadrao";
+import CampoSenha from "../components/CampoSenha";
 
 export default function CriarUsuarioAdm() {
-  const [nome, setNome] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [nascimento, setNascimento] = useState('');
-  const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [senha, setSenha] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [departamento, setDepartamento] = useState('');
+  const [avisoNome, setAvisoNome] = useState<string | undefined>(undefined);
+  const campoNome = CampoPadrao(
+    "Nome:",
+    "text",
+    "Insira o nome do usuário",
+    "Nome",
+    true,
+    avisoNome
+  )
+
+  const [avisoCPF, setAvisoCPF] = useState<string | undefined>(undefined);
+  const campoCPF = CampoPadrao(
+    "CPF:",
+    "text",
+    "Insira o cpf do usuário",
+    "CPF",
+    true,
+    avisoCPF
+  )
+
+  const [avisoTelefone, setAvisoTelefone] = useState<string | undefined>(undefined);
+  const campoTelefone = CampoPadrao(
+    "Telefone:",
+    "text",
+    "insira o telefone do usuário",
+    "Telefone",
+    true,
+    avisoTelefone
+  )
+
+  const [avisoEmail, setAvisoEmail] = useState<string | undefined>(undefined);
+  const campoEmail = CampoPadrao(
+    "Email:",
+    "email",
+    "Insira o email do usuário",
+    "Email",
+    true,
+    avisoEmail
+  )
+  const [avisoNascimento, setAvisoNascimento] = useState<string | undefined>(undefined);
+  const campoNascimento = CampoData(
+    "Data Nascimento:",
+    "Nascimento",
+    true,
+    avisoNascimento
+  )
+
+  const [avisoDepartamento, setAvisoDepartamento] = useState<string | undefined>(undefined);
+  const campoDepartamento = CampoDropdown(
+    "Departamento:",
+    ["Departamento 1", "Departamento 2"],
+    "Escolha um departamento",
+    true,
+    avisoDepartamento
+  )
+
+  const [avisoSenha, setAvisoSenha] = useState<string | undefined>(undefined);
+  const campoSenha = CampoSenha(
+    "Senha:",
+    "Insira a senha",
+    true,
+    avisoSenha
+  )
   const [aviso, setAviso] = useState("")
-
-  const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNome(event.target.value);
-  };
-
-  const handleCPFChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCpf(event.target.value);
-  };
-
-  const handleNascimentoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNascimento(event.target.value);
-  };
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const email = event.target.value;
-    setEmail(email);
-  };
-
-  const handleTelefoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTelefone(event.target.value);
-  };
-
-  const handleSenhaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSenha(event.target.value);
-  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    if (!emailRegex.test(email)) {
-      console.log('Email inválido');
-      return;
+    let certo = true
+    if (campoNome.dado === '' || !campoNome.dado) {
+      setAvisoNome("Insira algo no nome!")
+      certo = false
     }
-
-    const userData = {
-      nome,
-      cpf,
-      nascimento,
-      departamento,
-      email,
-      telefone,
-      status: 'ativo',
-      usuariologin: {
-        senha: senha
-      }
-    };
-
-    const token = getLocalToken();
-
-    try {
-      const userResponse = await fetch('http://localhost:8080/usuario/cadastro', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": token
-        },
-        body: JSON.stringify({
-          usuario: userData
-        })
-      });
-
-      if (userResponse.ok) {
-        const userData = await userResponse.json();
-        const { id } = userData;
-
-        const loginData = {
-          usuario: {
-            id,
-          },
-          senha
-        };
-
-        const loginResponse = await fetch('http://localhost:8080/usuarioLogin/cadastro', {
+    if (campoCPF.dado === '') {
+      setAvisoCPF("Insira o cpf!")
+      certo = false
+    } else if (campoCPF.dado.length !== 14) {
+      setAvisoCPF("Insira um cpf válido!")
+      certo = false
+    }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (campoEmail.dado === '') {
+      setAvisoEmail("Insira um email!")
+      certo = false
+    } else if (!emailRegex.test(campoEmail.dado)) {
+      setAvisoEmail("Insira um email válido!")
+    }
+    if (campoTelefone.dado === '') {
+      setAvisoTelefone("Insira um telefone!")
+      certo = false
+    } else if (![14, 15].includes(campoTelefone.dado.length)) {
+      setAvisoTelefone("Insira um telefone válido!")
+      certo = false
+    }
+    if (campoNascimento.dado === '') {
+      setAvisoNascimento("Insira uma data!")
+      certo = false
+    }
+    if (campoDepartamento.dado === '') {
+      setAvisoDepartamento("Escolha um departamento!")
+      certo = false
+    }
+    if (campoSenha.dado === '') {
+      setAvisoSenha("Insira uma senha!")
+    }
+    if (certo) {
+      const data = {
+        "nome": campoNome.dado,
+        "cpf": campoCPF.dado.replace(/\D/g, ''),
+        "nascimento": campoNascimento.dado,
+        "departamento": campoDepartamento.dado,
+        "telefone": campoTelefone.dado.replace(/\D/g, ''),
+        "email": campoEmail.dado,
+        "status": 'ativo',
+        "usuariologin": {
+          "senha": campoSenha.dado
+        }
+      };
+      const token = getLocalToken();
+      try {
+        console.log(data);
+        const userResponse = await fetch('http://localhost:8080/usuario/cadastro', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             "Authorization": token
           },
-          body: JSON.stringify(loginData)
+          body: JSON.stringify({
+            usuario: data
+          })
         });
-
-        if (loginResponse.ok) {
-          setAviso("Usuário cadastrado com sucesso!");
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          const { id } = userData;
+          const loginData = {
+            usuario: {
+              id,
+            },
+            senha: campoSenha.dado
+          };
+          const loginResponse = await fetch('http://localhost:8080/usuarioLogin/cadastro', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              "Authorization": token
+            },
+            body: JSON.stringify(loginData)
+          });
+          if (loginResponse.ok) {
+            setAviso("Usuário cadastrado com sucesso!");
+            setTimeout(() => {
+              setAviso('');
+            }, 2000);
+          } else {
+            console.error('Falha ao cadastrar login do usuário');
+            const loginResponseData = await loginResponse.json();
+            console.log(loginResponseData);
+          }
+        } else if (userResponse.status === 400) {
+          const userResponseData = await userResponse.text();
+          if (userResponseData == "O CPF já existe") {
+            setAvisoCPF(`${userResponseData}!`)
+          } else if (userResponseData == "O e-mail já existe") {
+            setAvisoEmail(`${userResponseData}!`)
+          }
+        }
+        else {
+          console.error('Falha ao cadastrar usuário');
+          const userResponseData = await userResponse.json();
+          console.log(userResponseData);
           setTimeout(() => {
             setAviso('');
           }, 2000);
-
-        } else {
-          console.error('Falha ao cadastrar login do usuário');
-          const loginResponseData = await loginResponse.json();
-          console.log(loginResponseData);
         }
-      } else {
-        console.error('Falha ao cadastrar usuário');
-        const userResponseData = await userResponse.json();
-        console.log(userResponseData);
-        setAviso("Falha ao cadastrar usuário!");
-        setTimeout(() => {
-          setAviso('');
-        }, 2000);
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-
-    setNome('');
-    setCpf('');
-    setNascimento('');
-    setDepartamento('');
-    setEmail('');
-    setTelefone('');
-    setSenha('');
-  };
+    };
+  }
 
   return (
     <div className="CadastroAdm">
       <form onSubmit={handleSubmit} className="form-cadastro">
         <Link className="retornarLogin" to={'/'}>◀ Voltar</Link>
         <h1 className="titulo">Cadastrar Adm</h1>
-        <label>Insira o nome: *</label>
-        <input type="text" value={nome} onChange={handleNomeChange} required />
-        <label>Insira a data de Nascimento: *</label>
-        <input type="date" value={nascimento} onChange={handleNascimentoChange} required />
-        <label>Insira o CPF: *</label>
-        <input type="text" value={cpf} onChange={handleCPFChange} required />
-        <label>Insira o Telefone: *</label>
-        <input type="text" value={telefone} onChange={handleTelefoneChange} required />
-        <label>Insira o e-mail: *</label>
-        <input type="email" value={email} onChange={handleEmailChange} required />
-        <label>Insira a senha: *</label>
-        <div className="input-container">
-          <input type={showPassword ? "text" : "password"} value={senha} onChange={handleSenhaChange} required />
-          {showPassword ? <FaEyeSlash className="password-icon" onClick={() => setShowPassword(!showPassword)} /> : <FaEye className="password-icon" onClick={() => setShowPassword(!showPassword)} />}
-        </div>
-        <label>Selecione o Departamento: *</label>
-        <select name="departamento" value={departamento} onChange={event => setDepartamento(event.target.value)} required>
-          <option value="">Selecione...</option>
-          <option value="Departamento 1">Departamento 1</option>
-          <option value="Departamento 2">Departamento 2</option>
-        </select>
-        <button type="submit">Cadastrar</button>
+        {campoNome.codigo}
+        {campoNascimento.codigo}
+        {campoCPF.codigo}
+        {campoTelefone.codigo}
+        {campoEmail.codigo}
+        {campoSenha.codigo}
+        {campoDepartamento.codigo}
+        <input type="submit" value="Cadastrar" />
         <label className="legenda">* Campo de preenchimento obrigatório.</label>
         {aviso !== '' && <p>{aviso}</p>}
       </form>
