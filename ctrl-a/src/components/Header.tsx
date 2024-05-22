@@ -20,8 +20,8 @@ export default class Header extends Component<{}, { showNotification: boolean, n
         this.setState(prevState => ({ showNotification: !prevState.showNotification }));
     }
 
-    handleNotificationUpdate = (garantiaCount: number, expiracaoCount: number) => {
-        this.setState({ notificationCount: garantiaCount + expiracaoCount });
+    handleNotificationUpdate = (garantiaCount: number, expiracaoCount: number, manutencoesProximasLength: number) => {
+        this.setState({ notificationCount: garantiaCount + expiracaoCount + manutencoesProximasLength });
     }
 
     render() {
@@ -41,7 +41,7 @@ export default class Header extends Component<{}, { showNotification: boolean, n
                         >
                             
                             <Notificacao 
-                                onUpdate={(garantiaCount, expiracaoCount) => this.handleNotificationUpdate(garantiaCount, expiracaoCount)} 
+                                onUpdate={(garantiaCount, expiracaoCount, manutencoesProximasLength) => this.handleNotificationUpdate(garantiaCount, expiracaoCount, manutencoesProximasLength)} 
                             />
                         </ModalNotificacao>
                     </div>

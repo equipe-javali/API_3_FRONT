@@ -183,18 +183,18 @@ export default class Notificacao extends Component<Props, State> {
                             }
                         })}
 
-                    {manutencoesProximas.map((manutencao: { id: number, dataFim: string, ativo: any }, index: number) => {
-                        const today = new Date();
-                        const dataFim = new Date(manutencao.dataFim);
-                        const diffTime = Math.abs(dataFim.getTime() - today.getTime());
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        {manutencoesProximas.map((manutencao: { id: number, dataFim: string, ativo: any }, index: number) => {
+                            const today = new Date();
+                            const dataFim = new Date(manutencao.dataFim);
+                            const diffTime = Math.abs(dataFim.getTime() - today.getTime());
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                        if (diffDays === 10) {
-                            return (
-                                <li key={index} >{`A manutenção do ativo ${manutencao.ativo.id} irá terminar em ${diffDays} dias`}</li> // Use o ativo aqui
-                            );
-                        }
-                    })}
+                            if (diffDays <= 10) {
+                                return (
+                                    <li key={index} >{`A manutenção do ativo ${manutencao.ativo.id} irá terminar em ${diffDays} dias`}</li> // Use o ativo aqui
+                                );
+                            }
+                        })}
                     </ul>
                 </div>
             </div>
