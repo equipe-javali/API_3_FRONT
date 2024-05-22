@@ -5,7 +5,7 @@ import "./css/CampoPadrao.css";
 export default function CampoSenha(
     titulo: string,
     placeholder: string,
-    obrigatorio: boolean, /* UTILIZE ISSO PARA COLOCAR O ASTERÍSTICO*/
+    obrigatorio: boolean,
     aviso?: string
 ) {
     const [senha, setSenha] = useState('');

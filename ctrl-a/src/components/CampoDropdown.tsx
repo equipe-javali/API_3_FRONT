@@ -5,7 +5,7 @@ export default function CampoDropdown(
     titulo: string,
     opcoes: string[],
     placeholder: string,
-    obrigatorio: boolean, /* UTILIZE ISSO PARA COLOCAR O ASTERÍSTICO*/
+    obrigatorio: boolean,
     aviso?: string
 ) {
     const [escolha, setEscolha] = useState('');
