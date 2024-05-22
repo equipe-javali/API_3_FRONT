@@ -157,7 +157,7 @@ export default class Notificacao extends Component<Props, State> {
         
                             if (dataGarantia < today) {
                                 return (
-                                    <li key={index}>{`A garantia do ativo ${ativo.id} encerrou ${dataGarantia.toLocaleDateString()}`}</li>
+                                    <li key={index}>{`A garantia do ativo ${ativo.id} terminou ${dataGarantia.toLocaleDateString()}`}</li>
                                 );
                             } else {
                                 return (
@@ -178,7 +178,7 @@ export default class Notificacao extends Component<Props, State> {
                                 );
                             } else {
                                 return (
-                                    <li key={index} >{`A licença do ativo ${ativo.id} irá expirar em ${diffDays} dias`}</li>
+                                    <li key={index} >{`A licença do ativo ${ativo.id} expira em ${diffDays} dias`}</li>
                                 );
                             }
                         })}
@@ -191,7 +191,7 @@ export default class Notificacao extends Component<Props, State> {
 
                             if (diffDays <= 10) {
                                 return (
-                                    <li key={index} >{`A manutenção do ativo ${manutencao.ativo.id} irá terminar em ${diffDays} dias`}</li> // Use o ativo aqui
+                                    <li key={index} >{`A manutenção do ativo ${manutencao.ativo.id} termina em ${diffDays} dias`}</li> // Use o ativo aqui
                                 );
                             }
                         })}
