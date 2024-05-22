@@ -234,37 +234,7 @@ export default function AtualizarAtivo() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);
     const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
-    const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
-    const [manutencaoData, setManutencaoData] = useState<Manutencao>({
-        id: 0,
-        idAtivo: {
-            nome: "",
-            dataAquisicao: "",
-            custoAquisicao: 0,
-            taxaOperacional: 0,
-            periodoOperacional: "",
-            dataLimite: "",
-            marca: "",
-            numeroIdentificacao: "",
-            //anexos: Documento[],
-            descricao: "",
-            tipo: "",
-            grauImportancia: 0,
-            tag: "",
-            status: "",
-            idResponsavel: 0,
-            departamento: "",
-            local: "string"
-        },
-        tipo: '',
-        descricao: '',
-        localizacao: '',
-        custo: 0,
-        dataInicio: '',
-        dataFim: '',
-    });
-    const [manutencao, setManutencao] = useState<Manutencao[]>([]);
-
+ 
     const [camposForm, setCamposForm] = useState({
         dataAquisicao: "",
         custoAquisicao: 0,
@@ -329,89 +299,6 @@ export default function AtualizarAtivo() {
     const CampoTag = CampoAtivoEditavel("Tag", camposForm.tag, "string")
     const CampoStatus = CampoAtivoReadOnly("Status", statusA, "string")
     const CampoLocal = CampoAtivoReadOnly("Local", local, "string")
-    function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setManutencaoData(prevData => ({
-            ...prevData,
-            [event.target.name]: event.target.value,
-            ativoId: prevData.idAtivo,
-        }))
-    }
-
-    const tipoMapping: { [key: string]: number } = {
-        "Preventiva": 1,
-        "Corretiva": 2,
-        "Preditiva": 3
-    };
-
-    const reverseTipoMapping: { [key: number]: string } = {
-        1: "Preventiva",
-        2: "Corretiva",
-        3: "Preditiva"
-    };
-
-    function toggleModal() {
-        setShowManutencaoModal(!showManutencaoModal);
-    }
-
-    function handleManutencaoSubmit() {
-        const currentDate = new Date().toISOString().split('T')[0];
-        const manutencaoDataWithDates = {
-            ...manutencaoData,
-            tipo: typeof manutencaoData.tipo === 'string' ? tipoMapping[manutencaoData.tipo] || 0 : manutencaoData.tipo,
-            dataInicio: manutencaoData.dataInicio ? new Date(manutencaoData.dataInicio).toISOString() : currentDate,
-            dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null,
-            ativo: { id: manutencaoData.idAtivo },
-        };
-
-        fetch('http://localhost:8080/manutencao/cadastro', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": token
-            },
-            body: JSON.stringify(manutencaoDataWithDates),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Manutenção cadastrada com sucesso!', data);
-                setShowManutencaoModal(false);
-                setManutencao(prevManutencao => [...prevManutencao, data]);
-                setManutencaoData({
-                    id: 0,
-                    idAtivo: {
-                        nome: "",
-                        dataAquisicao: "",
-                        custoAquisicao: 0,
-                        taxaOperacional: 0,
-                        periodoOperacional: "",
-                        dataLimite: "",
-                        marca: "",
-                        numeroIdentificacao: "",
-                        //anexos: Documento[],
-                        descricao: "",
-                        tipo: "",
-                        grauImportancia: 0,
-                        tag: "",
-                        status: "",
-                        idResponsavel: 0,
-                        departamento: "",
-                        local: "string"
-                    },
-                    tipo: '',
-                    descricao: '',
-                    localizacao: '',
-                    custo: 0,
-                    dataInicio: '',
-                    dataFim: '',
-                });
-            })
-            .catch(error => console.error('Error:', error));
-    }
 
     function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
         const userId = Number(event.target.value);
@@ -442,25 +329,6 @@ export default function AtualizarAtivo() {
         } else {
             return 'Selecione grau de importância';
         }
-    }
-
-    function handleTextareaDataChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-        setManutencaoData(prevData => ({
-            ...prevData,
-            [event.target.name]: event.target.value,
-            ativoId: prevData.idAtivo,
-        }));
-    };
-    function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        setManutencaoData(prevData => ({
-            ...prevData,
-            [event.target.name]: event.target.value,
-            ativoId: prevData.idAtivo,
-        }));
-    }
-
-    function handleCancel() {
-        setShowManutencaoModal(false);
     }
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -562,45 +430,6 @@ export default function AtualizarAtivo() {
     return (
         <div className="atualizarAtivo">
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
-            <Modal open={showManutencaoModal} onClose={handleManutencaoSubmit} onCancel={handleCancel} title="Pedido de manutenção">
-                <div>
-                    <div className="containerModal">
-                        <div className='modal-man'>
-                            <h3>Local</h3>
-                            <input name="localizacao" value={manutencaoData.localizacao} onChange={handleManutencaoDataChange} />
-                        </div>
-                        <div className='modal-man'>
-                            <h3>Custo</h3>
-                            <input name="custo" value={manutencaoData.custo} onChange={handleManutencaoDataChange} />
-                        </div>
-                    </div>
-                    <div className="containerModal">
-                        <div className='modal-man'>
-                            <h3>Data de envio</h3>
-                            <input type="date" name="dataInicio" value={manutencaoData.dataInicio} onChange={handleManutencaoDataChange} />
-                        </div>
-                        <div className='modal-man'>
-                            <h3>Data de retorno</h3>
-                            <input type="date" name="dataFim" value={manutencaoData.dataFim} onChange={handleManutencaoDataChange} />
-                        </div>
-                    </div>
-                    <div className="containerModal">
-                        <div className='modal-man'>
-                            <h3>Descrição</h3>
-                            <textarea className="textarea-description" name="descricao" value={manutencaoData.descricao} onChange={handleTextareaDataChange} maxLength={100} />
-                        </div>
-                        <div className='modal-man'>
-                            <h3>Tipo</h3>
-                            <select name="tipo" value={reverseTipoMapping[Number(manutencaoData.tipo)]} onChange={handleSelectDataChange}>
-                                <option value="">Selecione</option>
-                                <option value="Preventiva">Preventiva</option>
-                                <option value="Corretiva">Corretiva</option>
-                                <option value="Preditiva">Preditiva</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </Modal>
             <h1 className='tituloFormsAtualizarAtivo'>{`Ativos > (ID: ${id} / Número Identificador: ${dados?.numeroIdentificacao})`}</h1>
             <form className="formsAtualizarAtivo" onSubmit={handleSubmit}>
                 <div>
@@ -676,7 +505,7 @@ export default function AtualizarAtivo() {
                         </div>
                         <div className='botoesFormsEditar'>
                             <Link className='button' to={`/HistoricoManutencao/${id}`}>Histórico <br />Manutenção</Link>
-                            <button className='button' onClick={toggleModal}>Adicionar pedido <br />de manutenção</button>
+                            <Link className='button' to={`/Historico/${id}`}> Linha do tempo <br />do ativo</Link>
                             <input type="submit" placeholder='Atualizar' />
                         </div>
                     </div>

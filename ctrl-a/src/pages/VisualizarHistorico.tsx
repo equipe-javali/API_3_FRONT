@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import './css/visualizarHistorico.css';
+import getLocalToken from "../utils/getLocalToken";
+import { useParams } from "react-router-dom";
 
 interface EventoHistorico {
-  id: number;
-  ano: number;
-  evento: string;
-  data: string;
-  descricao: string;
+  idAtivo: number,
+  dataAlteracao: string,
+  nomeAtivo: string,
+  nomeUsuario: string,
+  departamentoUsuario: string
 }
 
 interface DadosAtivo {
@@ -21,45 +23,42 @@ const meses = [
 
 export default function VisualizarHistorico() {
   const [nomeAtivo, setNomeAtivo] = useState<string>('');
-  const [historico, setHistorico] = useState<EventoHistorico[]>([]);
+  const [historico, setHistorico] = useState<EventoHistorico[] | any>([]);
+  const token = getLocalToken();
+  const { id } = useParams();
 
   useEffect(() => {
-    async function fetchHistorico() {
-      try {
-        const response = await fetch('http://localhost:8080/visualizarhistorico/${id_ativo}');
-        if (!response.ok) {
-          throw new Error('Erro ao carregar dados');
-        }
-        const dadosAtivo: DadosAtivo = await response.json();
-        setNomeAtivo(dadosAtivo.nome);
-        const historicoOrdenado = dadosAtivo.historico.sort((a: EventoHistorico, b: EventoHistorico) => {
-          if (a.ano !== b.ano) {
-            return b.ano - a.ano;
-          }
-
-          const [diaA, mesA] = a.data.split(" ");
-          const [diaB, mesB] = b.data.split(" ");
-          
-          const indexMesA = meses.indexOf(mesA);
-          const indexMesB = meses.indexOf(mesB);
-          if (indexMesA !== indexMesB) {
-            return indexMesB - indexMesA; 
-          }
-
-          if (parseInt(diaA) !== parseInt(diaB)) {
-            return parseInt(diaB) - parseInt(diaA); 
-          }
-
-          return 0;
-        });
-        setHistorico(historicoOrdenado);
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-      }
-    }    
-
     fetchHistorico();
   }, []);
+
+  async function fetchHistorico() {
+    try {
+      const response = await fetch('http://localhost:8080/historicoAtivoTangivel/listagemTodos', {
+        headers: {
+          "Authorization": token
+        }
+      });
+      
+      if (response.ok) {
+        const data: EventoHistorico[] = await response.json();
+        const historicoFiltrado = data.filter(e => Number(e?.idAtivo) === Number(id))
+
+
+        if (historicoFiltrado.length > 0) {
+          setHistorico(historicoFiltrado);
+          setNomeAtivo(historicoFiltrado[0].nomeAtivo);
+          console.log('historico FILTRADO: ', historicoFiltrado)
+          console.log('historico: ', historico)
+        } else {
+          console.log('Caiu pra fora');
+          }
+      } else {
+        throw new Error('Erro na solicitação fetch');
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+    }
+  }
 
   return (
     <div className="VisualizarHistorico">
@@ -70,7 +69,7 @@ export default function VisualizarHistorico() {
             <div className="uia-timeline__container">
               <div className="uia-timeline__line"></div>
               <div className="uia-timeline__annual-sections">
-                {historico.slice().map((evento) => (
+                {/* {historico.slice().map((evento) => (
                   <div key={evento.id} className="uia-timeline__groups">
                     <span className="uia-timeline__year" aria-hidden="true">{evento.ano}</span>
                     <section className="uia-timeline__group">
@@ -94,7 +93,7 @@ export default function VisualizarHistorico() {
                       </div>
                     </section>
                   </div>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>
