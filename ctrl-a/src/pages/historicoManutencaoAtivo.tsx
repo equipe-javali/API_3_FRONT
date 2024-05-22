@@ -291,26 +291,34 @@ export default function HistoricoManutencao() {
                 })
                 .then(data => {
                     console.log('Data de retorno atualizada com sucesso!', data);
-                    toggleAtualizacaoModal();
-        
-                    
-                    setManutencao(prevManutencao => prevManutencao.map(m => 
-                        m.id === data.id ? { ...m, dataFim: data.dataFim } : m
-                    ));
-        
-                    setManutencaoData({
-                        id: 0,
-                        ativoId: Number(id_ativo),
-                        tipo: '',
-                        descricao: '',
-                        localizacao: '',
-                        custo: '',
-                        dataInicio: '',
-                        dataFim: null,
-                    });
+                    toggleAtualizacaoModal();            
+                 
+                    fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`, {
+                        headers: {
+                            "Authorization": token
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then((data: ManutencaoData[]) => {
+                        const formattedData = data.map((item: ManutencaoData) => ({
+                            ...item,
+                            dataInicio: moment(item.dataInicio).format('YYYY-MM-DD'),
+                            dataFim: item.dataFim ? moment(item.dataFim).format('YYYY-MM-DD') : null,
+                        }));
+            
+                        // 2. Atualizar o estado com os dados atualizados
+                        setManutencao(formattedData);
+                    })
+                    .catch(error => console.error('Error:', error));
                 })
                 .catch(error => console.error('Error:', error));
-        }
+            };
+            
 
 
     return (
