@@ -43,10 +43,42 @@ export default function VisualizarHistorico() {
       const data: EventoHistorico[] = await tangivel.json();
       const historicoFiltrado = data.filter(e => Number(e?.idAtivo) === Number(id))
 
+      const historicoOrdenado = historicoFiltrado.sort((a: EventoHistorico, b: EventoHistorico) => {
+        const [anoA, mesA, diaA] = a.dataAlteracao.split("-");
+        const [anoB, mesB, diaB] = b.dataAlteracao.split("-");
+      
+        // Função para obter o nome abreviado do mês
+        function getNomeMes(numeroMes: number): string {
+          return meses[numeroMes - 1];
+        }
+      
+        // Comparação de ano
+        if (parseInt(anoA) !== parseInt(anoB)) {
+          return parseInt(anoB) - parseInt(anoA);
+        }
+      
+        // Comparação de mês
+        const nomeMesA = getNomeMes(parseInt(mesA));
+        const nomeMesB = getNomeMes(parseInt(mesB));
+        if (nomeMesA !== nomeMesB) {
+          return meses.indexOf(nomeMesB) - meses.indexOf(nomeMesA);
+        }
+      
+        // Comparação de dia
+        return parseInt(diaB) - parseInt(diaA);
+      });
+      
+      
+
       if (tangivel.ok) {
         if (historicoFiltrado.length > 0) {
           if (historicoFiltrado[0].idAtivoTangivel) {
-            setHistorico(historicoFiltrado);
+            setHistorico({
+              dataAlteracao: historicoFiltrado[0].dataAlteracao,
+              nomeAtivo: historicoFiltrado[0].nomeAtivo,
+              nomeUsuario: historicoFiltrado[0].nomeUsuario,
+              departamentoUsuario: historicoFiltrado[0].departamentoUsuario
+            });
             setNomeAtivo(historicoFiltrado[0].nomeAtivo);
             console.log('historico FILTRADO: ', historicoFiltrado)
 
@@ -87,6 +119,7 @@ export default function VisualizarHistorico() {
             const dataIntangivel: EventoHistorico[] = await intangivel.json()
             const historicoIntangivel = dataIntangivel.filter(e => Number(e?.idAtivo) === Number(id))
             try {
+
               setHistorico(historicoIntangivel);
               setNomeAtivo(historicoIntangivel[0].nomeAtivo)
               console.log('historico: ', historicoIntangivel)
@@ -115,31 +148,31 @@ export default function VisualizarHistorico() {
             <div className="uia-timeline__container">
               <div className="uia-timeline__line"></div>
               <div className="uia-timeline__annual-sections">
-                {/* {historico.slice().map((evento) => (
-                  <div key={evento.id} className="uia-timeline__groups">
-                    <span className="uia-timeline__year" aria-hidden="true">{evento.ano}</span>
+                {historico.map((evento: EventoHistorico) => (
+                  <div key={evento.idAtivo} className="uia-timeline__groups">
+                    <span className="uia-timeline__year" aria-hidden="true">{evento.dataAlteracao.split("-")[0]}</span>
                     <section className="uia-timeline__group">
                       <div className="uia-timeline__point uia-card" data-uia-card-skin="1" data-uia-card-mod="1">
                         <div className="uia-card__container">
                           <div className="uia-card__intro">
-                            <h3 className="ra-heading">{evento.evento}</h3>
+                            <h3 className="ra-heading">{evento.nomeAtivo}</h3>
                             <span className="uia-card__time">
-                              <time dateTime={evento.ano.toString()}>
-                                <span className="uia-card__day">{evento.data.split(" ")[0]}</span>{" "}
-                                <span>{evento.data.split(" ")[1]}</span>
+                              <time dateTime={evento.dataAlteracao}>
+                                <span className="uia-card__day">{evento.dataAlteracao.split("-")[2]}</span>{" "}
+                                <span>{meses[parseInt(evento.dataAlteracao.split("-")[1]) - 1]}</span>
                               </time>
                             </span>
                           </div>
                           <div className="uia-card__body">
                             <div className="uia-card__description">
-                              <p>{evento.descricao}</p>
+                              <p>{evento.nomeUsuario}, {evento.departamentoUsuario}</p>
                             </div>
                           </div>
                         </div>
                       </div>
                     </section>
                   </div>
-                ))} */}
+                ))}
               </div>
             </div>
           </div>
@@ -147,4 +180,5 @@ export default function VisualizarHistorico() {
       </div>
     </div>
   );
+  
 }
