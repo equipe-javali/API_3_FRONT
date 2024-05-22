@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import './css/criarUsuario.css';
 import RespostaSistema from "../components/respostaSistema";
 import getLocalToken from "../utils/getLocalToken";
@@ -77,7 +77,7 @@ export default function CriarUsuario() {
     avisoDepartamento
   )
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     let certo = true
     if (campoNome.dado === '' || !campoNome.dado) {
@@ -122,7 +122,7 @@ export default function CriarUsuario() {
       const token = getLocalToken();
       try {
         console.log(data);
-        fetch('http://localhost:8080/usuario/cadastro', {
+        const userResponse = await fetch('http://localhost:8080/usuario/cadastro', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -132,21 +132,20 @@ export default function CriarUsuario() {
             usuario: data
           })
         })
-          .then((response) => {
-            if (response.ok) {
-              setTextoResposta("Usuário cadastrado com sucesso!")
-              setTipoResposta("Sucesso")
-            } else if (response.status === 400) {
-              setAvisoEmail("Email já cadastrado!")
-            } else {
-              setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
-              setTipoResposta("Erro")
-            }
-          })
-          .catch((error) => {
-            setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
-            setTipoResposta("Erro")
-          })
+        if (userResponse.ok) {
+          setTextoResposta("Usuário cadastrado com sucesso!")
+          setTipoResposta("Sucesso")
+        } else if (userResponse.status === 400) {
+          const userResponseData = await userResponse.text();
+          if (userResponseData === "O CPF já existe") {
+            setAvisoCPF(`${userResponseData}!`)
+          } else if (userResponseData === "O e-mail já existe") {
+            setAvisoEmail(`${userResponseData}!`)
+          }
+        } else {
+          setTextoResposta(`Não foi possível cadastrar! Erro:${userResponse.status}`)
+          setTipoResposta("Erro")
+        }
       } catch (error) {
         setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
         setTipoResposta("Erro")
