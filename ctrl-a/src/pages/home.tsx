@@ -86,7 +86,7 @@ export default function Home() {
             <p className='pergunta'>
               Não possui cadastro ainda?{' '}
               <span>&nbsp;</span>
-              <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>
+              <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>              
             </p>
 
           </form>

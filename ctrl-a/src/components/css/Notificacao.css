@@ -1,17 +1,19 @@
-
 .notificacao {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 9999;
-    background-color: #fff;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    padding: 10px;
+    position: relative;    
 }
 
-.notificacao div {
-    margin-bottom: 10px;
+.notificacao li {
+    list-style-type: circle;
+    margin-bottom: 20px;    
+}
+
+.notificacao-item {
+    border-bottom: 1px solid #747272;    
+    /* padding: auto; */
+    height:max-content;
+    width: 100%;
+    display: flex;
+    
 }
 
 

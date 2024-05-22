@@ -116,7 +116,7 @@ tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     width: 19%;
     padding: 9px;
     border-radius: 4px;
-    background-color: var(--cor4);
+    background-color: var(--cor3);
     color: var(--branco);   
     margin-right: 20px;
     margin-left: 3px;

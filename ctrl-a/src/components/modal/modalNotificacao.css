@@ -32,26 +32,27 @@
 
 .modalNotificacao-body{
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 20px;
     margin-bottom: 1rem;
     display: flex;
     justify-content: space-around;
+    color: var(--branco);
 }
 
-
-.modalNotificacao-body .modalNotificacao-responsavel, .modalNotificacao-local {
-    width: 40%;
+.modalNotificacao-head{
+    width: 100%;      
+    margin-top: 10px;          
+    border-bottom: 1px solid #747272;  
+    padding-bottom: 15px; 
+    
 }
-
-.modalNotificacao-responsavel select{
-    width: 100%;
-    padding: 3%;
+.modalNotificacao-title {
+    width: 100%;     
+    margin-top: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-around;   
+    
 }
-
-.modalNotificacao-local input{
-    width: 90%;
-    padding: 3%;
-}
-
 
 

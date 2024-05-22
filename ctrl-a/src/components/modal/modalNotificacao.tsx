@@ -13,8 +13,8 @@ export default function ModalNotificacao(props: ModalProps): ReturnType<FC> {
     return (
         <div className={`${"modalNotificacao"} ${props.open ? "display-block" : "display-none"}`}>
             <div className="modalNotificacao-main">
-                <div className="modal-head">
-                <h2>{props.title}</h2>
+                <div className="modalNotificacao-head">
+                <h2 className="modalNotificacao-title">{props.title}</h2>                
                 </div>
                 <div className="modalNotificacao-body">
                     {props.children}

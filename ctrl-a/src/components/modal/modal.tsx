@@ -17,7 +17,7 @@ export default function Modal(props: ModalProps): ReturnType<FC> {
                 <h2>{props.title}</h2>
                 </div>
                 <div className="modal-body">
-                    {props.children}
+                    {props.children}                    
                 </div>
                 <div className="btn-container">
                     <button type="button" className="btn" onClick={props.onClose}>Salvar</button>

@@ -37,7 +37,9 @@ export default class Header extends Component<{}, { showNotification: boolean, n
                             onClose={this.handleBellClick}
                             onCancel={this.handleBellClick}
                             title="Avisos"
+                            
                         >
+                            
                             <Notificacao 
                                 onUpdate={(garantiaCount, expiracaoCount) => this.handleNotificationUpdate(garantiaCount, expiracaoCount)} 
                             />
