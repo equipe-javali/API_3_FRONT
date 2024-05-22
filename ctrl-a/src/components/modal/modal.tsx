@@ -7,6 +7,7 @@ interface ModalProps {
     onCancel: () => void;
     title: string;    
     children: ReactElement;
+    
 }
 
 export default function Modal(props: ModalProps): ReturnType<FC> {

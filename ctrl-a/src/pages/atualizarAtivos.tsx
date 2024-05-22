@@ -506,7 +506,7 @@ export default function AtualizarAtivo() {
                         <div className='botoesFormsEditar'>
                             <Link className='button' to={`/HistoricoManutencao/${id}`}>Histórico <br />Manutenção</Link>
                             <Link className='button' to={`/Historico/${id}`}> Linha do tempo <br />do ativo</Link>
-                            <input type="submit" placeholder='Atualizar' />
+                            <input type="submit" value='Atualizar' />
                         </div>
                     </div>
                 </div>

@@ -309,9 +309,8 @@ export default function HistoricoManutencao() {
                             ...item,
                             dataInicio: moment(item.dataInicio).format('YYYY-MM-DD'),
                             dataFim: item.dataFim ? moment(item.dataFim).format('YYYY-MM-DD') : null,
-                        }));
-            
-                        // 2. Atualizar o estado com os dados atualizados
+                        }));            
+                       
                         setManutencao(formattedData);
                     })
                     .catch(error => console.error('Error:', error));
