@@ -27,7 +27,7 @@
 .inputCampoSenha {
     display: flex;
     align-items: center;
-    background-color: var(--cor20);
+    background-color: var(--corBackgroundInput);
     border-radius: 6px;
     width: 100%;
 }
@@ -52,7 +52,7 @@
 .divCampoPadrao input[type="date"],
 .inputCampoSenha input::placeholder,
 .divCampoPadrao input::placeholder {
-    color: var(--branco1);
+    color: var(--corTextInput);
 }
 
 .erroCampo {
@@ -83,7 +83,7 @@
 }
 
 .inputCampoSenha svg {
-    color: var(--branco1);
+    color: var(--corTextInput);
 }
 
 .inputCampoSenha .password-icon {
