@@ -3,7 +3,7 @@
     --fontSizeInputCampoPadrao: 13px;
     --minHeightDivCampoPadrao: 30px;
     --gapInputTitulo: 30px;
- 
+
     --corTituloCampo: var(--branco1);
     --corTextInput: var(--cor10);
     --corBackgroundInput: var(--cor20);
@@ -13,6 +13,7 @@
 }
 
 .divCampoPadrao,
+.divCampoDescricao,
 .divCampoRadio,
 .divCampoSenha {
     min-height: var(--minHeightDivCampoPadrao);
@@ -23,6 +24,7 @@
 }
 
 .divCampoRadio>div,
+.divCampoDescricao>div,
 .divCampoPadrao>div {
     display: flex;
     flex-direction: column;
@@ -32,6 +34,13 @@
 .inputCampoSenha {
     display: flex;
     align-items: center;
+}
+
+.inputCampoSenha,
+.divCampoDescricao textarea,
+.divCampoPadrao input,
+.inputCampoSenha input,
+.divCampoPadrao select {
     background-color: var(--corBackgroundInput);
     border-radius: 6px;
     width: 100%;
@@ -39,12 +48,15 @@
 
 .divCampoPadrao input,
 .inputCampoSenha input,
+.divCampoDescricao textarea,
 .divCampoPadrao select {
-    width: 100%;
     padding: 4px;
-    background-color: var(--corBackgroundInput);
     color: var(--corTextInput);
-    border-radius: 6px;
+}
+
+.divCampoDescricao textarea {
+    resize: none;
+    min-height: 150px;
 }
 
 .inputObrigatorio {
@@ -52,6 +64,7 @@
 }
 
 .inputCampoSenha,
+.divCampoDescricao textarea,
 .divCampoPadrao input,
 .divCampoPadrao select {
     border-style: solid;
@@ -70,12 +83,14 @@
 }
 
 .divCampoPadrao.alertaCampoErrado input,
+.divCampoDescricao.alertaCampoErrado textarea,
 .divCampoSenha.alertaCampoErrado .inputCampoSenha,
 .divCampoPadrao.alertaCampoErrado select {
     border-color: var(--vermelho1);
 }
 
 .divCampoPadrao.semAlertaCampo input,
+.divCampoDescricao.semAlertaCampo textarea,
 .divCampoSenha.semAlertaCampo .inputCampoSenha,
 .divCampoPadrao.semAlertaCampo select {
     border-color: var(--corBackgroundInput);
@@ -129,11 +144,12 @@
 .divInputRadioFormsAtivo input {
     appearance: none;
 }
-.opcoesCampoRadio input:checked ~ .controleInputRadio {
+
+.opcoesCampoRadio input:checked~.controleInputRadio {
     background-color: var(--corTextInput);
 }
 
-.opcoesCampoRadio input[type="radio"]:hover ~ .controleInputRadio,
-.opcoesCampoRadio input[type="radio"]::selection ~ .controleInputRadio {
+.opcoesCampoRadio input[type="radio"]:hover~.controleInputRadio,
+.opcoesCampoRadio input[type="radio"]::selection~.controleInputRadio {
     background-color: var(--corBackgroundInput);
 }
