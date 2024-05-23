@@ -22,7 +22,39 @@ export default function CampoPadrao(
             }
         } else if (palavraChave === "CPF") {
             const cpf = descricao.replace(/\D/g, '').slice(0, 11);
-            return cpf.replace(/(\d{3})(\d)/g, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+        } else if (palavraChave === "Custo") {
+            let valor = descricao.replace(/\D/g, '');
+            valor = valor.replace(/^0+/, '');
+            if (valor.length !== 0) {
+                if (valor.length === 1) {
+                    valor = "00" + valor
+                } else if (valor.length === 2) {
+                    valor = "0" + valor
+                } else {
+                    valor = valor.padStart(3, '0');
+                }
+                valor = valor.slice(0, -2) + ',' + valor.slice(-2);
+                valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                valor = 'R$' + valor
+            }
+            return valor
+        } else if (palavraChave === "Taxa") {
+            let taxa = descricao.replace(/\D/g, '');
+            taxa = taxa.replace(/^0+/, '');
+            if (taxa.length !== 0) {
+                if (taxa.length === 1) {
+                    taxa = "00" + taxa
+                } else if (taxa.length === 2) {
+                    taxa = "0" + taxa
+                } else {
+                    taxa = taxa.padStart(3, '0');
+                }
+                taxa = taxa.slice(0, -2) + ',' + taxa.slice(-2);
+                taxa = taxa.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                taxa = taxa + '%';
+            }
+            return taxa
         }
         return descricao;
     }
