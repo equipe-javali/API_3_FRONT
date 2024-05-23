@@ -1,4 +1,3 @@
-import '../components/css/CampoAtivo.css';
 import './css/cadastroAtivos.css'
 import { useState } from "react"
 import CadastroAtivosTangiveis from './cadastroAtivosTangiveis'
@@ -8,6 +7,7 @@ import getLocalToken from '../utils/getLocalToken'
 import CampoPadrao from '../components/CampoPadrao'
 import CampoData from '../components/CampoData'
 import CampoRadio from '../components/CampoRadio';
+import CampoDescricao from '../components/CampoDescricao'
 
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
@@ -72,9 +72,14 @@ export default function CadastroAtivos() {
         ["Tangível", "Intangível"],
         true
     )
-    const [proximo, setProximo] = useState(0)
 
-    const [descricao, setDescricao] = useState('')
+    const campoDescricao = CampoDescricao(
+        "Descrição",
+        "Insira a descrição",
+        false
+    )
+
+    const [proximo, setProximo] = useState(0)
 
     const [textoResposta, setTextoResposta] = useState('')
     const [tipoResposta, setTipoResposta] = useState('')
@@ -126,7 +131,7 @@ export default function CadastroAtivos() {
                                     "tipo": campoCategoria.dado,
                                     "tag": paginaAtivosTangiveis.dados.tag,
                                     "grauImportancia": importancia,
-                                    "descricao": descricao,
+                                    "descricao": campoDescricao.dado,
                                     "numeroIdentificacao": campoIdentificador.dado,
                                     "marca": campoMarca.dado,
                                     "dataAquisicao": campoDataAquisicao.dado
@@ -176,7 +181,7 @@ export default function CadastroAtivos() {
                                     "tipo": campoCategoria.dado,
                                     "tag": paginaAtivosTangiveis.dados.tag,
                                     "grauImportancia": importancia,
-                                    "descricao": descricao,
+                                    "descricao": campoDescricao.dado,
                                     "numeroIdentificacao": campoIdentificador.dado,
                                     "marca": campoMarca.dado,
                                     "dataAquisicao": campoDataAquisicao.dado
@@ -216,7 +221,7 @@ export default function CadastroAtivos() {
                     campoIdentificador.limpar()
                     campoDataAquisicao.limpar()
                     campoCategoria.limpar()
-                    setDescricao("")
+                    campoDescricao.limpar()
                     paginaAtivosIntangiveis.limpar()
                     paginaAtivosTangiveis.limpar()
                 }
@@ -286,10 +291,7 @@ export default function CadastroAtivos() {
                             {CampoTipo.codigo}
                         </div>
                         <div className='colunaFormsAtivo'>
-                            <div className='descricaoFormsAtivo'>
-                                <span>Descrição:</span>
-                                <textarea placeholder='Insira a descrição...' value={descricao} onChange={(e) => setDescricao(e.target.value)} />
-                            </div>
+                            {campoDescricao.codigo}
                         </div>
                         <div className='divBotaoForms'>
                             <div />
