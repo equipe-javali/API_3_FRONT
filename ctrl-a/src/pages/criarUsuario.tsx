@@ -138,6 +138,12 @@ export default function CriarUsuario() {
         if (userResponse.ok) {
           setTextoResposta("Usuário cadastrado com sucesso!")
           setTipoResposta("Sucesso")
+          campoCPF.limpar()
+          campoDepartamento.limpar()
+          campoEmail.limpar()
+          campoNascimento.limpar()
+          campoNome.limpar()
+          campoTelefone.limpar()
         } else if (userResponse.status === 400) {
           const userResponseData = await userResponse.text();
           if (userResponseData === "O CPF já existe") {
@@ -154,12 +160,6 @@ export default function CriarUsuario() {
         setTipoResposta("Erro")
       }
     }
-    campoCPF.limpar()
-    campoDepartamento.limpar()
-    campoEmail.limpar()
-    campoNascimento.limpar()
-    campoNome.limpar()
-    campoTelefone.limpar()
   };
 
   return (
