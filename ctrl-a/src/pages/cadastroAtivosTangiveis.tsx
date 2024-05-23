@@ -37,9 +37,9 @@ export default function CadastroAtivosTangiveis() {
 
     const taxaDepreciacao = CampoPadrao(
         "Taxa de depreciação:",
-        "number",
+        "text",
         "00%",
-        "Depreciação",
+        "Taxa",
         false
     )
 

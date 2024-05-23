@@ -1,6 +1,6 @@
 import '../components/css/CampoAtivo.css';
 import './css/cadastroAtivos.css'
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import CadastroAtivosTangiveis from './cadastroAtivosTangiveis'
 import CadastroAtivosIntangiveis from './cadastroAtivosIntangiveis'
 import RespostaSistema from '../components/respostaSistema'
@@ -26,7 +26,7 @@ export default function CadastroAtivos() {
     const [avisoCustoAquisicao, setAvisoCustoAquisicao] = useState<string | undefined>(undefined);
     const campoCustoAquisicao = CampoPadrao(
         "Custo da Aquisição:",
-        "number",
+        "text",
         "Insira o custo da aquisição",
         "Custo",
         true,
@@ -103,6 +103,7 @@ export default function CadastroAtivos() {
             certo = false
         }
         if (certo) {
+            const custo = parseFloat(campoCustoAquisicao.dado.replace('R$', '').replace(/\./g, '').replace(',', '.'));
             try {
                 if (CampoTipo.dado === "Tangível") {
                     if (paginaAtivosTangiveis.dados.garantia === '') {
@@ -119,7 +120,7 @@ export default function CadastroAtivos() {
                             body: JSON.stringify({
                                 "ativo": {
                                     "nome": campoNome.dado,
-                                    "custoAquisicao": Number(campoCustoAquisicao.dado),
+                                    "custoAquisicao": custo,
                                     "tipo": campoCategoria.dado,
                                     "tag": paginaAtivosTangiveis.dados.tag,
                                     "grauImportancia": importancia,
@@ -129,7 +130,7 @@ export default function CadastroAtivos() {
                                     "dataAquisicao": campoDataAquisicao.dado
                                 },
                                 "garantia": paginaAtivosTangiveis.dados.garantia,
-                                "taxaDepreciacao": Number(paginaAtivosTangiveis.dados.taxaDepreciacao),
+                                "taxaDepreciacao": parseFloat(paginaAtivosTangiveis.dados.taxaDepreciacao.replace('%', '')),
                                 "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao
                             }),
                             headers: {
@@ -169,7 +170,7 @@ export default function CadastroAtivos() {
                             body: JSON.stringify({
                                 "ativo": {
                                     "nome": campoNome.dado,
-                                    "custoAquisicao": Number(campoCustoAquisicao.dado),
+                                    "custoAquisicao": custo,
                                     "tipo": campoCategoria.dado,
                                     "tag": paginaAtivosTangiveis.dados.tag,
                                     "grauImportancia": importancia,
@@ -179,7 +180,7 @@ export default function CadastroAtivos() {
                                     "dataAquisicao": campoDataAquisicao.dado
                                 },
                                 "dataExpiracao": paginaAtivosIntangiveis.dados.expiracao,
-                                "taxaAmortizacao": Number(paginaAtivosIntangiveis.dados.taxaAmortizacao.replace(/\D/g, '')),
+                                "taxaAmortizacao": parseFloat(paginaAtivosIntangiveis.dados.taxaAmortizacao.replace('%', '')),
                                 "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao
                             }),
                             headers: {
@@ -205,7 +206,7 @@ export default function CadastroAtivos() {
                             })
                     }
                 }
-                if (certo){
+                if (certo) {
                     campoNome.limpar()
                     campoCustoAquisicao.limpar()
                     campoCustoAquisicao.limpar()
@@ -221,7 +222,7 @@ export default function CadastroAtivos() {
                 setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
                 setTipoResposta("Erro")
             }
-        } else{
+        } else {
             setProximo(0)
         }
     }

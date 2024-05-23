@@ -37,9 +37,9 @@ export default function CadastroAtivosIntangiveis() {
 
     const taxaAmortizacao = CampoPadrao(
         "Taxa de amortização:",
-        "number",
+        "text",
         "00%",
-        "Amortização",
+        "Taxa",
         false
     )
 
