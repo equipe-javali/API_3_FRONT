@@ -174,9 +174,9 @@ export default function CriarUsuarioAdm() {
           }
         } else if (userResponse.status === 400) {
           const userResponseData = await userResponse.text();
-          if (userResponseData == "O CPF já existe") {
+          if (userResponseData === "O CPF já existe") {
             setAvisoCPF(`${userResponseData}!`)
-          } else if (userResponseData == "O e-mail já existe") {
+          } else if (userResponseData === "O e-mail já existe") {
             setAvisoEmail(`${userResponseData}!`)
           }
         }
