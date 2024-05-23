@@ -16,6 +16,7 @@ interface Props {
 
 
 export default class Notificacao extends Component<Props, State> {
+    private intervalId: NodeJS.Timeout | null = null;
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -24,25 +25,31 @@ export default class Notificacao extends Component<Props, State> {
             manutencoesProximas: []
         };
     }
+
     componentDidMount() {
-        const token = getLocalToken();
-      
-        const fetchAtivosTangiveis = fetch('http://localhost:8080/ativoTangivel/listagemTodos', { headers: { 'Authorization': token } }).then(res => res.json());
-        const fetchAtivosIntangiveis = fetch('http://localhost:8080/ativoIntangivel/listagemTodos', { headers: { 'Authorization': token } }).then(res => res.json());
-        const fetchManutencoes = fetch('http://localhost:8080/manutencao/listagemTodos', { headers: { 'Authorization': token } }).then(res => res.json());
-      
-        Promise.all([fetchAtivosTangiveis, fetchAtivosIntangiveis, fetchManutencoes])
-          .then(([ativosTangiveisData, ativosIntangiveisData, manutencoesData]) => {
-            const today = new Date();
-            const dezDiasEmMilissegundos = 10 * 24 * 60 * 60 * 1000;       
-           
-            if (!Array.isArray(ativosTangiveisData)) {
-              console.error('Dados de ativos tangíveis inválidos:', ativosTangiveisData);
-              return;
-            }
-            if (!Array.isArray(ativosIntangiveisData)) {
-              console.error('Dados de ativos intangíveis inválidos:', ativosIntangiveisData);
-              return;
+      this.buscarDadosAtualizados(); 
+      this.intervalId = setInterval(this.buscarDadosAtualizados, 3000); 
+  }
+    
+  componentWillUnmount() {
+      if (this.intervalId) {
+          clearInterval(this.intervalId); 
+      }
+  }
+
+  buscarDadosAtualizados = () => {
+      const token = getLocalToken();
+
+        Promise.all([
+            fetch('http://localhost:8080/ativoTangivel/listagemTodos', { headers: { 'Authorization': token } }).then(res => res.json()),
+            fetch('http://localhost:8080/ativoIntangivel/listagemTodos', { headers: { 'Authorization': token } }).then(res => res.json()),
+            fetch('http://localhost:8080/manutencao/listagemTodos', { headers: { 'Authorization': token } }).then(res => res.json())
+        ])
+        .then(([ativosTangiveisData, ativosIntangiveisData, manutencoesData]) => {
+            
+            if (!Array.isArray(ativosTangiveisData) || !Array.isArray(ativosIntangiveisData) || !Array.isArray(manutencoesData)) {
+                console.error('Dados inválidos recebidos do servidor.');
+                return;
             }
             if (!Array.isArray(manutencoesData)) {
               console.error('Dados de manutenções inválidos:', manutencoesData);
@@ -83,12 +90,12 @@ export default class Notificacao extends Component<Props, State> {
       
               this.setState({ ativosGarantia, ativosExpiracao, manutencoesProximas }, () => {
                 this.props.onUpdate(this.state.ativosGarantia.length, this.state.ativosExpiracao.length, this.state.manutencoesProximas.length);
-              });
-            })
-            .catch(error => {
-              console.error('Erro ao buscar os dados:', error);
             });
-      }    
+        })
+        .catch(error => {
+            console.error('Erro ao buscar os dados:', error);
+        });
+    };  
     
     
     render() {
