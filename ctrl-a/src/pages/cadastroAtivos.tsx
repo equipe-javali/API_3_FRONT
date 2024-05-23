@@ -72,8 +72,6 @@ export default function CadastroAtivos() {
         ["Tangível", "Intangível"],
         true
     )
-
-    const [tipoAtivo, setTipoAtivo] = useState(0)
     const [proximo, setProximo] = useState(0)
 
     const [descricao, setDescricao] = useState('')
@@ -96,6 +94,10 @@ export default function CadastroAtivos() {
         }
         if (campoCustoAquisicao.dado === '') {
             setAvisoCustoAquisicao("Insira um custo de aquisição!")
+            certo = false
+        }
+        if (campoDataAquisicao.dado === '') {
+            setAvisoDataAquisicao("Insira uma data de aquisição!")
             certo = false
         }
         if (campoIdentificador.dado === '') {
