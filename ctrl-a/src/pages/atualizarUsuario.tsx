@@ -1,12 +1,13 @@
-import iconEditar from '../assets/icons/lapis.svg'
 import iconUser from '../assets/icons/visualizar_usuario.png';
-import olho from '../assets/icons/olho.png';
-import olhoCortado from '../assets/icons/olhoCortado.png';
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import './css/atualizaUsuario.css'
 import { useParams } from 'react-router-dom';
 import RespostaSistema from '../components/respostaSistema';
 import getLocalToken from '../utils/getLocalToken';
+import CampoEditavel from '../components/CampoEditavel';
+import CampoSenha from '../components/CampoSenha';
+import CampoDropdown from '../components/CampoDropdown';
+import CampoData from '../components/CampoData';
 
 interface UsuarioData {
     nome: string;
@@ -14,33 +15,16 @@ interface UsuarioData {
     nascimento: string;
     telefone: string;
     email: string;
-    permissao: string; //'Usuario' ou 'Administrador'
+    perfil: string; //'Usuario' ou 'Administrador'
     departamento: string;
-    usuariologin: { // null para 'Usuario' e contém informações para 'Administrador'
-        id: number;
-        senha: string;
-    } | null;
 }
 
 export default function AtualizarUsuario() {
-    const { id } = useParams<{ id: string }>()
-    const [editable, setEditable] = useState(false);
-    const [formData, setFormData] = useState<UsuarioData>({
-        nome: '',
-        cpf: '',
-        nascimento: '',
-        telefone: '',
-        email: '',
-        departamento: '',
-        permissao: '',
-        usuariologin: null
-    });
-    const [senhaInput, setSenhaInput] = useState(false);
-    const [showSenha, setShowSenha] = useState(false);
-    const [permissaoAnterior, setPermissaoAnterior] = useState('')
+    const { id } = useParams<{ id: string }>();
+    const token = getLocalToken();
 
-    const [textoResposta, setTextoResposta] = useState('')
-    const [tipoResposta, setTipoResposta] = useState('')
+    const [textoResposta, setTextoResposta] = useState('');
+    const [tipoResposta, setTipoResposta] = useState('');
     function fechaPopUp() {
         setTextoResposta('')
         setTipoResposta('')
@@ -54,252 +38,278 @@ export default function AtualizarUsuario() {
         }
     }, [tipoResposta]);
 
+    const [dadosUsuario, setDadosUsuario] = useState<UsuarioData>({
+        nome: '',
+        cpf: '',
+        nascimento: '',
+        telefone: '',
+        email: '',
+        departamento: '',
+        perfil: ''
+    });
+
+    const campoPermissao = CampoDropdown(
+        "Permissão:",
+        ["Usuario", "Administrador"],
+        dadosUsuario.perfil === "ADM" ? "Administrador" : "Usuario",
+        "Escolha uma permissão",
+        true
+    )
+
+    const [temSenha, setTemSenha] = useState(false);
     useEffect(() => {
-        fetchUserData();
-    }, []);
+        if (campoPermissao.dado === "Usuario") {
+            setTemSenha(false)
+        } else if (campoPermissao.dado === "Administrador") {
+            setTemSenha(true)
+        }
+    }, [campoPermissao.dado])
 
-    const token = getLocalToken();
-
-    const fetchUserData = async () => {
-        try {
-            const response = await fetch(`http://localhost:8080/usuario/listagem/${id}`, {
-                headers: {
-                    "Authorization": token
-                }
-            });
-            if (response.ok) {
-                const userData: UsuarioData = await response.json();
-                const permissao = userData.usuariologin ? 'Administrador' : 'Usuario';
-                if (permissao == 'Usuario') {
-                    setSenhaInput(false)
+    useEffect(() => {
+        const buscaDadosUsuario = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/usuario/listagem/${id}`, {
+                    headers: {
+                        "Authorization": token
+                    }
+                });
+                if (response.ok) {
+                    const dadosUsuario: UsuarioData = await response.json();
+                    console.log(dadosUsuario)
+                    setDadosUsuario({ ...dadosUsuario });
                 } else {
-                    setSenhaInput(true)
+                    setTextoResposta(`Erro ao buscar dados do usuário! Erro:${response.statusText}`);
+                    setTipoResposta("Erro");
                 }
-                setFormData({ ...userData, permissao });
-                setPermissaoAnterior(permissao);
-            } else {
-                console.error('Failed to fetch user data:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error fetching user data:', error);
+            } catch (error) {
+                setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
+                setTipoResposta("Erro");
+            };
+        };
+        buscaDadosUsuario();
+    }, [id, token])
+
+    const [avisoNome, setAvisoNome] = useState<string | undefined>(undefined);
+    const campoNome = CampoEditavel(
+        "Nome:",
+        "text",
+        dadosUsuario.nome,
+        "Insira o nome do usuário",
+        "Nome",
+        true,
+        avisoNome
+    );
+
+    const [avisoCPF, setAvisoCPF] = useState<string | undefined>(undefined);
+    const campoCPF = CampoEditavel(
+        "CPF:",
+        "text",
+        dadosUsuario.cpf,
+        "Insira o cpf do usuário",
+        "CPF",
+        true,
+        avisoCPF
+    );
+
+    const [avisoTelefone, setAvisoTelefone] = useState<string | undefined>(undefined);
+    const campoTelefone = CampoEditavel(
+        "Telefone:",
+        "text",
+        dadosUsuario.telefone,
+        "insira o telefone do usuário",
+        "Telefone",
+        true,
+        avisoTelefone
+    );
+
+    const [avisoEmail, setAvisoEmail] = useState<string | undefined>(undefined);
+    const campoEmail = CampoEditavel(
+        "Email:",
+        "email",
+        dadosUsuario.email,
+        "Insira o email do usuário",
+        "Email",
+        true,
+        avisoEmail
+    );
+
+    const [avisoNascimento, setAvisoNascimento] = useState<string | undefined>(undefined);
+    const campoNascimento = CampoData(
+        "Data Nascimento:",
+        "Nascimento",
+        dadosUsuario.nascimento,
+        true,
+        avisoNascimento
+    )
+
+    const [avisoDepartamento, setAvisoDepartamento] = useState<string | undefined>(undefined);
+    const campoDepartamento = CampoDropdown(
+        "Departamento:",
+        ["Departamento 1", "Departamento 2"],
+        dadosUsuario.departamento,
+        "Escolha um departamento",
+        true,
+        avisoDepartamento
+    )
+
+    const [avisoSenha, setAvisoSenha] = useState<string | undefined>(undefined);
+    const campoSenha = CampoSenha(
+        "Senha:",
+        "Insira a senha",
+        true,
+        avisoSenha
+    );
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        let certo = true;
+        if (campoNome.dado === '' || !campoNome.dado) {
+            setAvisoNome("Insira algo no nome!");
+            certo = false;
         }
-    };
-
-    const handleIconClick = () => {
-        setEditable(true);
-    };
-
-    const handleOlhoClick = () => {
-        setShowSenha(!showSenha)
-    }
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const value = e.target.value;
-        const name = e.target.name;
-
-        if (name === 'permissao') {
-            if (value === 'Usuario') {
-                setSenhaInput(false);
-                excluirUsuarioLogin()
-            } else {
-                setSenhaInput(true);
-            }
+        if (campoCPF.dado === '') {
+            setAvisoCPF("Insira o cpf!");
+            certo = false;
+        } else if (campoCPF.dado.length !== 14) {
+            setAvisoCPF("Insira um cpf válido!");
+            certo = false;
         }
-
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSenhaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        setFormData({
-            ...formData,
-            usuariologin: { ...formData.usuariologin!, senha: value }
-        });
-    };
-
-    const excluirUsuarioLogin = async () => {
-        try {
-            const excluir = await fetch(`http://localhost:8080/usuarioLogin/exclusao/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": token
-                }
-            });
-            if (excluir.ok) {
-                console.log('Login excluído com sucesso!');
-            } else {
-                console.error('Falha ao excluir login:', excluir.statusText);
-            }
-        } catch (err) {
-            console.error('Erro ao excluir login: ', err)
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (campoEmail.dado === '') {
+            setAvisoEmail("Insira um email!");
+            certo = false;
+        } else if (!emailRegex.test(campoEmail.dado)) {
+            setAvisoEmail("Insira um email válido!");
         }
-    }
-
-    const cadastroUsuarioLogin = async () => {
-        try {
-            const novoLogin = await fetch(`http://localhost:8080/usuarioLogin/cadastro`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": token
-                },
-                body: JSON.stringify({
-                    'usuario': {"id" : id},
-                    'senha': formData.usuariologin?.senha
-                })
-            });
-            if (novoLogin.ok) {
-                console.log('Novo login cadastrado!')
-            } else {
-                console.error('Falha ao cadastrar login: ', novoLogin.statusText)
-            }
-        } catch (err) {
-            console.error('Erro ao cadastrar login: ', err)
+        if (campoTelefone.dado === '') {
+            setAvisoTelefone("Insira um telefone!");
+            certo = false;
+        } else if (![14, 15].includes(campoTelefone.dado.length)) {
+            setAvisoTelefone("Insira um telefone válido!");
+            certo = false;
         }
-    }
-
-    const handleSubmit = async (e: FormEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        try {
-            if (formData.permissao === 'Administrador') {
-                if (permissaoAnterior === 'Usuario') {
-                    cadastroUsuarioLogin()
-                }
-                const respLogin = await fetch(`http://localhost:8080/usuarioLogin/atualizacao/${id}`, {
+        if (campoNascimento.dado === '') {
+            setAvisoNascimento("Insira uma data!");
+            certo = false;
+        }
+        if (campoDepartamento.dado === '') {
+            setAvisoDepartamento("Escolha um departamento!");
+            certo = false;
+        }
+        if (temSenha && campoSenha.dado === '') {
+            setAvisoSenha("Insira uma senha");
+            certo = false;
+        }
+        if (certo) {
+            try {
+                if (temSenha && dadosUsuario.perfil !== "ADM") {
+                    const cadastrarLogin = await fetch(`http://localhost:8080/usuarioLogin/cadastro`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "Authorization": token
+                        },
+                        body: JSON.stringify({
+                            'usuario': { "id": id },
+                            'senha': campoSenha.dado
+                        })
+                    });
+                    if (cadastrarLogin.status !== 201) {
+                        setTextoResposta(`Falha ao cadastrar o login! Erro:${cadastrarLogin.status}`);
+                        setTipoResposta("Erro");
+                    }
+                } else if (temSenha) {
+                    const atualizarLogin = await fetch(`http://localhost:8080/usuarioLogin/atualizacao/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token
+                        },
+                        body: JSON.stringify({
+                            usuario: { id },
+                            senha: campoSenha.dado
+                        })
+                    });
+                    if (!atualizarLogin.ok) {
+                        setTextoResposta(`Falha ao atualizar o login! Erro:${atualizarLogin.statusText}`);
+                        setTipoResposta("Erro");
+                    };
+                } else /* if (dadosUsuario.perfil == "ADM") */ {
+                    const excluirLogin = await fetch(`http://localhost:8080/usuarioLogin/exclusao/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': token
+                        }
+                    });
+                    if (excluirLogin.status !== 200) {
+                        setTextoResposta(`Falha ao deletar o login! Erro:${excluirLogin.statusText}`);
+                        setTipoResposta("Erro");
+                    }
+                };
+                const atualizarDados = await fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         "Authorization": token
                     },
                     body: JSON.stringify({
-                        'usuario': {"id" : id},
-                        'senha': formData.usuariologin?.senha
+                        nome: campoNome.dado,
+                        cpf: campoCPF.dado.replace(/\D/g, ''),
+                        nascimento: campoNascimento.dado,
+                        departamento: campoDepartamento.dado,
+                        telefone: campoTelefone.dado.replace(/\D/g, ''),
+                        email: campoEmail.dado
                     })
                 });
-                if (respLogin.ok){
-                    console.log('Senha alterada com sucesso')
-                    console.log(respLogin)
-                }
-            }
-
-            const response = await fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    "Authorization": token
-                },
-                body: JSON.stringify({
-                    'nome': formData.nome,
-                    'cpf': formData.cpf,
-                    'nascimento': formData.nascimento,
-                    'departamento': formData.departamento,
-                    'telefone': formData.telefone,
-                    'email': formData.email
-                })
-            });
-            if (response.ok) {
-                setTextoResposta("Usuário alterado com sucesso!")
-                setTipoResposta("Sucesso")
-                console.log(formData)
-            }
-            else {
-                setTextoResposta(`Não foi possível atualizar! Erro:${response.status}`)
+                if (atualizarDados.status !== 200) {
+                    setTextoResposta(`Falha ao atualizar o login! Erro:${atualizarDados.statusText}`);
+                    setTipoResposta("Erro");
+                } else {
+                    if (temSenha || dadosUsuario.perfil === "ADM") {
+                        setTextoResposta("Sucesso ao atualizar os dados e o login!");
+                    } else {
+                        setTextoResposta("Sucesso ao atualizar os dados!");
+                    }
+                    setTipoResposta("Sucesso");
+                };
+            } catch (error) {
+                setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
                 setTipoResposta("Erro")
             }
-        } catch (error) {
-            console.error('Error updating user:', error);
         }
     }
 
-
     return (
         <>
-            <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
-            <div className="primeiroBloco">
-                <div className='inputsPrimeiroBloco'>
-                    <div className='inputsFileira'>
-                        <div className='nomeUsuario'>
-                            <label>Nome</label>
-                            <div className="inputContainer">
-                                <input className='input' type="text" name='nome' defaultValue={formData.nome} onChange={handleChange} />
-                                <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
-                            </div>
+            <form className='divAtualizarUsuario' onSubmit={handleSubmit}>
+                <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
+                <div className='primeiroBlocoAtualizarUsuario'>
+                    <div>
+                        <div>
+                            {campoNome.codigo}
+                            {campoCPF.codigo}
                         </div>
-                        <div className='cpfUsuario'>
-                            <label>CPF</label>
-                            <div className="inputContainer">
-                                <input className='input' type="text" name='cpf' defaultValue={formData.cpf} readOnly={!editable} onChange={handleChange} />
-                                <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
-                            </div>
+                        <div>
+                            {campoNascimento.codigo}
+                            {campoTelefone.codigo}
                         </div>
                     </div>
-                    <div className='inputsFileira'>
-                        <div className='nascimentoUsuario'>
-                            <label>Data de nascimento</label>
-                            <div className="inputContainer">
-                                <input className='input' type="text" name='nascimento' defaultValue={formData.nascimento} readOnly={!editable} onChange={handleChange} />
-                                <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
-                            </div>
-                        </div>
-                        <div className='telefoneUsuario'>
-                            <label>Telefone</label>
-                            <div className="inputContainer">
-                                <input className='input' type="text" name='telefone' defaultValue={formData.telefone} readOnly={!editable} onChange={handleChange} />
-                                <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
-                            </div>
-                        </div>
+                    <div>
+                        <img className="imgPerfilAtualizarUsuario" src={iconUser} alt="ícone usuário" />
                     </div>
                 </div>
-
-                <div className="fotoUsuario">
-                    <img src={iconUser} />
-                </div>
-            </div>
-
-            <div className="segundoBloco">
-                <div className='inputsFileira'>
-                    <div className='emailUsuario'>
-                        <label>Email</label>
-                        <div className="inputContainer">
-                            <input className='input' type="text" name='email' defaultValue={formData.email} readOnly={!editable} onChange={handleChange} />
-                            <img src={iconEditar} id='iconeEditar' onClick={handleIconClick} />
-                        </div>
+                <div className='segundoBlocoAtualizarUsuario'>
+                    <div>
+                        {campoEmail.codigo}
+                        {campoPermissao.codigo}
+                        {temSenha && campoSenha.codigo}
+                        {campoDepartamento.codigo}
                     </div>
-
-                    <div className='permissaoUsuario'>
-                        <label>Permissão</label>
-                        <div className="inputContainer">
-                            <select className='input' name='permissao' value={formData.permissao} onChange={handleChange}>
-                                <option value="">Selecione nova permissão</option>
-                                <option value="Usuario">Usuário</option>
-                                <option value="Administrador">Administrador</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    {senhaInput && (
-                        <div className='senhaUsuario'>
-                            <label>Senha</label>
-                            <div className='inputContainer'>
-                                <input className='input' type={showSenha ? 'text' : 'password'} name="senha" defaultValue={formData.usuariologin?.senha || ''} onChange={handleSenhaChange} />
-                                <img src={showSenha ? olhoCortado : olho} id='iconeEditar' onClick={handleOlhoClick} />
-                            </div>
-                        </div>
-                    )}
-
-                    <div className='deptoUsuario'>
-                        <label>Departamento</label>
-                        <div className="inputContainer">
-                            <select className='input' name='departamento' value={formData.departamento} onChange={handleChange}>
-                                <option value="" >Selecione novo departamento</option>
-                                <option value="Departamento 1">Departamento 1</option>
-                                <option value="Departamento 2">Departamento 2</option>
-                            </select>
-                        </div>
+                    <div>
+                        <input type='submit' className='buttonAtualizar' value='Atualizar' />
                     </div>
                 </div>
-                <button type='button' className='buttonAtualizar' onClick={handleSubmit}>Atualizar</button>
-            </div>
+            </form>
         </>
     )
 }

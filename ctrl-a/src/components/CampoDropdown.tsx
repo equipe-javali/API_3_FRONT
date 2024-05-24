@@ -4,6 +4,7 @@ import "./css/CampoPadrao.css";
 export default function CampoDropdown(
     titulo: string,
     opcoes: string[],
+    opcaoInicial: string,
     placeholder: string,
     obrigatorio: boolean,
     aviso?: string
@@ -11,6 +12,9 @@ export default function CampoDropdown(
     const [escolha, setEscolha] = useState('');
     const [erroCampo, setErroCampo] = useState(false);
 
+    useEffect(() => {
+        setEscolha(opcaoInicial);
+    }, [opcaoInicial]);
     useEffect(() => {
         if (aviso) {
             setErroCampo(true);

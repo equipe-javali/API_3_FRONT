@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
+import lapis from '../assets/icons/lapis.svg'
+import { useCallback, useEffect, useState } from "react";
 import "./css/CampoPadrao.css";
 
-export default function CampoPadrao(
+export default function CampoEditavel(
     titulo: string,
     tipo: string,
+    descricao: string,
     placeholder: string,
     palavraChave: string,
     obrigatorio: boolean,
     aviso?: string
 ) {
-    const [descricaoCampo, setDescricaoCampo] = useState('');
-    const [erroCampo, setErroCampo] = useState(false);
+    const [editavel, setEditavel] = useState(false)
+    const [descricaoCampo, setDescricaoCampo] = useState("")
 
-    function mascaraCampo(descricao: string): string {
+    const mascaraCampo = useCallback((descricao: string): string => {
         if (palavraChave === "Telefone") {
             const telefone = descricao.replace(/\D/g, '').slice(0, 11);
             if (telefone.length === 11) {
@@ -28,39 +30,35 @@ export default function CampoPadrao(
             valor = valor.replace(/^0+/, '');
             if (valor.length !== 0) {
                 if (valor.length === 1) {
-                    valor = "00" + valor
+                    valor = "00" + valor;
                 } else if (valor.length === 2) {
-                    valor = "0" + valor
+                    valor = "0" + valor;
                 } else {
                     valor = valor.padStart(3, '0');
                 }
                 valor = valor.slice(0, -2) + ',' + valor.slice(-2);
                 valor = valor.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-                valor = 'R$' + valor
+                valor = 'R$' + valor;
             }
-            return valor
+            return valor;
         } else if (palavraChave === "Taxa") {
             let taxa = descricao.replace(/\D/g, '');
-            taxa = taxa.replace(/^0+/, '');
             if (taxa.length !== 0) {
-                if (taxa.length === 1) {
-                    taxa = "00" + taxa
-                } else if (taxa.length === 2) {
-                    taxa = "0" + taxa
-                } else {
-                    taxa = taxa.padStart(3, '0');
-                }
-                taxa = taxa.slice(0, -2) + ',' + taxa.slice(-2);
-                taxa = taxa.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                taxa = parseInt(taxa, 10).toString(); // Remove leading zeros
                 taxa = taxa + '%';
             }
-            return taxa
+            return taxa;
         }
         return descricao;
-    }
-
+    }, [palavraChave]);
+    useEffect(() => {
+        setDescricaoCampo(mascaraCampo(descricao));
+    }, [descricao, mascaraCampo]);
+    
+    const [erroCampo, setErroCampo] = useState(false);
     useEffect(() => {
         if (aviso) {
+            setEditavel(true);
             setErroCampo(true);
         }
     }, [aviso]);
@@ -79,21 +77,21 @@ export default function CampoPadrao(
         }
     };
 
-    function limpar() {
-        setDescricaoCampo('')
-    }
-
     const codigo = (
-        <div className={`divCampoPadrao ${erroCampo ? 'alertaCampoErrado' : 'semAlertaCampo'}`}>
+        <div className={`divCampoEditavel ${erroCampo ? 'alertaCampoErrado' : 'semAlertaCampo'}`}>
             <div>
                 <span>{titulo} {obrigatorio && <span className="inputObrigatorio">*</span>}</span>
-                <input
-                    placeholder={placeholder}
-                    type={tipo}
-                    value={descricaoCampo}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                />
+                <div className={`inputCampoEditavel ${editavel ? 'inputEnabled' : 'inputDesabled'}`}>
+                    <input
+                        placeholder={placeholder}
+                        type={tipo}
+                        value={descricaoCampo}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        disabled={!editavel}
+                    />
+                    <img src={lapis} alt='Lápis-Editar' onClick={(e) => setEditavel(!editavel)} />
+                </div>
             </div>
             {aviso && erroCampo && <span className="erroCampo">{aviso}</span>}
         </div>
@@ -102,6 +100,5 @@ export default function CampoPadrao(
     return {
         dado: descricaoCampo,
         codigo,
-        limpar
     };
-}
+};

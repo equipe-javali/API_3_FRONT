@@ -64,6 +64,7 @@ export default function CriarUsuario() {
   const campoNascimento = CampoData(
     "Data Nascimento:",
     "Nascimento",
+    "",
     true,
     avisoNascimento
   )
@@ -72,6 +73,7 @@ export default function CriarUsuario() {
   const campoDepartamento = CampoDropdown(
     "Departamento:",
     ["Departamento 1", "Departamento 2"],
+    "",
     "Escolha um departamento",
     true,
     avisoDepartamento
@@ -120,7 +122,8 @@ export default function CriarUsuario() {
         "nascimento": campoNascimento.dado,
         "departamento": campoDepartamento.dado,
         "telefone": campoTelefone.dado.replace(/\D/g, ''),
-        "email": campoEmail.dado
+        "email": campoEmail.dado,
+        "status": 'ativo',
       };
       const token = getLocalToken();
       try {
@@ -138,6 +141,12 @@ export default function CriarUsuario() {
         if (userResponse.ok) {
           setTextoResposta("Usuário cadastrado com sucesso!")
           setTipoResposta("Sucesso")
+          campoCPF.limpar()
+          campoDepartamento.limpar()
+          campoEmail.limpar()
+          campoNascimento.limpar()
+          campoNome.limpar()
+          campoTelefone.limpar()
         } else if (userResponse.status === 400) {
           const userResponseData = await userResponse.text();
           if (userResponseData === "O CPF já existe") {
@@ -154,12 +163,6 @@ export default function CriarUsuario() {
         setTipoResposta("Erro")
       }
     }
-    campoCPF.limpar()
-    campoDepartamento.limpar()
-    campoEmail.limpar()
-    campoNascimento.limpar()
-    campoNome.limpar()
-    campoTelefone.limpar()
   };
 
   return (

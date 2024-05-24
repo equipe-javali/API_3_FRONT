@@ -7,26 +7,46 @@
     --corTituloCampo: var(--branco1);
     --corTextInput: var(--cor10);
     --corBackgroundInput: var(--cor20);
+    ---widthInputCampoRadio: var(--fontSizeInputCampoPadrao);
+    ---marginTopInputCampoRadio: 2px;
+    --marginLeftSpanCampoRadio: calc(var(---widthInputCampoRadio) + 5px);
 }
 
 .divCampoPadrao,
+.divCampoEditavel,
+.divCampoDescricao,
+.divCampoRadio,
 .divCampoSenha {
     min-height: var(--minHeightDivCampoPadrao);
     display: flex;
     flex-direction: column;
     width: 100%;
     color: var(--corTituloCampo);
+    gap: 3px;
 }
 
+.divCampoRadio>div,
+.divCampoEditavel>div,
+.divCampoDescricao>div,
 .divCampoPadrao>div {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
+.inputCampoEditavel,
 .inputCampoSenha {
     display: flex;
     align-items: center;
+}
+
+.inputCampoSenha,
+.inputCampoEditavel,
+.divCampoDescricao textarea,
+.divCampoPadrao input,
+.inputCampoSenha input,
+.inputCampoEditavel input,
+.divCampoPadrao select {
     background-color: var(--corBackgroundInput);
     border-radius: 6px;
     width: 100%;
@@ -34,12 +54,16 @@
 
 .divCampoPadrao input,
 .inputCampoSenha input,
+.inputCampoEditavel input,
+.divCampoDescricao textarea,
 .divCampoPadrao select {
-    width: 100%;
     padding: 4px;
-    background-color: var(--corBackgroundInput);
     color: var(--corTextInput);
-    border-radius: 6px;
+}
+
+.divCampoDescricao textarea {
+    resize: none;
+    min-height: 150px;
 }
 
 .inputObrigatorio {
@@ -47,6 +71,8 @@
 }
 
 .inputCampoSenha,
+.inputCampoEditavel,
+.divCampoDescricao textarea,
 .divCampoPadrao input,
 .divCampoPadrao select {
     border-style: solid;
@@ -55,6 +81,7 @@
 
 .divCampoPadrao input[type="date"],
 .inputCampoSenha input::placeholder,
+.inputCampoEditavel input::placeholder
 .divCampoPadrao input::placeholder {
     color: var(--corTextInput);
 }
@@ -65,21 +92,22 @@
 }
 
 .divCampoPadrao.alertaCampoErrado input,
+.divCampoDescricao.alertaCampoErrado textarea,
 .divCampoSenha.alertaCampoErrado .inputCampoSenha,
+.divCampoEditavel.alertaCampoErrado .inputCampoEditavel,
 .divCampoPadrao.alertaCampoErrado select {
     border-color: var(--vermelho1);
 }
 
 .divCampoPadrao.semAlertaCampo input,
+.divCampoDescricao.semAlertaCampo textarea,
 .divCampoSenha.semAlertaCampo .inputCampoSenha,
 .divCampoPadrao.semAlertaCampo select {
     border-color: var(--corBackgroundInput);
 }
-
-.divCampoPadrao.alertaCampoErrado .erroCampo {
-    display: block;
+.divCampoEditavel.semAlertaCampo .inputCampoEditavel{
+    border: var(--cor7);
 }
-
 
 .divCampoPadrao input[type="date"]::-webkit-calendar-picker-indicator {
     filter: brightness(0) saturate(100%) invert(42%) sepia(92%) saturate(0%) hue-rotate(177deg) brightness(99%) contrast(97%);
@@ -90,8 +118,60 @@
     color: var(--corTextInput);
 }
 
-.inputCampoSenha .password-icon {
-    height: 100%;
+.inputCampoSenha .password-icon,
+.inputCampoEditavel > img {
+    height: var(--fontSizeInputCampoPadrao);
     cursor: pointer;
     margin-right: 5px;
 }
+
+.opcoesCampoRadio {
+    display: flex;
+    padding-top: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.opcoesCampoRadio span {
+    margin-left: var(--marginLeftSpanCampoRadio)
+}
+
+.opcoesCampoRadio input {
+    display: none;
+}
+
+.controleInputRadio {
+    border: 1.5px solid var(--corTextInput);
+    position: absolute;
+    cursor: pointer;
+    margin-top: var(---marginTopInputCampoRadio);
+    width: var(---widthInputCampoRadio);
+    border-radius: 100%;
+    height: var(---widthInputCampoRadio);
+}
+
+.divInputRadioFormsAtivo input {
+    appearance: none;
+}
+
+.opcoesCampoRadio input:checked~.controleInputRadio {
+    background-color: var(--corTextInput);
+}
+
+.opcoesCampoRadio input[type="radio"]:hover~.controleInputRadio,
+.opcoesCampoRadio input[type="radio"]::selection~.controleInputRadio {
+    background-color: var(--corBackgroundInput);
+}
+
+.inputCampoEditavel.inputDesabled,
+.inputCampoEditavel.inputDesabled>input {
+    background-color: inherit;
+    color: var(--corTextInputDesativado);
+}
+
+.inputCampoEditavel.inputEnabled,
+.inputCampoEditavel.inputEnabled>input {
+    background-color: var(--corBackgroundInput);
+    color: var(--corTextInputAtivo);
+}
+

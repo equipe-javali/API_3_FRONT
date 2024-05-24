@@ -51,6 +51,7 @@ export default function CriarUsuarioAdm() {
   const campoNascimento = CampoData(
     "Data Nascimento:",
     "Nascimento",
+    "",
     true,
     avisoNascimento
   )
@@ -59,6 +60,7 @@ export default function CriarUsuarioAdm() {
   const campoDepartamento = CampoDropdown(
     "Departamento:",
     ["Departamento 1", "Departamento 2"],
+    "",
     "Escolha um departamento",
     true,
     avisoDepartamento
@@ -160,6 +162,13 @@ export default function CriarUsuarioAdm() {
             setTimeout(() => {
               setAviso('');
             }, 2000);
+            campoCPF.limpar()
+            campoDepartamento.limpar()
+            campoEmail.limpar()
+            campoNascimento.limpar()
+            campoNome.limpar()
+            campoTelefone.limpar()
+            campoSenha.limpar()
           } else {
             console.error('Falha ao cadastrar login do usuário');
             const loginResponseData = await loginResponse.json();
@@ -167,9 +176,9 @@ export default function CriarUsuarioAdm() {
           }
         } else if (userResponse.status === 400) {
           const userResponseData = await userResponse.text();
-          if (userResponseData == "O CPF já existe") {
+          if (userResponseData === "O CPF já existe") {
             setAvisoCPF(`${userResponseData}!`)
-          } else if (userResponseData == "O e-mail já existe") {
+          } else if (userResponseData === "O e-mail já existe") {
             setAvisoEmail(`${userResponseData}!`)
           }
         }
@@ -185,13 +194,6 @@ export default function CriarUsuarioAdm() {
         console.error(error);
       }
     };
-    campoCPF.limpar()
-    campoDepartamento.limpar()
-    campoEmail.limpar()
-    campoNascimento.limpar()
-    campoNome.limpar()
-    campoTelefone.limpar()
-    campoSenha.limpar()
   }
 
   return (

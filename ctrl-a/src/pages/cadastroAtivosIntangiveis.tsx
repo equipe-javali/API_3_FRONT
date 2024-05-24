@@ -1,56 +1,84 @@
 import { useState } from 'react';
-import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
+import CampoPadrao from '../components/CampoPadrao';
+import CampoDropdown from '../components/CampoDropdown';
+import CampoData from '../components/CampoData';
 
 export default function CadastroAtivosIntangiveis() {
-    const tag = CampoAtivoPadrao("Tag", "text", "Insira as tags...", false)
-    const [importancia, setImportancia] = useState(0);
-    // const importancia = CampoAtivoPadrao("Grau", "text", "Insira o grau de importância...")
-    // const anexo = CampoAtivoPadrao("Anexo", "file", "insira o anexo")
-    const expiracao = CampoAtivoPadrao("Data de expiração", "date", "dd/mm/aaaa", true)
-    const periodoAmortizacao = CampoAtivoPadrao("Período de amortização", "text", "anos, meses...", false)
-    const taxaAmortizacao = CampoAtivoPadrao("Taxa de amortização", "number", "00%", false)
+    const tag = CampoPadrao(
+        "Tag:",
+        "text",
+        "Insira as tags...",
+        "Tag",
+        false
+    )
 
-    function handleImportancia(event: React.ChangeEvent<HTMLSelectElement>) {
-        setImportancia(Number(event.target.value));
+    const [validarExpiracao, setValidarExpiracao] = useState<string | undefined>(undefined);
+    const expiracao = CampoData(
+        "Data de expiração:",
+        "Expiração",
+        "",
+        true,
+        validarExpiracao
+    )
+
+    const importancia = CampoDropdown(
+        "Importância:",
+        ["Alta", "Média", "Baixa"],
+        "",
+        "Escolha um grau de importância",
+        false
+    )
+
+    const periodoAmortizacao = CampoPadrao(
+        "Período de amortização:",
+        "text",
+        "Exemplo: anos, meses",
+        "Amortização",
+        false
+    )
+
+    const taxaAmortizacao = CampoPadrao(
+        "Taxa de amortização:",
+        "text",
+        "00%",
+        "Taxa",
+        false
+    )
+
+    function limpar() {
+        tag.limpar()
+        expiracao.limpar()
+        importancia.limpar()
+        periodoAmortizacao.limpar()
+        taxaAmortizacao.limpar()
     }
 
+    const codigo = (
+        <>
+            <div className='colunaFormsAtivo'>
+                {tag.codigo}
+                {expiracao.codigo}
+                {/* anexo.codigo */}
+            </div>
+            <div className='colunaFormsAtivo'>
+                {importancia.dado}
+                {periodoAmortizacao.codigo}
+                {taxaAmortizacao.codigo}
+            </div>
+        </>
+    )
     return {
-        'dados': {
-            "tag": tag.dados,
-            "importancia": importancia,
-            // "anexo": anexo,
-            "expiracao": expiracao.dados,
-            "periodoAmortizacao": periodoAmortizacao.dados,
-            "taxaAmortizacao": taxaAmortizacao.dados,
+        dados: {
+            tag: tag.dado,
+            importancia: importancia.dado,
+            expiracao: expiracao.dado,
+            periodoAmortizacao: periodoAmortizacao.dado,
+            taxaAmortizacao: taxaAmortizacao.dado
         },
-        'setDados' : {
-            "setTag": tag.setDados,
-            "setImportancia": setImportancia,
-            "setExpiracao": expiracao.setDados,
-            "setPeriodoAmortizacao": periodoAmortizacao.setDados,
-            "setTaxaAmortizacao": taxaAmortizacao.setDados
+        validacoes: {
+            setValidarExpiracao
         },
-        'código': (
-            <>
-                <div className='colunaFormsAtivo'>
-                    {tag.codigo}
-                    {expiracao.codigo}                    
-                    {/* anexo.codigo */}
-                </div>
-                <div className='colunaFormsAtivo'>
-                    <div className='selectImportanciaAtivo'>
-                        <label>Importância: </label>
-                        <select className='input' name='importancia' value={importancia} onChange={handleImportancia}>
-                            <option value={0} disabled>Selecione o grau de importância</option>
-                            <option value={3}>Alto</option>
-                            <option value={2}>Média</option>
-                            <option value={1}>Baixo</option>
-                        </select>
-                    </div>
-                    {periodoAmortizacao.codigo}
-                    {taxaAmortizacao.codigo}
-                </div>
-            </>
-        )
+        codigo,
+        limpar
     }
 }

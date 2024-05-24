@@ -7,7 +7,6 @@ import lapis from "../assets/icons/lapis.svg"
 import { Link } from 'react-router-dom';
 import Modal from '../components/modal/modal';
 import getLocalToken from '../utils/getLocalToken';
-import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
 import CampoAtivoReadOnly from '../components/CampoAtivoReadOnly';
 interface Ativo {
     nome: string;

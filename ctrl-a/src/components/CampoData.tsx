@@ -4,6 +4,7 @@ import "./css/CampoPadrao.css";
 export default function CampoData(
     titulo: string,
     palavraChave: string,
+    dataInicial: string,
     obrigatorio: boolean,
     aviso?: string
 ) {
@@ -14,16 +15,21 @@ export default function CampoData(
 
     useEffect(() => {
         const dataAtual = new Date();
-        if (palavraChave) {
+        if (palavraChave === "Nascimento") {
             const minDate = new Date();
             minDate.setFullYear(dataAtual.getFullYear() - 150);
             setMinDate(minDate.toISOString().split('T')[0]);
-
             const maxDate = new Date();
             maxDate.setFullYear(dataAtual.getFullYear() - 18);
             setMaxDate(maxDate.toISOString().split('T')[0]);
+        } else if (palavraChave === "Aquisição") {
+            setMaxDate(dataAtual.toISOString().split('T')[0])
         }
     }, [palavraChave]);
+
+    useEffect(() => {
+        setDataCampo(dataInicial)
+    }, [dataInicial])
 
     useEffect(() => {
         if (aviso) {
