@@ -348,7 +348,7 @@ export default function HistoricoManutencao() {
                             <input 
                             type="date" 
                             name="dataFim" 
-                            value={manutencaoData.dataFim || ''} // Corrigido: valor vazio se null
+                            value={manutencaoData.dataFim || ''} 
                             onChange={handleManutencaoDataChange} 
                         />
                         </div>
@@ -419,8 +419,9 @@ export default function HistoricoManutencao() {
                 </div>
             </Modal>
             <div className="buscaFiltro">
+                
                 <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
-                    <option value="">Filtro</option>
+                    <option value="">Tipo</option>
                     {tipos.map(tipo => (
                         <option key={tipo} value={tipo}>
                             {tipo}
