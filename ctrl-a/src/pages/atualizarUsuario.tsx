@@ -51,7 +51,7 @@ export default function AtualizarUsuario() {
     const campoPermissao = CampoDropdown(
         "Permissão:",
         ["Usuario", "Administrador"],
-        dadosUsuario.perfil == "ADM" ? "Administrador" : "Usuario",
+        dadosUsuario.perfil === "ADM" ? "Administrador" : "Usuario",
         "Escolha uma permissão",
         true
     )
@@ -281,54 +281,33 @@ export default function AtualizarUsuario() {
 
     return (
         <>
-            <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
-            <form onSubmit={handleSubmit}>
-                <div className="primeiroBloco">
-                    <div className='inputsPrimeiroBloco'>
-                        <div className='inputsFileira'>
-                            <div className='nomeUsuario'>
-                                {campoNome.codigo}
-                            </div>
-                            <div className='cpfUsuario'>
-                                {campoCPF.codigo}
-                            </div>
+            <form className='divAtualizarUsuario' onSubmit={handleSubmit}>
+                <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
+                <div className='primeiroBlocoAtualizarUsuario'>
+                    <div>
+                        <div>
+                            {campoNome.codigo}
+                            {campoCPF.codigo}
                         </div>
-                        <div className='inputsFileira'>
-                            <div className='nascimentoUsuario'>
-                                {campoNascimento.codigo}
-                            </div>
-                            <div className='telefoneUsuario'>
-                                {campoTelefone.codigo}
-                            </div>
+                        <div>
+                            {campoNascimento.codigo}
+                            {campoTelefone.codigo}
                         </div>
                     </div>
-
-                    <div className="fotoUsuario">
-                        <img src={iconUser} alt="ícone Usuário" />
+                    <div>
+                        <img className="imgPerfilAtualizarUsuario" src={iconUser} alt="ícone usuário" />
                     </div>
                 </div>
-
-                <div className="segundoBloco">
-                    <div className='inputsFileira'>
-                        <div className='emailUsuario'>
-                            {campoEmail.codigo}
-                        </div>
-
-                        <div className='permissaoUsuario'>
-                            {campoPermissao.codigo}
-                        </div>
-
-                        {temSenha && (
-                            <div className='senhaUsuario'>
-                                {campoSenha.codigo}
-                            </div>
-                        )}
-
-                        <div className='deptoUsuario'>
-                            {campoDepartamento.codigo}
-                        </div>
+                <div className='segundoBlocoAtualizarUsuario'>
+                    <div>
+                        {campoEmail.codigo}
+                        {campoPermissao.codigo}
+                        {temSenha && campoSenha.codigo}
+                        {campoDepartamento.codigo}
                     </div>
-                    <input type='submit' className='buttonAtualizar' value='Atualizar' />
+                    <div>
+                        <input type='submit' className='buttonAtualizar' value='Atualizar' />
+                    </div>
                 </div>
             </form>
         </>

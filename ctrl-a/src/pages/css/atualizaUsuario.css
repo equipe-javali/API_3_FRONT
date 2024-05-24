@@ -1,85 +1,100 @@
-:root{
-  --doisPorcento: 2%;
-  --tresPorcento: 3%;
-  --cincoPorcento: 5%;
-  --dezPorcento: 10%;
-  --quarentaPorcento: 40%;
-  --secentaPorcento: 60%;
-  --noventaPorcento: 90%;
-  --total: 100%;
+:root {
+  --heightPrimeiroBlocoAtualizarAtivo: 50%;
+  --heightSegundoBlocoAtualizarAtivo: calc(100% - var(--heightPrimeiroBlocoAtualizarAtivo));
 }
 
-.primeiroBloco {
+.divAtualizarUsuario {
   display: flex;
-  width: var(--noventaPorcento);
-  margin-bottom: var(--doisPorcento);
-  align-self: center;
-  align-items: center;
-}
-
-.inputsPrimeiroBloco {
-  width: var(--total);
-}
-
-.inputsFileira {
-  display: flex;
-  justify-content: space-around;
-  width: var(--total);
-}
-
-.nomeUsuario,
-.cpfUsuario,
-.telefoneUsuario,
-.nascimentoUsuario {
-  margin: var(--doisPorcento);
-}
-
-.inputContainer {
-  position: relative;
-}
-
-.inputContainer .input {
-  margin-top: var(--cincoPorcento);
-  padding: var(--tresPorcento);
-  color: var(--branco1);
-  background-color: var(--cor20);
+  flex-wrap: wrap;
+  min-height: calc(100vh - var(--heightHeader));
+  height: max-content;
   width: 100%;
-  border-radius: 5px;
+  padding: 15px;
 }
 
-#iconeEditar {
-  position: absolute;
-  width: var(--dezPorcento);
-  right: var(--tresPorcento);
-  top: var(--secentaPorcento);
-  transform: translateY(-50%);
-  cursor: pointer;
+.divAtualizarUsuario>div {
+  width: 100%;
+  height: max-content;
 }
 
-.fotoUsuario {
-  width: var(--quarentaPorcento);
+.primeiroBlocoAtualizarUsuario {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: var(--heightPrimeiroBlocoAtualizarAtivo);
+  height: max-content;
 }
 
-.fotoUsuario img {
-  width: var(--total);
+.primeiroBlocoAtualizarUsuario>div {
+  min-height: var(--heightPrimeiroBlocoAtualizarAtivo);
 }
 
-.segundoBloco {
+.primeiroBlocoAtualizarUsuario>div,
+.primeiroBlocoAtualizarUsuario>div:first-child>div {
+  min-width: 200px;
+  display: flex;
+}
+
+.primeiroBlocoAtualizarUsuario>div:first-child {
+  flex: 2;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 5px;
+}
+
+.primeiroBlocoAtualizarUsuario>div:first-child>div {
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.primeiroBlocoAtualizarUsuario>div:last-child {
+  margin: auto;
+}
+
+.imgPerfilAtualizarUsuario {
+  min-width: 200px;
+  max-width: 50%;
+  height: 100%;
+  max-height: 400px;
+  margin: auto;
+}
+
+.segundoBlocoAtualizarUsuario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: var(--heightSegundoBlocoAtualizarAtivo);
+  background-color: var(--cor8);
+  padding: 15px;
+  justify-content: space-around;
+}
+
+.segundoBlocoAtualizarUsuario>div{
+  min-width: 100%;
+  margin: auto;
+  justify-content: space-around;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px
+}
+.segundoBlocoAtualizarUsuario>div>div{
+  min-width: 200px;
+  width: 18vw;
+}
+
+.segundoBlocoAtualizarUsuario>div>div>div{
+  height: 50px;
   display: flex;
   flex-direction: column;
-  align-self: center;
-  align-items: center;
-  width: var(--noventaPorcento);
-  padding: var(--doisPorcento);
-  background-color: var(--cor8);
-  border-radius: 10px;
+  justify-content: space-between;
 }
 
 .buttonAtualizar {
   all: unset;
-  width: auto;
-  padding: 0.5vw;
-  margin-top: var(--cincoPorcento);
+  height: max-content;
+  width: max-content;
+  padding: 10px 30px;
   cursor: pointer;
   border-radius: 5px;
   background-color: var(--cor4);
