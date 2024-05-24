@@ -122,7 +122,8 @@ export default function CriarUsuario() {
         "nascimento": campoNascimento.dado,
         "departamento": campoDepartamento.dado,
         "telefone": campoTelefone.dado.replace(/\D/g, ''),
-        "email": campoEmail.dado
+        "email": campoEmail.dado,
+        "status": 'ativo',
       };
       const token = getLocalToken();
       try {
