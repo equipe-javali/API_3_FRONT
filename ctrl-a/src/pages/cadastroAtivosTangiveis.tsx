@@ -16,6 +16,7 @@ export default function CadastroAtivosTangiveis() {
     const garantia = CampoData(
         "Validade de garantia:",
         "Expiração",
+        "",
         true,
         validarGarantia
     )

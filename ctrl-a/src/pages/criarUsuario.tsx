@@ -64,6 +64,7 @@ export default function CriarUsuario() {
   const campoNascimento = CampoData(
     "Data Nascimento:",
     "Nascimento",
+    "",
     true,
     avisoNascimento
   )

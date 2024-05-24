@@ -63,6 +63,7 @@ export default function CadastroAtivos() {
     const campoDataAquisicao = CampoData(
         "Data da aquisição",
         "Aquisição",
+        "",
         true,
         avisoDataAquisicao
     )

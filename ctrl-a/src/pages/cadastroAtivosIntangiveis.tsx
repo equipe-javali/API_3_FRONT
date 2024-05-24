@@ -16,6 +16,7 @@ export default function CadastroAtivosIntangiveis() {
     const expiracao = CampoData(
         "Data de expiração:",
         "Expiração",
+        "",
         true,
         validarExpiracao
     )
