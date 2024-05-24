@@ -37,6 +37,8 @@ export default function VisualizarUsuario() {
   const [tipoResposta, setTipoResposta] = useState('');
   const [mostrarInativos, setMostrarInativos] = useState(true);
   const [chaveAtualizacao, setChaveAtualizacao] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const token = getLocalToken();
 
@@ -73,6 +75,7 @@ export default function VisualizarUsuario() {
 
   const usuariosExibidos = mostrarInativos ? usuarios : usuarios.filter(usuario => usuario.status === 'Ativo');
 
+
   const usuariosFiltrados = usuariosExibidos.filter(usuario => {
     const termoBuscaMatch = Object.values(usuario).some(value =>
       typeof value === 'string' && value.includes(termoBusca)
@@ -90,29 +93,35 @@ export default function VisualizarUsuario() {
   };
 
   const handleDelete = (id: number) => {
+    const usuarioAExcluir = usuarios.find(usuario => usuario.id === id);
+    if (!usuarioAExcluir || usuarioAExcluir.status !== 'Ativo') {
+      setTextoResposta("Apenas usuários ativos podem ser excluídos.");
+      setTipoResposta("Erro");
+      return; 
+    }
     fetch(`http://localhost:8080/usuario/atualizacao/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization": token
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: token },
       body: JSON.stringify({ status: 'Inativo' }),
     })
       .then(response => {
         if (response.ok) {
-          setTextoResposta("Usuário excluído com sucesso!");
+          // Atualizar o estado localmente
+          setUsuarios(prevUsuarios => prevUsuarios.map(usuario =>
+            usuario.id === id ? { ...usuario, status: 'Inativo' } : usuario
+          ));
+
+          setTextoResposta("Usuário inativado com sucesso!");
           setTipoResposta("Sucesso");
-  
-          // Atualiza o estado removendo o usuário excluído
-          setUsuarios(prevUsuarios => prevUsuarios.filter(usuario => usuario.id !== id));
         } else {
-          throw new Error(`Erro ao deletar usuário: ${response.status}`);
+          throw new Error(`Erro ao inativar usuário: ${response.status}`);
         }
       })
       .catch(error => {
-        setTextoResposta(`Erro ao deletar usuário: ${error.message}`);
+        setTextoResposta(`Erro ao inativar usuário: ${error.message}`);
         setTipoResposta("Erro");
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
   
 
@@ -127,6 +136,15 @@ export default function VisualizarUsuario() {
             <div>
                 <h2>Usuários</h2>
                 <div className="search-container">
+                    <select value={filtroDepartamento} onChange={handleFilterChange} className="mySelect">
+                      <option value="">Departamento</option>
+                      <option value="Todos">Todos</option> 
+                      {departamentos.map(departamento => (
+                          <option key={departamento} value={departamento}>
+                              {departamento}
+                          </option>
+                      ))}
+                    </select>
                     <input
                         type="text"
                         placeholder="Buscar por usuários"
@@ -144,15 +162,7 @@ export default function VisualizarUsuario() {
                         Mostrar Inativos
                     </label>
                 </div>
-                <select value={filtroDepartamento} onChange={handleFilterChange} className="mySelect">
-                    <option value="">Filtro</option>
-                    <option value="Todos">Todos</option> 
-                    {departamentos.map(departamento => (
-                        <option key={departamento} value={departamento}>
-                            {departamento}
-                        </option>
-                    ))}
-                </select>
+                
 
                 <table className="userTable">
                     <thead>
