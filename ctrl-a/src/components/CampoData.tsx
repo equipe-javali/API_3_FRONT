@@ -29,7 +29,7 @@ export default function CampoData(
 
     useEffect(() => {
         setDataCampo(dataInicial)
-    })
+    }, [dataInicial])
 
     useEffect(() => {
         if (aviso) {
