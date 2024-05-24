@@ -72,6 +72,7 @@ export default function CriarUsuario() {
   const campoDepartamento = CampoDropdown(
     "Departamento:",
     ["Departamento 1", "Departamento 2"],
+    "",
     "Escolha um departamento",
     true,
     avisoDepartamento

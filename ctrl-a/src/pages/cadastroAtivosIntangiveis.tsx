@@ -23,6 +23,7 @@ export default function CadastroAtivosIntangiveis() {
     const importancia = CampoDropdown(
         "Importância:",
         ["Alta", "Média", "Baixa"],
+        "",
         "Escolha um grau de importância",
         false
     )
