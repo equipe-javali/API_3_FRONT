@@ -116,7 +116,11 @@ export default class Notificacao extends Component<Props, State> {
       
                     return (
                       <li key={index}>
-                        {diffDays < 0
+                        {diffDays === 0
+                          ? `A garantia do ativo ${ativo.id} termina hoje`
+                          : diffDays === 1
+                          ? `A garantia do ativo ${ativo.id} termina amanhã`
+                          : diffDays < 0
                           ? `A garantia do ativo ${ativo.id} terminou em ${dataGarantia.format("DD/MM/YYYY")}`
                           : `A garantia do ativo ${ativo.id} termina em ${diffDays} dias`}
                       </li>
@@ -128,12 +132,17 @@ export default class Notificacao extends Component<Props, State> {
                     const dataExpiracao = moment(ativo.dataExpiracao, 'YYYY-MM-DD');
                     const diffDays = dataExpiracao.diff(today, 'days');
       
-                    return (
-                      <li key={index}>
-                        {diffDays < 0
-                          ? `A licença do ativo ${ativo.id} expirou em ${dataExpiracao.format("DD/MM/YYYY")}`
-                          : `A licença do ativo ${ativo.id} expira em ${diffDays} dias`}
+                    return (                      
+                        <li key={index}>
+                          {diffDays === 0
+                            ? `A licença do ativo ${ativo.id} expira hoje`
+                            : diffDays === 1
+                            ? `A licença do ativo ${ativo.id} expira amanhã`
+                            : diffDays < 0
+                            ? `A licença do ativo ${ativo.id} expirou em ${dataExpiracao.format("DD/MM/YYYY")}`
+                            : `A licença do ativo ${ativo.id} expira em ${diffDays} dias`}
                       </li>
+                      
                     );
                   })}
       
@@ -144,7 +153,13 @@ export default class Notificacao extends Component<Props, State> {
       
                     if (diffDays <= 10) {
                       return (
-                        <li key={index}>{`A manutenção do ativo ${manutencao.ativo.id} termina em ${diffDays} dias`}</li>
+                        <li key={index}>
+                          {diffDays === 0
+                            ? `A manutenção do ativo ${manutencao.ativo.id} termina hoje`
+                            : diffDays === 1
+                            ? `A manutenção do ativo ${manutencao.ativo.id} termina amanhã`
+                            : `A manutenção do ativo ${manutencao.ativo.id} termina em ${diffDays} dias`}
+                        </li>
                       );
                     }
                     return null; // Não renderiza nada se a manutenção não for próxima
