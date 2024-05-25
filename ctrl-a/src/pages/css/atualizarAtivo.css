@@ -20,8 +20,9 @@
 }
 
 
-.divisaoFormsEditar1 {
-  height: 50px;
+.tituloFormsAtualizarAtivo *,
+.divisaoFormsEditar1 * {
+  font-size: 25px;
 }
 
 .atualizarAtivo,
@@ -91,6 +92,7 @@
 }
 
 .formsAtualizarAtivo,
+.tituloFormsAtualizarAtivo,
 .divisaoFormsEditar2>div:first-child,
 .divisaoFormsEditar3,
 .divisaoFormsEditar4{
