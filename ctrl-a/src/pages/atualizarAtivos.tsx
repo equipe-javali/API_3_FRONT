@@ -526,9 +526,7 @@ export default function AtualizarAtivo() {
                                 {campoMarca.codigo}
                             </div>
                         </div>
-                        <div>
-                            {campoDescricao.codigo}
-                        </div>
+                        {campoDescricao.codigo}
                     </div>
                 </div>
                 <div>

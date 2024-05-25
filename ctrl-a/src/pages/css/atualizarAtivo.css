@@ -1,92 +1,55 @@
 :root {
   --gapformsAtualizarAtivo: 20px;
   --divisaoCampoForms1: 55%;
-  --divisaoCampoForms2: calc(100% - var(--divisaoCampoForms1));
-}
-
-
-.formsAtualizarAtivo,
-.formsAtualizarAtivo>div,
-.divisaoFormsEditar2,
-.divisaoFormsEditar2>div,
-.divisaoFormsEditar2>div:first-child>div,
-.formsAtualizarAtivo>div:last-child>div,
-.formsAtualizarAtivo>div:last-child>div>div {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  gap: 8px;
-}
-
-.divisaoFormsEditar2>div:first-child>div,
-.divisaoFormsEditar3>div,
-.divisaoFormsEditar4>div:first-child {
-  justify-content: space-between;
-}
-
-.formsAtualizarAtivo>div,
-.divisaoFormsEditar2,
-.divisaoFormsEditar2>div:first-child>div,
-.formsAtualizarAtivo>div:last-child>div>div {
-  flex-direction: column;
-}
-
-.formsAtualizarAtivo>div:first-child {
-  flex: var(--divisaoCampoForms1);
-}
-
-.formsAtualizarAtivo>div:last-child {
-  flex: var(--divisaoCampoForms2);
+  --divisaoCampoForms2: calc(100% - var(--divisaoCampoForms1) - var(--gapformsAtualizarAtivo));
 }
 
 .atualizarAtivo {
-  padding: 10px;
+  min-height: calc(100vh - var(--heightHeader) - var(--gapformsAtualizarAtivo));
+  padding: var(--gapformsAtualizarAtivo);
 }
 
-.atualizarAtivo>h1 {
-  padding-bottom: 20px;
+.formsAtualizarAtivo,
+.formsAtualizarAtivo>div {
+  height: 100%;
+  width: 100%;
 }
 
-
-.formsAtualizarAtivo>div>div {
+.formsAtualizarAtivo>div {
   flex: 1;
 }
 
 
-.formsAtualizarAtivo>div:first-child {
-  flex: var(--divisaoCampoForms1)
-}
-
-.formsAtualizarAtivo>div:last-child {
-  flex: var(--divisaoCampoForms2);
-}
-
-.atualizarAtivo {
-  width: 100%;
-  height: calc(100vh - var(--heightHeader));
-}
-
-.formsAtualizarAtivo {
-  height: calc(100% - 50px);
-}
-
-.tituloFormsAtualizarAtivo {
+.divisaoFormsEditar1 {
   height: 50px;
 }
 
-.divisaoFormsEditar1 {
-  max-height: 70px;
-  background-color: var(--cor8);
+.atualizarAtivo,
+.tituloFormsAtualizarAtivo,
+.formsAtualizarAtivo,
+.formsAtualizarAtivo>div,
+.divisaoFormsEditar2>div,
+.divisaoFormsEditar2>div:first-child>div,
+.divisaoFormsEditar3,
+.divisaoFormsEditar3>div,
+.divisaoFormsEditar4,
+.divisaoFormsEditar4>div {
+  display: flex;
+  gap: var(--gapformsAtualizarAtivo);
 }
 
-.divisaoFormsEditar2>div:last-child,
-.divisaoFormsEditar3 {
-  flex: 1;
+.tituloFormsAtualizarAtivo {
+  align-items: top;
+  height: min-content;
+  gap: 0;
 }
 
-.divisaoFormsEditar2>div:first-child,
-.divisaoFormsEditar4 {
-  flex: 2;
+.atualizarAtivo,
+.formsAtualizarAtivo>div,
+.divisaoFormsEditar2>div:first-child>div,
+.divisaoFormsEditar3>div,
+.divisaoFormsEditar4>div {
+  flex-direction: column;
 }
 
 .divisaoFormsEditar1,
@@ -94,21 +57,54 @@
 .divisaoFormsEditar3,
 .divisaoFormsEditar4>div:first-child {
   background-color: var(--cor8);
-  padding: 10px;
   border-radius: 5px;
+  padding: 10px;
 }
 
-.divisaoFormsEditar1>input {
-  width: 100%;
-  background: inherit;
-  color: var(--branco1);
-  font-size: 30px;
+.divisaoFormsEditar2>div:last-child {
+  padding-top: var(--gapformsAtualizarAtivo);
 }
 
-.botoesFormsEditar {
+.divisaoFormsEditar2 {
+  height: 100%;
+}
+
+.divisaoFormsEditar4>div:first-child {
+  width: 60%;
+}
+
+.divisaoFormsEditar4 {
+  flex: 2;
+}
+
+.formsAtualizarAtivo,
+.divisaoFormsEditar2>div,
+.divisaoFormsEditar4,
+.divisaoFormsEditar4>div:first-child {
+  justify-content: space-between;
+}
+
+.divisaoFormsEditar3,
+.divisaoFormsEditar3>div,
+.divisaoFormsEditar4>div:last-child {
   justify-content: space-around;
-  gap: 5px;
-  padding: 15px;
+}
+
+.formsAtualizarAtivo,
+.divisaoFormsEditar2>div:first-child,
+.divisaoFormsEditar3,
+.divisaoFormsEditar4{
+  flex-wrap: wrap;
+}
+.formsAtualizarAtivo>div{
+  min-width: calc(150px + 18vw);
+}
+.divisaoFormsEditar2>div:first-child{
+  min-width: calc(150px + 7vw);
+}
+.divisaoFormsEditar2>div,
+.divisaoFormsEditar2>div:first-child>div{
+  margin: auto;
 }
 
 .botoesFormsEditar>* {
@@ -129,4 +125,16 @@
 
 .botoesFormsEditar>*:last-child {
   background-color: var(--cor5);
+}
+
+@media (max-width: 780px){
+  .divisaoFormsEditar2{
+    height: max-content;
+  }
+  .formsAtualizarAtivo>div{
+    height: max-content;
+  }
+  .divisaoFormsEditar4>div{
+    margin: auto;
+  }
 }
