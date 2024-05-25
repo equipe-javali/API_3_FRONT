@@ -1,5 +1,6 @@
 .cadastroUsuário {
-  min-height: calc(100vh - var(--heightHeader) - var(--gapformsAtualizarAtivo));
+  margin: 20px;
+  min-height: calc(100vh - var(--heightHeader) - var(--gapformsAtualizarAtivo) - 20px);
 }
 
 /* personalização especifica da página */
@@ -11,7 +12,6 @@
 }
 
 .cadastroUsuário .primeira-parte {
-  margin: 20px;
   background-color: var(--cor8);
   border-radius: 10px;
   padding: 20px;
