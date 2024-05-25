@@ -293,16 +293,43 @@ export default function DashboardAtivos() {
         }
     }, [tipoResposta]);
 
-    const sortedAtivos = [...ativos].sort((a, b) => a.id - b.id);
+    // const sortedAtivos = [...ativos].sort((a, b) => a.id - b.id);
     const [Pesquisa, setPesquisa] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        setPesquisa(event.target.value);
+        const value = event.target.value;
+        setPesquisa(value);
+        setSearchTerm(''); // Limpa o termo de busca ao alterar o filtro
     };
-    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
+
+    let sortedAtivos = ativos;
+
+    if (searchTerm) {
+        sortedAtivos = ativos.filter((ativo) =>
+            ativo.nome.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }
+
+    let filteredAtivos = ativos;
+
+    if (Pesquisa === 'Em uso') {
+        filteredAtivos = ativos.filter(ativo => ativo.status === 'Em uso');
+    } else if (Pesquisa === 'Em manutenção') {
+        filteredAtivos = ativos.filter(ativo => ativo.status === 'Em manutenção');
+    } else if (Pesquisa === 'Não alocado') {
+        filteredAtivos = ativos.filter(ativo => !ativo.idResponsavel);
+    }
+
+    if (searchTerm) {
+        filteredAtivos = filteredAtivos.filter(ativo =>
+            ativo.nome.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }
+
     const token = getLocalToken();
 
     const excluirAtivo = (ativoId: number) => {
@@ -350,6 +377,7 @@ export default function DashboardAtivos() {
                 setTipoResposta('Erro');
             });
     }, []);
+
     return (
         <div className="dashboardAtv">
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={handleResponseTimeout} />
@@ -358,12 +386,10 @@ export default function DashboardAtivos() {
             </div>
             <div className="buscaFiltro">
                 <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
-                    <option value="">Filtro</option>
-                    {ativos.map((ativo, index) => (
-                        <option key={index} value={ativo.id}>
-                            {ativo.tipo}
-                        </option>
-                    ))}
+                    <option value="">Todos</option>
+                    {/* <option value="Em uso">Em uso</option>
+    <option value="Em manutenção">Em manutenção</option> */}
+                    <option value="Não alocado">Não alocado</option>
                 </select>
                 <input
                     type="text"
@@ -373,7 +399,9 @@ export default function DashboardAtivos() {
                     className="myInput"
                 />
             </div>
-            <TabelaAtivos ativos={sortedAtivos} excluirAtivo={excluirAtivo} setTextoResposta={setTextoResposta} setTipoResposta={setTipoResposta} />
+            <TabelaAtivos ativos={filteredAtivos} excluirAtivo={excluirAtivo} setTextoResposta={setTextoResposta} setTipoResposta={setTipoResposta} />
+
+
         </div>
     );
 };
