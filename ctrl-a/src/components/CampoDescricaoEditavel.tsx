@@ -14,6 +14,9 @@ export default function CampoDescricaoEditavel(
     const [erroCampo, setErroCampo] = useState(false);
 
     useEffect(() => {
+        setDescricaoCampo(descricao)
+    }, [descricao])
+    useEffect(() => {
         if (aviso) {
             setEditavel(true);
             setErroCampo(true);
@@ -34,9 +37,6 @@ export default function CampoDescricaoEditavel(
         }
     };
 
-    function limpar() {
-        setDescricaoCampo('')
-    }
 
     const codigo = (
         <div className={`divCampoDescricaoEditavel ${erroCampo ? 'alertaCampoErrado' : 'semAlertaCampo'}`}>
@@ -59,7 +59,6 @@ export default function CampoDescricaoEditavel(
 
     return {
         dado: descricaoCampo,
-        codigo,
-        limpar
+        codigo
     };
 }
