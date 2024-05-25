@@ -13,6 +13,7 @@
 }
 
 .divCampoPadrao,
+.divCampoDesativado,
 .divCampoEditavel,
 .campoInputSemTítulo,
 .divCampoDescricao,
@@ -29,6 +30,7 @@
 
 .divCampoRadio>div,
 .divCampoEditavel>div,
+.divCampoDesativado>div,
 .divCampoDescricao>div,
 .divCampoDescricaoEditavel>div,
 .divCampoPadrao>div {
@@ -47,6 +49,7 @@
 .inputCampoSenha,
 .divCampoDescricao textarea,
 .textareaCampoEditavel textarea,
+.divCampoDesativado input:disabled,
 .divCampoPadrao input,
 .inputCampoSenha input,
 .inputCampoEditavel input,
@@ -63,6 +66,7 @@
 .divCampoPadrao input,
 .inputCampoSenha input,
 .inputCampoEditavel input,
+.divCampoDesativado input:disabled,
 .textareaCampoEditavel textarea,
 .divCampoDescricao textarea,
 .divCampoPadrao select {
@@ -199,7 +203,7 @@
 }
 
 .divCampoInputSemTitulo > div {
-    border-radius: 4px;
+    border-radius: 6px;
     padding: 2px;
     display: flex;
     width: 100%;
@@ -207,6 +211,8 @@
     align-items: center;
 }
 
+.divCampoDesativado input:disabled,
+.divCampoDesativado input:disabled::placeholder,
 .divCampoInputSemTitulo input {
     background-color: inherit;
     color: var(--corTituloCampo);
