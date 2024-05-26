@@ -467,7 +467,7 @@ export default function AtualizarAtivo() {
                         setTipoResposta("Erro")
                     }
                 } else {
-                    const atualizarAtivoIntangivel = await fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
+                    const atualizarAtivoIntangivel = await fetch(`http://localhost:8080/ativoIntangivel/atualizacao/${id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
