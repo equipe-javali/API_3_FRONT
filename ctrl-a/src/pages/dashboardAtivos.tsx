@@ -52,7 +52,7 @@ type TabelaAtivosProps<T extends AtivoProps> = {
     setTipoResposta: (tipo: string) => void;
 }
 
-function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo, setTextoResposta, setTipoResposta }: AtivoProps) {
+function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo, setTextoResposta, setTipoResposta, onResponsavelAtribuido }: AtivoProps & { onResponsavelAtribuido: (ativoId: number) => void }) { 
     const [showModal, setShowModal] = useState<boolean>(false);
     const [manutencoes, setManutencoes] = useState<ManutencaoProps[]>([]);
     const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
@@ -156,21 +156,22 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
                 },
                 body: JSON.stringify(selectedUser.id),
             })
-                .then(response => {
-                    if (response.ok) {
-                        setTextoResposta(`Responsável atualizado com sucesso!`);
-                        setTipoResposta("Sucesso");
-                    }
-                    else {
-                        setTextoResposta(`Não foi possível associar o ativo! Erro: ${response.status}`);
-                        setTipoResposta("Erro");
-                    }
-                    setShowModal(false);
-                })
-                .catch(error => {
-                    setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+            .then(response => {
+                if (response.ok) {
+                    setTextoResposta(`Responsável atualizado com sucesso!`);
+                    setTipoResposta("Sucesso");
+                    
+                    onResponsavelAtribuido(id);
+                } else {
+                    setTextoResposta(`Não foi possível associar o ativo! Erro: ${response.status}`);
                     setTipoResposta("Erro");
-                });
+                }
+                setShowModal(false);
+            })
+            .catch(error => {
+                setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+                setTipoResposta("Erro");
+            });
         } else {
             setShowModal(!showModal);
         }
@@ -244,22 +245,22 @@ function LinhaAtivo({ id, nome, idResponsavel, tipo, status, local, excluirAtivo
     )
 }
 
-function TabelaAtivos({ ativos, excluirAtivo, setTextoResposta, setTipoResposta }: TabelaAtivosProps<AtivoProps>) {
-    const linhas = ativos.map((atv) => {
-        return (
-            <LinhaAtivo
-                key={atv.id}
-                id={atv.id}
-                nome={atv.nome}
-                idResponsavel={atv.idResponsavel}
-                tipo={atv.tipo}
-                status={atv.status}
-                local={atv.local}
-                excluirAtivo={excluirAtivo}
-                setTextoResposta={setTextoResposta}
-                setTipoResposta={setTipoResposta} />
-        );
-    });
+function TabelaAtivos({ ativos, excluirAtivo, setTextoResposta, setTipoResposta, onResponsavelAtribuido }: TabelaAtivosProps<AtivoProps> & { onResponsavelAtribuido: (ativoId: number) => void }) {
+    const linhas = ativos.map((atv) => (
+        <LinhaAtivo
+            key={atv.id}
+            onResponsavelAtribuido={onResponsavelAtribuido} 
+            id={atv.id}
+            nome={atv.nome}
+            idResponsavel={atv.idResponsavel}
+            tipo={atv.tipo}
+            status={atv.status}
+            local={atv.local}
+            excluirAtivo={excluirAtivo}
+            setTextoResposta={setTextoResposta}
+            setTipoResposta={setTipoResposta} 
+        /> // Removido o ponto e vírgula aqui
+    ));
     return (
         <div className="tabelaAtv">
             <div className="linhaAtv" id="cabecalho">
@@ -278,13 +279,53 @@ function TabelaAtivos({ ativos, excluirAtivo, setTextoResposta, setTipoResposta 
 
 export default function DashboardAtivos() {
     const [ativos, setAtivos] = useState<AtivoProps[]>([]);
+    const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
     const [textoResposta, setTextoResposta] = useState('');
     const [tipoResposta, setTipoResposta] = useState('');
+    const [filtroResponsavel, setFiltroResponsavel] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [atualizarLista, setAtualizarLista] = useState(false);
 
+    const handleResponsavelAtribuido = (ativoId: number) => {
+        // Find the updated ativo
+        fetch(`http://localhost:8080/ativo/${ativoId}`, { headers: { 'Authorization': token } })
+            .then(res => res.json())
+            .then(ativoAtualizado => {
+                // Update the state with the new data for the specific ativo
+                setAtivos(prevAtivos => prevAtivos.map(ativo =>
+                    ativo.id === ativoId ? ativoAtualizado : ativo
+                ));
+            })
+            .catch(error => {
+                setTextoResposta(`Erro ao atualizar dados do ativo: ${error.message}`);
+                setTipoResposta('Erro');
+            });
+    };
+    
+    const token = getLocalToken();
+
+    useEffect(() => {
+        Promise.all([
+            fetch('http://localhost:8080/ativo/listagemTodos', { headers: { 'Authorization': token } }).then(res => res.json()),
+            fetch('http://localhost:8080/usuario/listagemTodos', { headers: { 'Authorization': token } }).then(res => res.json())
+        ])
+        .then(([ativosData, usuariosData]) => {
+            if (!Array.isArray(ativosData) || !Array.isArray(usuariosData)) {
+                console.error('Dados inválidos recebidos do servidor.');
+                return;
+            }
+            setAtivos(ativosData.sort((a, b) => a.id - b.id));
+            setUsuarios(usuariosData);
+        })
+        .catch(error => {
+            setTextoResposta(`Erro ao buscar dados: ${error.message}`);
+            setTipoResposta('Erro');
+        });
+    }, []); 
     const handleResponseTimeout = () => {
         setTextoResposta('');
         setTipoResposta('');
-    };
+    }; 
 
     useEffect(() => {
         if (tipoResposta === 'Sucesso') {
@@ -292,18 +333,13 @@ export default function DashboardAtivos() {
             return () => clearTimeout(timer);
         }
     }, [tipoResposta]);
-
-    const sortedAtivos = [...ativos].sort((a, b) => a.id - b.id);
-    const [Pesquisa, setPesquisa] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        setPesquisa(event.target.value);
+        setFiltroResponsavel(event.target.value);
     };
+
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
     };
-    const token = getLocalToken();
 
     const excluirAtivo = (ativoId: number) => {
         fetch(`http://localhost:8080/ativo/exclusao/${ativoId}`, {
@@ -313,43 +349,31 @@ export default function DashboardAtivos() {
                 "Authorization": token
             }
         })
-            .then(response => {
-                if (response.ok) {
-                    setTextoResposta('Ativo excluído com sucesso!');
-                    setTipoResposta('Sucesso');
-                } else {
-                    setTextoResposta(`Não foi possível deletar! Erro: ${response.status}`);
-                    setTipoResposta('Erro');
-                }
-                setAtivos(ativos.filter(ativo => ativo.id !== ativoId));
-            })
-            .catch(error => {
-                setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+        .then(response => {
+            if (response.ok) {
+                setTextoResposta('Ativo excluído com sucesso!');
+                setTipoResposta('Sucesso');
+            } else {
+                setTextoResposta(`Não foi possível deletar! Erro: ${response.status}`);
                 setTipoResposta('Erro');
-            });
+            }
+            setAtivos(ativos.filter(ativo => ativo.id !== ativoId));
+        })
+        .catch(error => {
+            setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+            setTipoResposta('Erro');
+        });
     };
 
-    useEffect(() => {
-        fetch('http://localhost:8080/ativo/listagemTodos', {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": token
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    setTextoResposta(`Não foi possível listar os ativos! Erro: ${response.status}`);
-                    setTipoResposta('Erro');
-                }
-                return response.json();
-            })
-            .then(data => setAtivos((data as AtivoProps[])))
-            .catch(error => {
-                setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
-                setTipoResposta('Erro');
-            });
-    }, []);
+    const filteredAtivos = ativos.filter(ativo => {
+        const termoBuscaMatch = ativo.nome.toLowerCase().includes(searchTerm.toLowerCase());
+        const responsavelMatch = 
+            !filtroResponsavel || 
+            (filtroResponsavel === "sem_responsavel" && !ativo.idResponsavel) || 
+            (ativo.idResponsavel && ativo.idResponsavel.id === parseInt(filtroResponsavel, 10)); 
+    
+        return termoBuscaMatch && responsavelMatch;
+    });
     return (
         <div className="dashboardAtv">
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={handleResponseTimeout} />
@@ -357,11 +381,12 @@ export default function DashboardAtivos() {
                 <h1>Ativos</h1>
             </div>
             <div className="buscaAtivos">
-                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
-                    <option value="">Filtro</option>
-                    {ativos.map((ativo, index) => (
-                        <option key={index} value={ativo.id}>
-                            {ativo.tipo}
+                <select value={filtroResponsavel} onChange={handleFilterChange} className="mySelect">
+                    <option value="">Responsável</option>
+                    <option value="sem_responsavel">Não definido</option> {/* Nova opção */}
+                    {usuarios.map(usuario => (
+                        <option key={usuario.id} value={usuario.id}>
+                            {usuario.nome} 
                         </option>
                     ))}
                 </select>
@@ -373,7 +398,13 @@ export default function DashboardAtivos() {
                     className="myInput"
                 />
             </div>
-            <TabelaAtivos ativos={sortedAtivos} excluirAtivo={excluirAtivo} setTextoResposta={setTextoResposta} setTipoResposta={setTipoResposta} />
+            <TabelaAtivos 
+                ativos={filteredAtivos} 
+                excluirAtivo={excluirAtivo} 
+                setTextoResposta={setTextoResposta} 
+                setTipoResposta={setTipoResposta} 
+                onResponsavelAtribuido={handleResponsavelAtribuido} // Pass to TabelaAtivos
+            />
         </div>
     );
 };
