@@ -374,6 +374,10 @@ export default function DashboardAtivos() {
     
         return termoBuscaMatch && responsavelMatch;
     });
+
+    const usuariosNaTabela = usuarios.filter(usuario =>
+        ativos.some(ativo => ativo.idResponsavel && ativo.idResponsavel.id === usuario.id)
+    ).sort((a, b) => a.nome.localeCompare(b.nome)); 
     return (
         <div className="dashboardAtv">
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={handleResponseTimeout} />
@@ -383,11 +387,9 @@ export default function DashboardAtivos() {
             <div className="buscaAtivos">
                 <select value={filtroResponsavel} onChange={handleFilterChange} className="mySelect">
                     <option value="">Responsável</option>
-                    <option value="sem_responsavel">Não definido</option> {/* Nova opção */}
-                    {usuarios.map(usuario => (
-                        <option key={usuario.id} value={usuario.id}>
-                            {usuario.nome} 
-                        </option>
+                    <option value="sem_responsavel">Não definido</option> 
+                    {usuariosNaTabela.map(usuario => (
+                        <option key={usuario.id} value={usuario.id}>{usuario.nome}</option>
                     ))}
                 </select>
                 <input

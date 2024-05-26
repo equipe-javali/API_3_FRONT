@@ -143,9 +143,9 @@
     appearance: none; 
 }
 
-.mySelect option {
+/* .mySelect option {
     background-color: white;
-}
+} */
 
 .buscaAtivos {
     padding: 10px 30px 10px 15px;

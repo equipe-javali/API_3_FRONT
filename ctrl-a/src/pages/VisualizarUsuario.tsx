@@ -43,15 +43,6 @@ export default function VisualizarUsuario() {
   const token = getLocalToken();
 
   useEffect(() => {
-    if (tipoResposta === "Sucesso") {
-      const timer = setTimeout(() => {
-        fechaPopUp();
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [tipoResposta]);
-
-  useEffect(() => {
     fetch('http://localhost:8080/usuario/listagemTodos', {
       headers: { "Authorization": token }
     })
@@ -62,10 +53,13 @@ export default function VisualizarUsuario() {
         return response.json();
       })
       .then((data: Usuario[]) => {
-        setUsuarios(data.sort((a, b) => a.id - b.id));
+        // Ensure departamento exists and is not null
+        const usuariosComDepartamento = data.filter(usuario => usuario.departamento !== null);
+        
+        setUsuarios(usuariosComDepartamento.sort((a, b) => a.id - b.id));
 
-        const uniqueDepartamentos = Array.from(new Set(data.map(u => u.departamento).filter(Boolean)));
-        setDepartamentos(uniqueDepartamentos);
+        const uniqueDepartamentos = Array.from(new Set(usuariosComDepartamento.map(u => u.departamento)));
+        setDepartamentos(uniqueDepartamentos); 
       })
       .catch(error => {
         setTextoResposta(`Erro ao buscar usuários: ${error.message}`);
@@ -73,15 +67,18 @@ export default function VisualizarUsuario() {
       });
   }, []);
 
-  const usuariosExibidos = mostrarInativos ? usuarios : usuarios.filter(usuario => usuario.status.toLowerCase() === 'ativo'); 
+  const usuariosExibidos = mostrarInativos 
+    ? usuarios
+    : usuarios.filter(usuario => usuario.status.toLowerCase() === 'ativo' && usuario.departamento !== null); 
 
   const usuariosFiltrados = usuariosExibidos.filter(usuario => {
     const termoBuscaMatch = Object.values(usuario).some(value =>
-      typeof value === 'string' && value.toLowerCase().includes(termoBusca.toLowerCase()) 
+      typeof value === 'string' && value.toLowerCase().includes(termoBusca.toLowerCase())
     );
-    const departamentoMatch = filtroDepartamento === '' || filtroDepartamento === 'Todos' || usuario.departamento.toLowerCase() === filtroDepartamento.toLowerCase(); // Converte para minúsculas
+    const departamentoMatch = filtroDepartamento === '' || filtroDepartamento === 'Todos' || usuario.departamento?.toLowerCase() === filtroDepartamento.toLowerCase(); 
     return termoBuscaMatch && departamentoMatch;
   });
+
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTermoBusca(event.target.value);
