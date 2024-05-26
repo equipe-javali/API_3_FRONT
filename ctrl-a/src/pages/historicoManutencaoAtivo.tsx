@@ -6,6 +6,7 @@ import getLocalToken from '../utils/getLocalToken';
 import { FaPencilAlt } from 'react-icons/fa';
 import moment from 'moment-timezone';
 
+
 export default function HistoricoManutencao() {
     interface ManutencaoData {
         id: number;
