@@ -116,6 +116,8 @@ export default function VisualizarHistorico() {
               <div className="uia-timeline__line"></div>
               <div className="uia-timeline__annual-sections">
                 {historico.map((evento) => {
+                  console.log(evento);
+
                   const data = new Date(Number(evento.data.substring(0, 4)).valueOf(),
                     Number(evento.data.substring(5, 7)).valueOf(), Number(evento.data.substring(8, 10)).valueOf());
                   const dia = data.getDate();
@@ -132,7 +134,7 @@ export default function VisualizarHistorico() {
                               <h3 className="ra-heading">
                                 {evento.tipo === "manutencao"
                                   ? `Manutenção ${evento.dataFim ? '(Retorno)' : '(Envio)'}: ${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`
-                                  : `${evento.nomeUsuario} (${evento.departamentoUsuario})`}
+                                  : (evento.nomeUsuario !== null ? `${evento.nomeUsuario} (${evento.departamentoUsuario})` : `Ativo sem usuário`)}
                               </h3>
                               <span className="uia-card__time">
                                 <time dateTime={evento.data}>
