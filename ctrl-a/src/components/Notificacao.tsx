@@ -58,30 +58,27 @@ export default class Notificacao extends Component<Props, State> {
       
             
             const ativosGarantia = ativosTangiveisData.filter((ativo: any) => {
-                
-                const dataGarantia = moment.tz(ativo.garantia, 'YYYY-MM-DD', 'America/Sao_Paulo'); // Use seu fuso horário aqui
-                const today = moment(); 
-                return dataGarantia.diff(today, 'days') <= 10;
+                const dataGarantia = moment(ativo.garantia); // Remove a necessidade de tz
+                const today = moment();
+                return dataGarantia.isValid() && dataGarantia.diff(today, 'days') <= 10; 
               }).map((ativo: any) => ({
                 id: ativo.id,
                 dataGarantia: ativo.garantia
               }));
       
               const ativosExpiracao = ativosIntangiveisData.filter((ativo: any) => {
-                
-                const dataExpiracao = moment.tz(ativo.dataExpiracao, 'YYYY-MM-DD', 'America/Sao_Paulo'); // Use seu fuso horário aqui
+                const dataExpiracao = moment(ativo.dataExpiracao); 
                 const today = moment();
-                return dataExpiracao.diff(today, 'days') <= 10;
+                return dataExpiracao.isValid() && dataExpiracao.diff(today, 'days') <= 10; 
               }).map((ativo: any) => ({
                 id: ativo.id,
                 dataExpiracao: ativo.dataExpiracao
               }));
       
               const manutencoesProximas = manutencoesData.filter((manutencao: any) => {
-                
-                const dataFim = moment.tz(manutencao.dataFim, 'YYYY-MM-DD', 'America/Sao_Paulo'); 
+                const dataFim = moment(manutencao.dataFim); 
                 const today = moment();
-                return dataFim.isValid() && dataFim.isAfter(today) && dataFim.diff(today, 'days') <= 10;
+                return dataFim.isValid() && dataFim.isAfter(today) && dataFim.diff(today, 'days') <= 10; 
               }).map((manutencao: any) => ({
                 id: manutencao.id,
                 dataFim: manutencao.dataFim,
@@ -90,12 +87,12 @@ export default class Notificacao extends Component<Props, State> {
       
               this.setState({ ativosGarantia, ativosExpiracao, manutencoesProximas }, () => {
                 this.props.onUpdate(this.state.ativosGarantia.length, this.state.ativosExpiracao.length, this.state.manutencoesProximas.length);
+              });
+            })
+            .catch(error => {
+              console.error('Erro ao buscar os dados:', error);
             });
-        })
-        .catch(error => {
-            console.error('Erro ao buscar os dados:', error);
-        });
-    };  
+        };
     
     
     render() {
