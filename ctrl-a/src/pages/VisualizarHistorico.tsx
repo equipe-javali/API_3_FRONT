@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import './css/visualizarHistorico.css';
 import getLocalToken from "../utils/getLocalToken";
 import { useParams } from "react-router-dom";
- 
+
 interface Evento {
   tipo: 'alteracao' | 'manutencao';
   data: string;
@@ -14,18 +14,18 @@ interface Evento {
   descricaoManutencao?: string;
   custoManutencao?: string;
 }
- 
+
 const meses = [
   "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
   "Jul", "Ago", "Set", "Out", "Nov", "Dez"
 ];
- 
+
 export default function VisualizarHistorico() {
   const [nomeAtivo, setNomeAtivo] = useState<string>('');
   const [historico, setHistorico] = useState<Evento[]>([]);
   const token = getLocalToken();
   const { id } = useParams<{ id: string }>();
- 
+
   useEffect(() => {
     const fetchHistorico = async () => {
       try {
@@ -34,15 +34,15 @@ export default function VisualizarHistorico() {
           `http://localhost:8080/historicoAtivoTangivel/listagemAtivo/${id}`,
           `http://localhost:8080/manutencao/listagem/${id}`,
         ];
- 
+
         const [alteracoesIntangiveis, alteracoesTangiveis, manutencoes] = await Promise.all(
           urls.map(url => fetch(url, { headers: { Authorization: token } }))
         );
- 
+
         const historicoCompleto: Evento[] = [];
- 
+
         // Alterações de ativos intangíveis
-        if (alteracoesIntangiveis.ok) {
+        if (alteracoesIntangiveis.status === 200) {
           const data = await alteracoesIntangiveis.json();
           historicoCompleto.push(
             ...data.map((item: any) => ({
@@ -54,9 +54,9 @@ export default function VisualizarHistorico() {
             }))
           );
         }
- 
+
         // Alterações de ativos tangíveis
-        if (alteracoesTangiveis.ok) {
+        if (alteracoesTangiveis.status === 200) {
           const data = await alteracoesTangiveis.json();
           historicoCompleto.push(
             ...data.map((item: any) => ({
@@ -68,9 +68,11 @@ export default function VisualizarHistorico() {
             }))
           );
         }
- 
+
+
         // Manutenções
-        if (manutencoes.ok) {
+
+        if (manutencoes.status === 200) {
           const data = await manutencoes.json();
           historicoCompleto.push(
             ...data.map((item: any) => ({
@@ -84,9 +86,11 @@ export default function VisualizarHistorico() {
             }))
           );
         }
- 
+
+
+
         historicoCompleto.sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
- 
+
         setHistorico(historicoCompleto);
         setNomeAtivo(historicoCompleto.length > 0 ? historicoCompleto[0].nomeAtivo : "Ativo não encontrado");
       } catch (error) {
@@ -95,12 +99,12 @@ export default function VisualizarHistorico() {
         setNomeAtivo("Erro ao carregar histórico");
       }
     };
- 
+
     if (id) {
       fetchHistorico();
     }
   }, [id, token]);
- 
+
   return (
     <div className="VisualizarHistorico">
       <h1>Histórico do {nomeAtivo}</h1>
@@ -115,7 +119,7 @@ export default function VisualizarHistorico() {
                   const dia = data.getDate();
                   const mes = meses[data.getMonth()];
                   const ano = data.getFullYear();
- 
+
                   return (
                     <div key={`${evento.tipo}-${evento.data}`} className="uia-timeline__groups">
                       <span className="uia-timeline__year" aria-hidden="true">{ano}</span>
