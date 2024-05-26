@@ -152,13 +152,13 @@ export default function AtualizarAtivo() {
                         "Authorization": token
                     }
                 })
-                if (responseUsuario.status !== 200) {
-                    setTextoResposta(`Erro ao listar os usuários! Erro:${responseUsuario.status}`);
-                    setTipoResposta("Erro")
-                } else {
+                if (responseUsuario.status === 200){
                     const usuarios: Usuario[] = await responseUsuario.json();
                     console.log(usuarios);
                     setListaUsuarios(usuarios);
+                } else if (responseUsuario.status !== 204) {
+                    setTextoResposta(`Erro ao listar os usuários! Erro:${responseUsuario.status}`);
+                    setTipoResposta("Erro")
                 }
             } catch (error) {
                 setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
@@ -172,14 +172,14 @@ export default function AtualizarAtivo() {
                         "Authorization": token
                     }
                 })
-                if (responseManutencao.status !== 200) {
-                    setTextoResposta(`Erro ao listar as manutenções! Erro:${responseManutencao.status}`);
-                    setTipoResposta("Erro")
-                } else {
+                if (responseManutencao.status === 200){
                     const manutencoes: Manutencao[] = await responseManutencao.json()
                     console.log(manutencoes)
                     setListaManutencoes(manutencoes)
                     trocaLocal()
+                } else if (responseManutencao.status !== 204) {
+                    setTextoResposta(`Erro ao listar as manutenções! Erro:${responseManutencao.status}`);
+                    setTipoResposta("Erro")
                 }
             } catch (error) {
                 setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
@@ -322,7 +322,6 @@ export default function AtualizarAtivo() {
             const manutencaoAtual = listaManutencoes[0];
             const dataInicio = new Date(manutencaoAtual.dataInicio);
             const dataFim = new Date(manutencaoAtual.dataFim);
-
             if (dataAtual >= dataInicio && dataAtual <= dataFim) {
                 if (manutencaoAtual.localizacao) {
                     setLocal(manutencaoAtual.localizacao);
