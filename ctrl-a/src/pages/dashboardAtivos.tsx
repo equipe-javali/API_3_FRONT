@@ -356,7 +356,7 @@ export default function DashboardAtivos() {
             <div className="tituloAtv">
                 <h1>Ativos</h1>
             </div>
-            <div className="buscaFiltro">
+            <div className="buscaAtivos">
                 <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
                     <option value="">Filtro</option>
                     {ativos.map((ativo, index) => (

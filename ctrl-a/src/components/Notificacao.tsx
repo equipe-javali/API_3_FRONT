@@ -99,74 +99,76 @@ export default class Notificacao extends Component<Props, State> {
     
     
     render() {
-        const { ativosGarantia, ativosExpiracao, manutencoesProximas } = this.state;
-    
-        if (ativosGarantia.length === 0 && ativosExpiracao.length === 0) {
-            return null;
-        }
-    
-        return (
-            <div className={this.props.className}>
+      const { ativosGarantia, ativosExpiracao, manutencoesProximas } = this.state;
+
+      // Verifica se há alguma notificação
+      const temNotificacoes = ativosGarantia.length > 0 || ativosExpiracao.length > 0 || manutencoesProximas.length > 0;
+
+      return (
+          <div className={this.props.className}>
               <div className="notificacao">
-                <ul>
-                  {ativosGarantia.map((ativo, index) => {
-                    const today = moment(); // Data de hoje usando Moment.js
-                    const dataGarantia = moment(ativo.dataGarantia, 'YYYY-MM-DD');
-                    const diffDays = dataGarantia.diff(today, 'days');
-      
-                    return (
-                      <li key={index}>
-                        {diffDays === 0
-                          ? `A garantia do ativo ${ativo.id} termina hoje`
-                          : diffDays === 1
-                          ? `A garantia do ativo ${ativo.id} termina amanhã`
-                          : diffDays < 0
-                          ? `A garantia do ativo ${ativo.id} terminou em ${dataGarantia.format("DD/MM/YYYY")}`
-                          : `A garantia do ativo ${ativo.id} termina em ${diffDays} dias`}
-                      </li>
-                    );
-                  })}
-      
-                  {ativosExpiracao.map((ativo, index) => {
-                    const today = moment();
-                    const dataExpiracao = moment(ativo.dataExpiracao, 'YYYY-MM-DD');
-                    const diffDays = dataExpiracao.diff(today, 'days');
-      
-                    return (                      
-                        <li key={index}>
-                          {diffDays === 0
-                            ? `A licença do ativo ${ativo.id} expira hoje`
-                            : diffDays === 1
-                            ? `A licença do ativo ${ativo.id} expira amanhã`
-                            : diffDays < 0
-                            ? `A licença do ativo ${ativo.id} expirou em ${dataExpiracao.format("DD/MM/YYYY")}`
-                            : `A licença do ativo ${ativo.id} expira em ${diffDays} dias`}
-                      </li>
-                      
-                    );
-                  })}
-      
-                  {manutencoesProximas.map((manutencao, index) => {
-                    const today = moment();
-                    const dataFim = moment(manutencao.dataFim, 'YYYY-MM-DD');
-                    const diffDays = dataFim.diff(today, 'days');
-      
-                    if (diffDays <= 10) {
-                      return (
-                        <li key={index}>
-                          {diffDays === 0
-                            ? `A manutenção do ativo ${manutencao.ativo.id} termina hoje`
-                            : diffDays === 1
-                            ? `A manutenção do ativo ${manutencao.ativo.id} termina amanhã`
-                            : `A manutenção do ativo ${manutencao.ativo.id} termina em ${diffDays} dias`}
-                        </li>
-                      );
-                    }
-                    return null; // Não renderiza nada se a manutenção não for próxima
-                  })}
-                </ul>
+                  {temNotificacoes ? (
+                      <ul>
+                          {ativosGarantia.map((ativo, index) => {
+                              const today = moment();
+                              const dataGarantia = moment(ativo.dataGarantia, 'YYYY-MM-DD');
+                              const diffDays = dataGarantia.diff(today, 'days');
+
+                              return (
+                                  <li key={index}>
+                                      {diffDays === 0
+                                          ? `A garantia do ativo ${ativo.id} termina hoje`
+                                          : diffDays === 1
+                                          ? `A garantia do ativo ${ativo.id} termina amanhã`
+                                          : diffDays < 0
+                                          ? `A garantia do ativo ${ativo.id} terminou em ${dataGarantia.format("DD/MM/YYYY")}`
+                                          : `A garantia do ativo ${ativo.id} termina em ${diffDays} dias`}
+                                  </li>
+                              );
+                          })}
+
+                          {ativosExpiracao.map((ativo, index) => {
+                              const today = moment();
+                              const dataExpiracao = moment(ativo.dataExpiracao, 'YYYY-MM-DD');
+                              const diffDays = dataExpiracao.diff(today, 'days');
+
+                              return (
+                                  <li key={index}>
+                                      {diffDays === 0
+                                          ? `A licença do ativo ${ativo.id} expira hoje`
+                                          : diffDays === 1
+                                          ? `A licença do ativo ${ativo.id} expira amanhã`
+                                          : diffDays < 0
+                                          ? `A licença do ativo ${ativo.id} expirou em ${dataExpiracao.format("DD/MM/YYYY")}`
+                                          : `A licença do ativo ${ativo.id} expira em ${diffDays} dias`}
+                                  </li>
+                              );
+                          })}
+
+                          {manutencoesProximas.map((manutencao, index) => {
+                              const today = moment();
+                              const dataFim = moment(manutencao.dataFim, 'YYYY-MM-DD');
+                              const diffDays = dataFim.diff(today, 'days');
+
+                              if (diffDays <= 10) {
+                                  return (
+                                      <li key={index}>
+                                          {diffDays === 0
+                                              ? `A manutenção do ativo ${manutencao.ativo.id} termina hoje`
+                                              : diffDays === 1
+                                              ? `A manutenção do ativo ${manutencao.ativo.id} termina amanhã`
+                                              : `A manutenção do ativo ${manutencao.ativo.id} termina em ${diffDays} dias`}
+                                      </li>
+                                  );
+                              }
+                              return null; 
+                          })}
+                      </ul>
+                  ) : (
+                      <p className="sem-notificacoes">Não há notificações para exibir</p>
+                  )}
               </div>
-            </div>
-          );
-        }
-      }
+          </div>
+      );
+  }
+}
