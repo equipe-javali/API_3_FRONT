@@ -73,14 +73,13 @@ export default function VisualizarUsuario() {
       });
   }, []);
 
-  const usuariosExibidos = mostrarInativos ? usuarios : usuarios.filter(usuario => usuario.status === 'Ativo');
-
+  const usuariosExibidos = mostrarInativos ? usuarios : usuarios.filter(usuario => usuario.status.toLowerCase() === 'ativo'); 
 
   const usuariosFiltrados = usuariosExibidos.filter(usuario => {
     const termoBuscaMatch = Object.values(usuario).some(value =>
-      typeof value === 'string' && value.includes(termoBusca)
+      typeof value === 'string' && value.toLowerCase().includes(termoBusca.toLowerCase()) 
     );
-    const departamentoMatch = filtroDepartamento === '' || filtroDepartamento === 'Todos' || usuario.departamento === filtroDepartamento;
+    const departamentoMatch = filtroDepartamento === '' || filtroDepartamento === 'Todos' || usuario.departamento.toLowerCase() === filtroDepartamento.toLowerCase(); // Converte para minúsculas
     return termoBuscaMatch && departamentoMatch;
   });
 
@@ -94,7 +93,7 @@ export default function VisualizarUsuario() {
 
   const handleDelete = (id: number) => {
     const usuarioAExcluir = usuarios.find(usuario => usuario.id === id);
-    if (!usuarioAExcluir || usuarioAExcluir.status !== 'Ativo') {
+    if (!usuarioAExcluir || usuarioAExcluir.status.toLowerCase() !== 'ativo') {
       setTextoResposta("Apenas usuários ativos podem ser excluídos.");
       setTipoResposta("Erro");
       return; 
@@ -204,5 +203,4 @@ export default function VisualizarUsuario() {
         </div>
     );
 }
-
 
