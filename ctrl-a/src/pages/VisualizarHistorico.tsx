@@ -61,7 +61,7 @@ export default function VisualizarHistorico() {
           historicoCompleto.push(
             ...data.map((item: any) => ({
               tipo: 'alteracao',
-              data: item.ultimaAtualizacaoAtivo,
+              data: (item.ultimaAtualizacaoAtivo !== null ? item.ultimaAtualizacaoAtivo : item.dataCadastroAtivo),
               nomeAtivo: item.nomeAtivo,
               nomeUsuario: item.nomeUsuario,
               departamentoUsuario: item.departamentoUsuario,
@@ -102,6 +102,7 @@ export default function VisualizarHistorico() {
 
     if (id) {
       fetchHistorico();
+
     }
   }, [id, token]);
 
@@ -115,7 +116,8 @@ export default function VisualizarHistorico() {
               <div className="uia-timeline__line"></div>
               <div className="uia-timeline__annual-sections">
                 {historico.map((evento) => {
-                  const data = new Date(evento.data);
+                  const data = new Date(Number(evento.data.substring(0, 4)).valueOf(),
+                    Number(evento.data.substring(5, 7)).valueOf(), Number(evento.data.substring(8, 10)).valueOf());
                   const dia = data.getDate();
                   const mes = meses[data.getMonth()];
                   const ano = data.getFullYear();
