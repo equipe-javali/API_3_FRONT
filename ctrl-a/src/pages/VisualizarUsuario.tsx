@@ -42,7 +42,7 @@ export default function VisualizarUsuario() {
 
   const token = getLocalToken();
 
-  useEffect(() => {
+   useEffect(() => {
     fetch('http://localhost:8080/usuario/listagemTodos', {
       headers: { "Authorization": token }
     })
@@ -66,19 +66,15 @@ export default function VisualizarUsuario() {
         setTipoResposta("Erro");
       });
   }, []);
-
-  const usuariosExibidos = mostrarInativos 
-    ? usuarios
-    : usuarios.filter(usuario => usuario.status.toLowerCase() === 'ativo' && usuario.departamento !== null); 
+  const usuariosExibidos = mostrarInativos ? usuarios : usuarios.filter(usuario => usuario.status.toLowerCase() === 'ativo'); 
 
   const usuariosFiltrados = usuariosExibidos.filter(usuario => {
     const termoBuscaMatch = Object.values(usuario).some(value =>
-      typeof value === 'string' && value.toLowerCase().includes(termoBusca.toLowerCase())
+      typeof value === 'string' && value.toLowerCase().includes(termoBusca.toLowerCase()) 
     );
-    const departamentoMatch = filtroDepartamento === '' || filtroDepartamento === 'Todos' || usuario.departamento?.toLowerCase() === filtroDepartamento.toLowerCase(); 
+    const departamentoMatch = filtroDepartamento === '' || filtroDepartamento === 'Todos' || usuario.departamento.toLowerCase() === filtroDepartamento.toLowerCase(); // Converte para minúsculas
     return termoBuscaMatch && departamentoMatch;
   });
-
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTermoBusca(event.target.value);
