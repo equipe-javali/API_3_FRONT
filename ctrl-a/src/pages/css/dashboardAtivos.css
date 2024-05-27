@@ -47,7 +47,7 @@
     width: 100%; 
     border-collapse: collapse;       
     overflow: auto;
-    padding: 10px 55px 10px 22px;
+    padding: 0px 55px 10px 22px;
 }
 
 .tabelaAtv #cabecalho {
@@ -136,7 +136,7 @@
     justify-content: space-around;
 }
 
-.mySelect {
+.buscaAtivos .mySelect {
     background-color: white;
     -webkit-appearance: none; 
     -moz-appearance: none; 
@@ -148,33 +148,34 @@
 } */
 
 .buscaAtivos {
-    padding: 10px 30px 10px 15px;
+    display: flex; 
+        align-items: center; 
+        flex-wrap: wrap;
+        gap: 10px; 
+        
+        padding: 0px 35px 0px 15px;
     
 }
 
-.buscaAtivos .mySelect,
-.buscaAtivos .myInput {
-    height: 32px;     
-    border-radius: 4px;
-    background-color: var(--cor3);
-    
-}
 
 .buscaAtivos .mySelect {
-    margin-right: 10px; 
-    margin-left: 10px; 
-    width: 26%; 
-    padding-left: 8px;
-    color: #ffff;
+    flex: 1;             
+  min-width: 200px;  
+  max-width: 300px;  
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--cor3);
+  color: var(--branco);
 }
 
 .buscaAtivos .myInput {
-    margin-right: 20px; 
-    margin-left: 10px; 
-    width: 70%;
-    padding-left: 8px;
-    color: var(--branco1);
+    flex: 2;            
+  min-width: 200px;  
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--cor3);
 }
+
 
 .buscaAtivos .myInput::placeholder {
     color: var(--branco);
@@ -252,26 +253,26 @@
     background-color: white;
 }
 
-.buscaFiltro {
+.buscaAtivos {
     margin-bottom: 22px; 
 }
 
-.buscaFiltro .mySelect,
-.buscaFiltro .myInput {
+.buscaAtivos .mySelect,
+.buscaAtivos .myInput {
     height: 16px; 
     border-radius: 3px;
     background-color: var(--cor3);
 }
 
-.buscaFiltro .mySelect,
-.buscaFiltro .myInput {
+.buscaAtivos .mySelect,
+.buscaAtivos .myInput {
     height: 32px; 
     width: 200px; 
     border-radius: 4px;
     background-color: var(--cor3);
 }
 
-.buscaFiltro .mySelect {
+.buscaAtivos .mySelect {
     margin-right: 10px; 
     margin-left: 10px; 
     width: 250px; 
@@ -279,7 +280,7 @@
     color: #ffff;
 }
 
-.buscaFiltro .myInput {
+.buscaAtivos .myInput {
     margin-right: 20px; 
     margin-left: 10px; 
     width: 950px;
@@ -287,12 +288,12 @@
     color: var(--branco1);
 }
 
-.buscaFiltro .myInput::placeholder {
+.buscaAtivos .myInput::placeholder {
     color: var(--branco);
     opacity: 0.7;
   }
 
-.buscaFiltro .myInput {
+.buscaAtivos .myInput {
     margin-right: 20px; 
     margin-left: 10px; 
     width: 950px;
@@ -300,7 +301,7 @@
     color: var(--branco1);
 }
 
-.buscaFiltro .mySelect option {
+.buscaAtivos .mySelect option {
     background-color: var(--cor3);
 }
 
