@@ -25,6 +25,7 @@ interface EventoHistorico {
   dataFim?: string;
   dataAlteracao: string;
   responsavel?: string;
+  
 }
 
 const meses = [
@@ -98,14 +99,26 @@ export default function VisualizarHistorico() {
       const historicoFiltrado = historicoCompleto
         .filter(e => e.idAtivo === Number(id))
         .sort((a, b) => Date.parse(b.dataAlteracao) - Date.parse(a.dataAlteracao));
-
-      setHistorico(historicoFiltrado);
-      setNomeAtivo(historicoFiltrado.length > 0 ? historicoFiltrado[0].nomeAtivo : "Ativo sem histórico");
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-      setHistorico([]);
-      setNomeAtivo("Erro ao carregar histórico");
-    }
+      
+      if (historicoFiltrado.length > 0) {
+        setHistorico(historicoFiltrado);
+        setNomeAtivo(historicoFiltrado[0].nomeAtivo);
+      } else {
+        
+        const eventoCadastro = {
+          idAtivo: Number(id),
+          dataAlteracao: new Date().toISOString(),
+          nomeAtivo: "Ativo sem histórico",
+          tipo: "cadastro",
+        };
+        setHistorico([eventoCadastro]);
+        setNomeAtivo(eventoCadastro.nomeAtivo);
+      }
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+        setHistorico([]);
+        setNomeAtivo("Erro ao carregar histórico");
+      }
   }
 
   return (
@@ -117,8 +130,8 @@ export default function VisualizarHistorico() {
             <div className="uia-timeline__container">
               <div className="uia-timeline__line"></div>
               <div className="uia-timeline__annual-sections">
-              {historico.length > 0 && historico[0].dataCadastroAtivo ? (
-                    historico.map((evento: EventoHistorico) => {
+              {historico.length > 0 ? ( 
+                 historico.map((evento: EventoHistorico) => {
                     const dataAlteracao = parseISO(evento.dataAlteracao);
                     const dataCadastro = evento.dataCadastroAtivo ? parseISO(evento.dataCadastroAtivo) : null;
 
@@ -170,7 +183,15 @@ export default function VisualizarHistorico() {
                     );
                   })
                 ) : (
-                  <p>Nenhum histórico encontrado para este ativo.</p> 
+                  <div className="uia-timeline__event">
+                    <div className="uia-timeline__event__date">
+                    {historico[0]?.dataCadastroAtivo ? format(parseISO(historico[0].dataCadastroAtivo), 'dd/MM/yyyy') : ''}
+                    </div>
+                    <div className="uia-timeline__event__content">
+                      <h2>Cadastro do Ativo</h2>
+                      <p>O ativo foi cadastrado mas ainda não possui eventos.</p>
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
