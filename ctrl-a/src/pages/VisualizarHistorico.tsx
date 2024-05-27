@@ -34,7 +34,7 @@ const meses = [
 ];
 
 export default function VisualizarHistorico() {
-  const [nomeAtivo, setNomeAtivo] = useState<string>('');
+  const [nomeAtivo, setNomeAtivo] = useState<string>('Carregando histórico...'); 
   const [historico, setHistorico] = useState<EventoHistorico[]>([]);
   const token = getLocalToken();
   const { id } = useParams<{ id: string }>();
@@ -45,36 +45,39 @@ export default function VisualizarHistorico() {
 
   async function fetchHistorico() {
     if (!id) return;
-
+  
     try {
-      const urls = [
+      const urls = [        
         `http://localhost:8080/historicoAtivoTangivel/listagemAtivo/${id}`,
         `http://localhost:8080/historicoAtivoIntangivel/listagemAtivo/${id}`,
         `http://localhost:8080/manutencao/listagem/${id}`,
       ];
-
+  
       const responses = await Promise.all(urls.map(url => fetch(url, { headers: { Authorization: token } })));
 
       const historicoCompleto: EventoHistorico[] = [];
       for (const response of responses) {
         if (response.ok) {
-          const data = await response.json();
-
-          const eventosFiltrados = data.filter((item: any) => item.idAtivo === Number(id) || (item.ativo && item.ativo.id === Number(id)));
-
+          const data = await response.text();
+  
+          if (data) {
+            const jsonData = JSON.parse(data);
+  
+            const eventosFiltrados = jsonData.filter((item: any) => item.idAtivo === Number(id) || (item.ativo && item.ativo.id === Number(id)));
+  
           const eventosMapeados = eventosFiltrados.map((item: any) => {
             let tipo: string = 'manutencao';
-
+          
             if (item.nomeUsuario) {
               tipo = "usuario";
             } else if (item.departamentoUsuario) {
               tipo = "local";
-            } else if (item.dataCadastroAtivo && !item.ultimaAtualizacaoAtivo) { // Verifica se é um evento de cadastro
+            } else if (item.dataCadastroAtivo) {
               tipo = "cadastro";
             } else if (item.responsavel) {
               tipo = "responsavel";              
             }
-
+          
             return {
               idAtivo: item.idAtivo || item.ativo.id,
               dataAlteracao: item.ultimaAtualizacaoAtivo || item.dataCadastroAtivo || item.dataInicio,
@@ -88,23 +91,27 @@ export default function VisualizarHistorico() {
               dataFim: item.dataFim,
               dataCadastroAtivo: item.dataCadastroAtivo, 
             };
-          });
-
+          });      
+          
+          
           historicoCompleto.push(...eventosMapeados);
         } else {
-          console.error(`Erro ao buscar histórico da URL ${response.url}: ${response.status}`);
+          console.log('Resposta vazia do servidor');
         }
+      } else {
+        console.error(`Erro ao buscar histórico da URL ${response.url}: ${response.status}`);
+        setNomeAtivo("Ativo não encontrado"); 
       }
-
+    }        
+  
       const historicoFiltrado = historicoCompleto
-        .filter(e => e.idAtivo === Number(id))
+        .filter(e => e.idAtivo === Number(id) || e.dataCadastroAtivo)
         .sort((a, b) => Date.parse(b.dataAlteracao) - Date.parse(a.dataAlteracao));
-      
+
       if (historicoFiltrado.length > 0) {
         setHistorico(historicoFiltrado);
         setNomeAtivo(historicoFiltrado[0].nomeAtivo);
       } else {
-        
         const eventoCadastro = {
           idAtivo: Number(id),
           dataAlteracao: new Date().toISOString(),
@@ -114,11 +121,11 @@ export default function VisualizarHistorico() {
         setHistorico([eventoCadastro]);
         setNomeAtivo(eventoCadastro.nomeAtivo);
       }
-      } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-        setHistorico([]);
-        setNomeAtivo("Erro ao carregar histórico");
-      }
+        } catch (error) {
+          console.error("Erro ao carregar dados:", error);
+          setHistorico([]);
+          setNomeAtivo("Erro ao carregar histórico");
+        }
   }
 
   return (
@@ -151,9 +158,8 @@ export default function VisualizarHistorico() {
                     } else if (evento.tipo === "local") {
                       tituloEvento = "Troca de Departamento"; 
                       descricaoEvento = `Novo departamento: ${evento.departamentoUsuario}`;
-                    } else if (evento.dataCadastroAtivo || historico.length === 1) {
-                      tituloEvento = "Cadastro do Ativo";       
-                      descricaoEvento = dataCadastro ? format(dataCadastro, 'dd/MM/yyyy') : '';                                                                            
+                    } else if (evento.dataCadastroAtivo || (historico.length === 0 && evento.tipo === "cadastro")) {
+                      tituloEvento = "Cadastro do Ativo";                                                                                                       
                     }
 
                     return (
@@ -185,7 +191,7 @@ export default function VisualizarHistorico() {
                 ) : (
                   <div className="uia-timeline__event">
                     <div className="uia-timeline__event__date">
-                    {historico[0]?.dataCadastroAtivo ? format(parseISO(historico[0].dataCadastroAtivo), 'dd/MM/yyyy') : ''}
+                    {historico[0] && historico[0].dataCadastroAtivo ? format(parseISO(historico[0].dataCadastroAtivo), 'dd/MM/yyyy') : ''}
                     </div>
                     <div className="uia-timeline__event__content">
                       <h2>Cadastro do Ativo</h2>
