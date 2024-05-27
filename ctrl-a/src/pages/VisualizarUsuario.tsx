@@ -42,16 +42,7 @@ export default function VisualizarUsuario() {
 
   const token = getLocalToken();
 
-  useEffect(() => {
-    if (tipoResposta === "Sucesso") {
-      const timer = setTimeout(() => {
-        fechaPopUp();
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [tipoResposta]);
-
-  useEffect(() => {
+   useEffect(() => {
     fetch('http://localhost:8080/usuario/listagemTodos', {
       headers: { "Authorization": token }
     })
@@ -62,25 +53,26 @@ export default function VisualizarUsuario() {
         return response.json();
       })
       .then((data: Usuario[]) => {
-        setUsuarios(data.sort((a, b) => a.id - b.id));
+        // Ensure departamento exists and is not null
+        const usuariosComDepartamento = data.filter(usuario => usuario.departamento !== null);
+        
+        setUsuarios(usuariosComDepartamento.sort((a, b) => a.id - b.id));
 
-        const uniqueDepartamentos = Array.from(new Set(data.map(u => u.departamento).filter(Boolean)));
-        setDepartamentos(uniqueDepartamentos);
+        const uniqueDepartamentos = Array.from(new Set(usuariosComDepartamento.map(u => u.departamento)));
+        setDepartamentos(uniqueDepartamentos); 
       })
       .catch(error => {
         setTextoResposta(`Erro ao buscar usuários: ${error.message}`);
         setTipoResposta("Erro");
       });
   }, []);
-
-  const usuariosExibidos = mostrarInativos ? usuarios : usuarios.filter(usuario => usuario.status === 'Ativo');
-
+  const usuariosExibidos = mostrarInativos ? usuarios : usuarios.filter(usuario => usuario.status.toLowerCase() === 'ativo'); 
 
   const usuariosFiltrados = usuariosExibidos.filter(usuario => {
     const termoBuscaMatch = Object.values(usuario).some(value =>
-      typeof value === 'string' && value.includes(termoBusca)
+      typeof value === 'string' && value.toLowerCase().includes(termoBusca.toLowerCase()) 
     );
-    const departamentoMatch = filtroDepartamento === '' || filtroDepartamento === 'Todos' || usuario.departamento === filtroDepartamento;
+    const departamentoMatch = filtroDepartamento === '' || filtroDepartamento === 'Todos' || usuario.departamento.toLowerCase() === filtroDepartamento.toLowerCase(); // Converte para minúsculas
     return termoBuscaMatch && departamentoMatch;
   });
 
@@ -94,7 +86,7 @@ export default function VisualizarUsuario() {
 
   const handleDelete = (id: number) => {
     const usuarioAExcluir = usuarios.find(usuario => usuario.id === id);
-    if (!usuarioAExcluir || usuarioAExcluir.status !== 'Ativo') {
+    if (!usuarioAExcluir || usuarioAExcluir.status.toLowerCase() !== 'ativo') {
       setTextoResposta("Apenas usuários ativos podem ser excluídos.");
       setTipoResposta("Erro");
       return; 
@@ -204,5 +196,4 @@ export default function VisualizarUsuario() {
         </div>
     );
 }
-
 

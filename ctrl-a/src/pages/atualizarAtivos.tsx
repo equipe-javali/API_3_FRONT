@@ -68,6 +68,7 @@ export default function AtualizarAtivo() {
         setTipoResposta('')
     }
     useEffect(() => {
+
         if (tipoResposta === "Sucesso") {
             const timer = setTimeout(() => {
                 fechaPopUp();
@@ -139,6 +140,7 @@ export default function AtualizarAtivo() {
                         setTextoResposta(`Erro ao procurar ativos tangíveis! Erro:${responseIntangivel.status}`);
                         setTipoResposta('Erro');
                     }
+
                 }
             } catch (error) {
                 setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
@@ -357,10 +359,12 @@ export default function AtualizarAtivo() {
                 return
             }
         }
+
         if (campoResponsavel.dado) {
             setStatus("Em uso")
         } else {
             setStatus("Não alocado")
+
 
         }
     }, [campoResponsavel.dado, listaManutencoes])
@@ -547,7 +551,7 @@ export default function AtualizarAtivo() {
                         </div>
                         <div className='botoesFormsEditar'>
                             <Link className='button' to={`/HistoricoManutencao/${id}`}>Histórico <br />Manutenção</Link>
-                            <Link className='button' to={`/Historico/${id}`}> Linha do tempo <br />do ativo</Link>
+                            <Link className='button' to={`/Historico/${id}`}> Linha do tempo</Link>
                             <input type="submit" value='Atualizar' />
                         </div>
                     </div>
