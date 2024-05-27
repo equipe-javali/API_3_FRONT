@@ -33,6 +33,7 @@ export default function HistoricoManutencao() {
         custo: number;
         dataInicio: string;
         dataFim: string;
+        ativoId: number
     }
 
     interface TabelaManutencaoProps {
@@ -111,6 +112,7 @@ export default function HistoricoManutencao() {
                     <LinhaManutencao
                         key={man.id}
                         id={man.id}
+                        ativoId={man.ativoId}
                         tipo={man.tipo}
                         descricao={man.descricao}
                         localizacao={man.localizacao}
@@ -143,6 +145,7 @@ export default function HistoricoManutencao() {
     const { id_ativo } = useParams();
     const [manutencaoData, setManutencaoData] = useState<ManutencaoData>({
         id: 0,
+        ativoId: Number(id_ativo),
         tipo: 0,
         descricao: '',
         localizacao: '',
@@ -191,6 +194,7 @@ export default function HistoricoManutencao() {
         setManutencaoData(prevData => ({
             ...prevData,
             [event.target.name]: event.target.value,
+            ativoId: prevData.ativoId
         }));
     }
 
@@ -198,12 +202,14 @@ export default function HistoricoManutencao() {
         setManutencaoData(prevData => ({
             ...prevData,
             [event.target.name]: event.target.value,
+            ativoId: prevData.ativoId
         }));
     };
     function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
         setManutencaoData(prevData => ({
             ...prevData,
             [event.target.name]: event.target.value,
+            ativoId: prevData.ativoId
         }));
     }
     function handleCancel() {
@@ -220,6 +226,7 @@ export default function HistoricoManutencao() {
             tipo: typeof manutencaoData.tipo === 'string' ? tipoMapping[manutencaoData.tipo] || 0 : manutencaoData.tipo,
             dataInicio: manutencaoData.dataInicio ? new Date(manutencaoData.dataInicio).toISOString() : currentDate,
             dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null,
+            ativo: { id: manutencaoData.ativoId }
         };
 
         fetch('http://localhost:8080/manutencao/cadastro', {
@@ -228,7 +235,9 @@ export default function HistoricoManutencao() {
                 'Content-Type': 'application/json',
                 "Authorization": token
             },
-            body: JSON.stringify(manutencaoDataWithDates),
+            body: JSON.stringify({
+                ...manutencaoDataWithDates,
+            }),
         })
             .then(response => {
                 if (!response.ok) {
@@ -243,6 +252,7 @@ export default function HistoricoManutencao() {
                 setManutencao(prevManutencao => [...prevManutencao, data]);
                 setManutencaoData({
                     id: 0,
+                    ativoId: Number(id_ativo),
                     tipo: 0,
                     descricao: '',
                     localizacao: '',
@@ -433,7 +443,7 @@ export default function HistoricoManutencao() {
             </Modal>
             <div className="buscaFiltro">
 
-               <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
+                <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
                     <option value="">Tipo</option>
                     {tipos.map(tipo => (
                         <option key={tipo} value={tipo}>
