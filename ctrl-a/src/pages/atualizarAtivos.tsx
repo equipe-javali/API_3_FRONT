@@ -154,7 +154,7 @@ export default function AtualizarAtivo() {
                         "Authorization": token
                     }
                 })
-                if (responseUsuario.status === 200){
+                if (responseUsuario.status === 200) {
                     const usuarios: Usuario[] = await responseUsuario.json();
                     console.log(usuarios);
                     setListaUsuarios(usuarios);
@@ -174,7 +174,7 @@ export default function AtualizarAtivo() {
                         "Authorization": token
                     }
                 })
-                if (responseManutencao.status === 200){
+                if (responseManutencao.status === 200) {
                     const manutencoes: Manutencao[] = await responseManutencao.json()
                     console.log(manutencoes)
                     setListaManutencoes(manutencoes)
@@ -427,25 +427,38 @@ export default function AtualizarAtivo() {
                         campoImportancia.dado === 'Média' ? 2 :
                             campoImportancia.dado === 'Baixa' ? 1 :
                                 0
-                let idResponsavel: number = 0
                 const custo = parseFloat(campoCustoAquisicao.dado.replace('R$', '').replace(/\./g, '').replace(',', '.'));
                 const taxa = parseFloat(campoTaxaOperacional.dado.replace('%', ''));
                 const usuarioDesejado = listaUsuarios.find(usuario => usuario.nome === campoResponsavel.dado);
+                let ativo: Object
                 if (usuarioDesejado) {
-                    idResponsavel = usuarioDesejado.id
-                }
-                const ativo = {
-                    id,
-                    nome: campoNome.dado,
-                    custoAquisicao: custo,
-                    tipo: campoCategoria.dado,
-                    tag: campoTag.dado,
-                    importancia: importancia,
-                    idResponsavel: { id: idResponsavel },
-                    descricao: campoDescricao.dado,
-                    numeroIdentificacao: campoIdentificador.dado,
-                    marca: campoMarca.dado,
-                    dataAquisicao: campoDataAquisicao.dado
+                    const idResponsavel = usuarioDesejado.id
+                    ativo = {
+                        id,
+                        nome: campoNome.dado,
+                        custoAquisicao: custo,
+                        tipo: campoCategoria.dado,
+                        tag: campoTag.dado,
+                        importancia: importancia,
+                        idResponsavel: { id: idResponsavel },
+                        descricao: campoDescricao.dado,
+                        numeroIdentificacao: campoIdentificador.dado,
+                        marca: campoMarca.dado,
+                        dataAquisicao: campoDataAquisicao.dado
+                    }
+                } else {
+                    ativo = {
+                        id,
+                        nome: campoNome.dado,
+                        custoAquisicao: custo,
+                        tipo: campoCategoria.dado,
+                        tag: campoTag.dado,
+                        importancia: importancia,
+                        descricao: campoDescricao.dado,
+                        numeroIdentificacao: campoIdentificador.dado,
+                        marca: campoMarca.dado,
+                        dataAquisicao: campoDataAquisicao.dado
+                    }
                 }
                 if (tipoAtivo === "Tangível") {
                     const atualizarAtivoTangivel = await fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
