@@ -12,12 +12,14 @@ import Home from './pages/home';
 import HistoricoManutencao from './pages/historicoManutencaoAtivo';
 import VisualizarHistorico from './pages/VisualizarHistorico'
 import AtualizarUsuario from './pages/atualizarUsuario';
+import EsqueciSenha from './pages/esqueciSenha';
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<Home />} />
         <Route path="/CadastroUsuarioAdm" element={<CriarUsuarioAdm />} />
+        <Route path="/RedefinirSenha" element={<EsqueciSenha />} />
         <Route element={<BaseLateralHeader />}>
           <Route path="/ListaAtivos" element={<DashboardAtivos />} />
           <Route path="/ListaUsuarios" element={<VisualizarUsuario />} />
