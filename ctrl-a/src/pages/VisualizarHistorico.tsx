@@ -85,7 +85,9 @@ export default function VisualizarHistorico() {
             let nomeUsuarios: string[] = [];
             let nomeUsuarioAnterior = "";
 
-            const eventosMapeados = eventosFiltrados.map((item: any) => {
+            const eventosMapeados: any[] = [];
+
+            eventosFiltrados.forEach((item: any) => {
               let tipo: string = "manutencao";
 
               if (item.nomeUsuario) {
@@ -105,7 +107,7 @@ export default function VisualizarHistorico() {
                 tipo = "responsavel";
               }
 
-              return {
+              eventosMapeados.push({
                 id: item.id,
                 idAtivo: item.idAtivo || item.ativo.id,
                 dataAlteracao:
@@ -120,9 +122,31 @@ export default function VisualizarHistorico() {
                 tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
                 descricaoManutencao: item.descricao,
                 custoManutencao: item.custo,
-                dataFim: item.dataFim,
                 dataCadastroAtivo: item.dataCadastroAtivo,
-              };
+                localManutencao: item.localManutencao,
+              });
+
+              if (item.dataFim && tipo === "manutencao") {
+                eventosMapeados.push({
+                  id: item.id,
+                  idAtivo: item.idAtivo || item.ativo.id,
+                  dataAlteracao:
+                    item.ultimaAtualizacaoAtivo ||
+                    item.dataCadastroAtivo ||
+                    item.dataFim,
+                  nomeAtivo: item.nomeAtivo || item.ativo?.nome,
+                  nomeUsuario: item.nomeUsuario || "",
+                  nomeUsuarioAnterior,
+                  departamentoUsuario: item.departamentoUsuario || "",
+                  tipo: "retornoManutencao",
+                  tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
+                  descricaoManutencao: item.descricao,
+                  custoManutencao: item.custo,
+                  dataFim: item.dataFim,
+                  dataCadastroAtivo: item.dataCadastroAtivo,
+                  localManutencao: item.localManutencao,
+                });
+              }
             });
 
             historicoCompleto.push(...eventosMapeados);
@@ -139,7 +163,14 @@ export default function VisualizarHistorico() {
 
       const historicoFiltrado = historicoCompleto
         .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
-        .sort((a, b) => (b.id ? b.id : 0) - (a.id ? a.id : 0));
+        .sort((a, b) => {
+          const dateComparison = b.dataAlteracao.localeCompare(a.dataAlteracao);
+          if (dateComparison !== 0) {
+            return dateComparison;
+          }
+
+          return (b.id ? b.id : 0) - (a.id ? a.id : 0);
+        });
 
       if (historicoFiltrado.length > 0) {
         setHistorico(historicoFiltrado);
@@ -189,15 +220,18 @@ export default function VisualizarHistorico() {
                     let descricaoEvento: React.ReactNode = "";
 
                     if (evento.tipo === "manutencao") {
-                      tituloEvento = evento.dataFim
-                        ? "Retorno da Manutenção"
-                        : "Envio para Manutenção";
+                      tituloEvento = "Envio para Manutenção";
+                      descricaoEvento = `${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`;
+                    } else if (evento.tipo === "retornoManutencao") {
+                      tituloEvento = "Retorno da Manutenção";
                       descricaoEvento = `${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`;
                     } else if (evento.tipo === "usuario") {
                       tituloEvento = "Troca de Responsável";
                       descricaoEvento = (
                         <ul>
-                          <li>Responsável anterior: {evento.nomeUsuarioAnterior}</li>
+                          <li>
+                            Responsável anterior: {evento.nomeUsuarioAnterior}
+                          </li>
                           <li>Responsável atual: {evento.nomeUsuario}</li>
                         </ul>
                       );
