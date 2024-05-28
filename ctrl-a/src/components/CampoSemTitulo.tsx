@@ -43,7 +43,6 @@ export default function CampoSemTitulo(
                     onChange={handleChange}
                     onBlur={handleBlur}
                 />
-                {obrigatorio && <span className="inputObrigatorio">*</span>}
             </div>
             {aviso && erroCampo && <span className="erroCampo">{aviso}</span>}
         </div>

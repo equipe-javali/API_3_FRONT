@@ -49,10 +49,11 @@
 }
 
 .atualizarAtivo,
-.formsAtualizarAtivo > div,
-.divisaoFormsEditar2 > div:first-child > div,
-.divisaoFormsEditar3 > div,
-.divisaoFormsEditar4 > div {
+.formsAtualizarAtivo>div,
+.divisaoFormsEditar2,
+.divisaoFormsEditar2>div:first-child>div,
+.divisaoFormsEditar3>div,
+.divisaoFormsEditar4>div {
   flex-direction: column;
 }
 
@@ -78,18 +79,37 @@
   width: 60%;
 }
 
+.divisaoFormsEditar2 {
+  display: flex;
+}
+
+.divisaoFormsEditar2>div {
+  width: 100%;
+}
+
+.divisaoFormsEditar3 {
+  flex: 1.5;
+}
+
 .divisaoFormsEditar4 {
-  flex: 2; /* Ajuste para o layout desejado */
+  flex: 2;
+}
+
+.divisaoFormsEditar2>div:first,
+.divisaoFormsEditar2>div:first>div {
+  height: 100%;
 }
 
 /* Alinhamento e quebra de linha */
 .formsAtualizarAtivo,
-.divisaoFormsEditar2 > div,
+.divisaoFormsEditar2,
+.divisaoFormsEditar2>div,
 .divisaoFormsEditar4,
 .divisaoFormsEditar4 > div:first-child {
   justify-content: space-between;
 }
 
+.divisaoFormsEditar2>div>div,
 .divisaoFormsEditar3,
 .divisaoFormsEditar3 > div,
 .divisaoFormsEditar4 > div:last-child {
@@ -104,25 +124,25 @@
   flex-wrap: wrap;
 }
 
-/* Larguras mínimas responsivas */
-.formsAtualizarAtivo > div {
+.divisaoFormsEditar4>div:last-child {
+  margin: 0 auto;
+}
+
+.formsAtualizarAtivo>div {
   min-width: calc(150px + 18vw);
 }
 
-.divisaoFormsEditar2 > div:first-child {
+.divisaoFormsEditar2>div:first-child {
   min-width: calc(150px + 7vw);
-}
-
-.divisaoFormsEditar2 > div,
-.divisaoFormsEditar2 > div:first-child > div {
-  margin: auto;
+  flex: 1;
 }
 
 /* Estilos dos botões */
 .botoesFormsEditar > * {
   text-align: center;
+  width: 100%;
   color: var(--branco1);
-  font-size: 20px;
+  font-size: calc(10px + 1vw);
   text-decoration: none;
   border-radius: 5px;
   cursor: pointer;
@@ -138,17 +158,21 @@
   background-color: var(--cor5);
 }
 
-/* Media Queries */
 @media (max-width: 780px) {
   .divisaoFormsEditar2 {
     height: max-content;
   }
 
-  .formsAtualizarAtivo > div {
+  .divisaoFormsEditar2>div,
+  .divisaoFormsEditar2>div:first-child>div {
+    margin: auto;
+  }
+
+  .formsAtualizarAtivo>div {
     height: max-content;
   }
 
-  .divisaoFormsEditar4 > div {
+  .divisaoFormsEditar4>div {
     margin: auto;
   }
 }

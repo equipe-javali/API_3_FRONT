@@ -1,13 +1,13 @@
 :root {
-    --fontSizeTituloCampoPadrao: 15px;
-    --fontSizeInputCampoPadrao: 13px;
+    --fontSizeTituloCampoPadrao: calc(10px + 0.7dw);
+    --fontSizeInputCampoPadrao: calc(8px + 0.7dw);
     --minHeightDivCampoPadrao: 30px;
     --gapInputTitulo: 30px;
 
     --corTituloCampo: var(--branco1);
     --corTextInput: var(--cor10);
     --corBackgroundInput: var(--cor20);
-    ---widthInputCampoRadio: var(--fontSizeInputCampoPadrao);
+    ---widthInputCampoRadio: 13px;
     ---marginTopInputCampoRadio: 2px;
     --marginLeftSpanCampoRadio: calc(var(---widthInputCampoRadio) + 5px);
 }
@@ -58,8 +58,9 @@
     border-radius: 6px;
     width: 100%;
 }
+
 .textareaCampoEditavel textarea,
-.inputCampoEditavel input{
+.inputCampoEditavel input {
     width: calc(100% - var(--fontSizeInputCampoPadrao));
 }
 
@@ -75,9 +76,10 @@
 }
 
 .divCampoDescricao textarea,
-.textareaCampoEditavel textarea{
+.textareaCampoEditavel textarea {
     resize: none;
     min-height: 150px;
+    width: 100%;
 }
 
 .inputObrigatorio {
@@ -93,6 +95,7 @@
 .divCampoPadrao select {
     border-style: solid;
     border-width: 1.8px;
+    border-radius: 6px;
 }
 
 .divCampoPadrao input[type="date"],
@@ -202,7 +205,7 @@
     color: var(--corTextInputAtivo);
 }
 
-.divCampoInputSemTitulo > div {
+.divCampoInputSemTitulo>div {
     border-radius: 6px;
     padding: 2px;
     display: flex;
@@ -218,4 +221,3 @@
     color: var(--corTituloCampo);
     width: calc(100% - var(--fontSizeInputCampoPadrao));
 }
-
