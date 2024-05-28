@@ -1,35 +1,7 @@
 .cadastroUsuário {
-  padding-top: 2%;
-  padding-bottom: 5%;
-  margin: 0;
-  height: 100%;
+  margin: 20px;
+  min-height: calc(100vh - var(--heightHeader) - var(--gapformsAtualizarAtivo) - 20px);
 }
-
-.cadastroUsuário h1 {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  font-size: 20px;
-  text-align: center;
-}
-
-.cadastroUsuário h2 {
-  margin-top: 5px;
-  margin-bottom: 20px;
-  font-size: 4vh;
-  font-family: Arial, sans-serif;
-  color: var(--branco);
-  text-align: left;
-  padding-left: 2%;
-}
-
-.cadastroUsuário h3 {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  font-size: 4vh;
-  text-align: left;
-  padding-left: 3%;
-}
-
 
 /* personalização especifica da página */
 
@@ -40,65 +12,33 @@
 }
 
 .cadastroUsuário .primeira-parte {
-  margin: 20px;
   background-color: var(--cor8);
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 6px #0000001a;
   font-size: 2vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.cadastroUsuário .primeira-parte label {
-  display: block;
-  margin-bottom: 10px;
-  color: var(--branco);
-}
-
-.cadastroUsuário .nome label {
-  display: block;
-  margin-left: 10%;
-  margin-bottom: 5px;
-  font-size: 2vh;
-  color: var(--branco1);
-}
-
-.cadastroUsuário .primeira-parte input,
-.cadastroUsuário .primeira-parte select {
-  width: 98%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid var(--cor10);
-  border-radius: 5px;
-}
-
-.cadastroUsuário .primeira-parte button {
+.cadastroUsuário .primeira-parte input[type="submit"] {
   padding: 10px 20px;
   background-color: var(--cor5);
   color: var(--branco);
   border: none;
+  width: auto;
   border-radius: 5px;
   font-size: 3vh;
   cursor: pointer;
 }
 
-.cadastroUsuário .primeira-parte button {
+.cadastroUsuário .primeira-parte input[type="submit"] {
   display: block;
   margin: 20px auto 0;
 }
 
-
-.cadastroUsuário .primeira-parte input,
-.cadastroUsuário select {
-  width: 98%;
-  padding: 8px;
-  margin-left: 10px;
-  border-radius: 4px;
-  background-color: var(--cor20);
-  color: var(--branco);
-}
-
-
-.cadastroUsuário .primeira-parte button:hover {
+.cadastroUsuário .primeira-parte input[type="submit"]:hover {
   background-color: var(--cor20);
 }
 

@@ -39,15 +39,15 @@
     padding: var(--paddingDasboardAtv);
 }
 
-.dashboardAtv .buscaFiltro {
+/* .dashboardAtv .buscaFiltro {
     visibility: hidden;
-}
+} */
 
 .tabelaAtv {
     width: 100%; 
     border-collapse: collapse;       
     overflow: auto;
-    
+    padding: 10px 55px 10px 22px;
 }
 
 .tabelaAtv #cabecalho {
@@ -136,6 +136,56 @@
     justify-content: space-around;
 }
 
+.mySelect {
+    background-color: white;
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    appearance: none; 
+}
+
+/* .mySelect option {
+    background-color: white;
+} */
+
+.buscaAtivos {
+    padding: 10px 30px 10px 15px;
+    
+}
+
+.buscaAtivos .mySelect,
+.buscaAtivos .myInput {
+    height: 32px;     
+    border-radius: 4px;
+    background-color: var(--cor3);
+    
+}
+
+.buscaAtivos .mySelect {
+    margin-right: 10px; 
+    margin-left: 10px; 
+    width: 26%; 
+    padding-left: 8px;
+    color: #ffff;
+}
+
+.buscaAtivos .myInput {
+    margin-right: 20px; 
+    margin-left: 10px; 
+    width: 70%;
+    padding-left: 8px;
+    color: var(--branco1);
+}
+
+.buscaAtivos .myInput::placeholder {
+    color: var(--branco);
+    opacity: 0.7;
+  }
+
+
+.buscaAtivos .mySelect option {
+    background-color: var(--cor3);
+}
+
 @media screen and (max-width: 600px) {
     .tabelaAtv {
       width: 100%;
@@ -190,3 +240,68 @@
     
 }
   }
+
+.mySelect {
+    background-color: white;
+    -webkit-appearance: none; /* Remover o estilo padrão no Chrome e Safari */
+    -moz-appearance: none; /* Remover o estilo padrão no Firefox */
+    appearance: none; /* Remover o estilo padrão em navegadores que suportam */
+}
+
+.mySelect option {
+    background-color: white;
+}
+
+.buscaFiltro {
+    margin-bottom: 22px; 
+}
+
+.buscaFiltro .mySelect,
+.buscaFiltro .myInput {
+    height: 16px; 
+    border-radius: 3px;
+    background-color: var(--cor3);
+}
+
+.buscaFiltro .mySelect,
+.buscaFiltro .myInput {
+    height: 32px; 
+    width: 200px; 
+    border-radius: 4px;
+    background-color: var(--cor3);
+}
+
+.buscaFiltro .mySelect {
+    margin-right: 10px; 
+    margin-left: 10px; 
+    width: 250px; 
+    padding-left: 8px;
+    color: #ffff;
+}
+
+.buscaFiltro .myInput {
+    margin-right: 20px; 
+    margin-left: 10px; 
+    width: 950px;
+    padding-left: 8px;
+    color: var(--branco1);
+}
+
+.buscaFiltro .myInput::placeholder {
+    color: var(--branco);
+    opacity: 0.7;
+  }
+
+.buscaFiltro .myInput {
+    margin-right: 20px; 
+    margin-left: 10px; 
+    width: 950px;
+    padding-left: 8px;
+    color: var(--branco1);
+}
+
+.buscaFiltro .mySelect option {
+    background-color: var(--cor3);
+}
+
+

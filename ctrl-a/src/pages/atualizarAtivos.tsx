@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import './css/atualizarAtivo.css'; // Certifique-se de ajustar o nome do seu arquivo CSS
+import './css/atualizarAtivo.css';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import RespostaSistema from '../components/respostaSistema';
-import CampoAtivoEditavel from '../components/CampoAtivoEditavel';
-import lapis from "../assets/icons/lapis.svg"
-import { Link } from 'react-router-dom';
-import Modal from '../components/modal/modal';
 import getLocalToken from '../utils/getLocalToken';
-import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
-import CampoAtivoReadOnly from '../components/CampoAtivoReadOnly';
+import CampoEditavel from '../components/CampoEditavel';
+import CampoData from '../components/CampoData';
+import campoDescricaoEditavel from '../components/CampoDescricaoEditavel';
+import CampoSemTitulo from '../components/CampoSemTitulo';
+import CampoDropdown from '../components/CampoDropdown';
+import { Link } from 'react-router-dom';
+import CampoDesativado from '../components/CampoDesativado';
+
 interface Ativo {
     nome: string;
     dataAquisicao: string;
@@ -24,9 +26,8 @@ interface Ativo {
     grauImportancia: number;
     tag: string;
     status: string;
-    idResponsavel: number;
+    idResponsavel?: Usuario;
     departamento: string;
-    local: string;
 };
 
 interface Usuario {
@@ -57,631 +58,501 @@ type Manutencao = {
 };
 
 export default function AtualizarAtivo() {
-    const [tipoAtivoTangivel, setTipoAtivoTangivel] = useState(true)
-    const [dados, setDados] = useState<Ativo | null>(null);
+    const { id } = useParams<{ id: string }>();
+    const token = getLocalToken();
+
     const [textoResposta, setTextoResposta] = useState('');
     const [tipoResposta, setTipoResposta] = useState('');
-    const { id } = useParams();
     function fechaPopUp() {
         setTextoResposta('')
         setTipoResposta('')
     }
-    const token = getLocalToken();
     useEffect(() => {
-        DadosAtivo();
-        DadosUsuario();
-        ListagemManutencao();
-    }, [])
-    async function DadosAtivo() {
-        try {
-            let response = await fetch(`http://localhost:8080/ativoIntangivel/listagem/${id}`, {
-                headers: {
-                    "Authorization": token
-                }
-            })
-            if (response.status === 200) {
-                setTextoTipoOperacional("amortização")
-                setTextoDataLimite("Data de expiracao")
-                setTipoAtivoTangivel(false)
-                return response.json().then(data => {
-                    console.log(data)
-                    const responsavel = data.ativo.idResponsavel
-                    setDados({
-                        nome: data.ativo?.nome || "",
-                        dataAquisicao: data.ativo?.dataAquisicao || "",
-                        custoAquisicao: data.ativo?.custoAquisicao || 0,
-                        taxaOperacional: data.taxaAmortizacao || 0,
-                        periodoOperacional: data.periodoAmortizacao || "",
-                        dataLimite: data.dataExpiracao || "",
-                        marca: data.ativo?.marca || "",
-                        numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
-                        descricao: data.ativo?.descricao || "",
-                        tipo: data.ativo?.tipo || "",
-                        grauImportancia: data.ativo?.grauImportancia || 0,
-                        tag: data.ativo?.tag || "",
-                        status: data.ativo?.status || "",
-                        idResponsavel: responsavel?.id || 0,
-                        departamento: responsavel?.departamento || 0,
-                        local: data.ativo?.local || "",
-                    });
-                })
-            } else if (response.status !== 404) {
-                setTextoResposta(`Erro ao procurar ativo! Erro:${response.status}`);
-                setTipoResposta('Erro');
-                return
-            } else {
-                response = await fetch(`http://localhost:8080/ativoTangivel/listagem/${id}`, {
+        if (tipoResposta === "Sucesso") {
+            const timer = setTimeout(() => {
+                fechaPopUp();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [tipoResposta]);
+
+    const [dadosAtivo, setDadosAtivo] = useState<Ativo>({
+        nome: "",
+        dataAquisicao: "",
+        custoAquisicao: 0,
+        taxaOperacional: 0,
+        periodoOperacional: "",
+        dataLimite: "",
+        marca: "",
+        numeroIdentificacao: "",
+        //anexos: Documento[];
+        descricao: "",
+        tipo: "",
+        grauImportancia: 0,
+        tag: "",
+        status: "",
+        departamento: ""
+    });
+    const [tipoAtivo, setTipoAtivo] = useState("Tangível")
+    const [listaUsuarios, setListaUsuarios] = useState<Usuario[]>([]);
+    const [listaManutencoes, setListaManutencoes] = useState<Manutencao[]>([]);
+    useEffect(() => {
+        const buscaDadosAtivo = async () => {
+            try {
+                const responseIntangivel = await fetch(`http://localhost:8080/ativoIntangivel/listagem/${id}`, {
                     headers: {
                         "Authorization": token
                     }
                 })
-                if (response.status === 404) {
-                    setTextoResposta(`Ativo não existe!`);
-                    setTipoResposta('Erro');
-                } else if (response.status !== 200) {
-                    setTextoResposta(`Erro ao procurar ativo! Erro:${response.status}`);
-                    setTipoResposta('Erro');
-                    return
-                }
-                return response.json().then(data => {
-                    console.log(data)
-                    const responsavel = data.ativo.idResponsavel
-                    setDados({
-                        nome: data.ativo?.nome || "",
-                        dataAquisicao: data.ativo?.dataAquisicao || "",
-                        custoAquisicao: data.ativo?.custoAquisicao || 0,
-                        taxaOperacional: data.taxaDepreciacao || 0,
-                        periodoOperacional: data.periodoDepreciacao || "",
-                        dataLimite: data.garantia || "",
-                        marca: data.ativo?.marca || "",
-                        numeroIdentificacao: data.ativo?.numeroIdentificacao || "",
-                        descricao: data.ativo?.descricao || "",
-                        tipo: data.ativo?.tipo || "",
-                        grauImportancia: data.ativo?.grauImportancia || 0,
-                        tag: data.ativo?.tag || "",
-                        status: data.ativo?.status || "",
-                        idResponsavel: responsavel?.id || 0,
-                        departamento: responsavel?.departamento || "",
-                        local: data.ativo?.local || "",
+                if (responseIntangivel.status === 200) {
+                    const dadosAtivo = await responseIntangivel.json();
+                    console.log(dadosAtivo)
+                    setDadosAtivo({
+                        ...dadosAtivo.ativo,
+                        periodoOperacional: dadosAtivo.periodoAmortizacao,
+                        taxaOperacional: dadosAtivo.taxaAmortizacao,
+                        dataLimite: dadosAtivo.dataExpiracao
                     });
-                })
-            }
-        } catch (error) {
-            setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
-            setTipoResposta("Erro")
-        }
-    }
-    async function DadosUsuario() {
-        try {
-            const response = await fetch('http://localhost:8080/usuario/listagemTodos', {
-                headers: {
-                    "Authorization": token
+                    setTipoAtivo("Intangível");
+                } else if (responseIntangivel.status !== 404) {
+                    setTextoResposta(`Erro ao procurar ativos intangíveis! Erro:${responseIntangivel.status}`);
+                    setTipoResposta('Erro');
+                } else {
+                    const responseTangivel = await fetch(`http://localhost:8080/ativoTangivel/listagem/${id}`, {
+                        headers: {
+                            "Authorization": token
+                        }
+                    })
+                    if (responseTangivel.status === 200) {
+                        const dadosAtivo = await responseTangivel.json();
+                        console.log(dadosAtivo)
+                        setDadosAtivo({
+                            ...dadosAtivo.ativo,
+                            taxaOperacional: dadosAtivo.taxaDepreciacao,
+                            periodoOperacional: dadosAtivo.periodoDepreciacao,
+                            dataLimite: dadosAtivo.garantia
+                        });
+                    } else if (responseTangivel.status === 404) {
+                        setTextoResposta(`O ativo não existe!`);
+                        setTipoResposta('Erro');
+                    } else {
+                        setTextoResposta(`Erro ao procurar ativos tangíveis! Erro:${responseIntangivel.status}`);
+                        setTipoResposta('Erro');
+                    }
                 }
-            })
-            if (!response.ok) {
-                setTextoResposta(`Não foi possível listar os usuários! Erro:${response.status}`)
-                setTipoResposta("Erro")
+            } catch (error) {
+                setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
+                setTipoResposta("Erro");
+            }
+        }
+        const buscaUsuarios = async () => {
+            try {
+                const responseUsuario = await fetch('http://localhost:8080/usuario/listagemTodos', {
+                    headers: {
+                        "Authorization": token
+                    }
+                })
+                if (responseUsuario.status === 200){
+                    const usuarios: Usuario[] = await responseUsuario.json();
+                    console.log(usuarios);
+                    setListaUsuarios(usuarios);
+                } else if (responseUsuario.status !== 204) {
+                    setTextoResposta(`Erro ao listar os usuários! Erro:${responseUsuario.status}`);
+                    setTipoResposta("Erro")
+                }
+            } catch (error) {
+                setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+                setTipoResposta("Erro");
+            }
+        }
+        const buscaManutencao = async () => {
+            try {
+                const responseManutencao = await fetch(`http://localhost:8080/manutencao/listagem/${id}`, {
+                    headers: {
+                        "Authorization": token
+                    }
+                })
+                if (responseManutencao.status === 200){
+                    const manutencoes: Manutencao[] = await responseManutencao.json()
+                    console.log(manutencoes)
+                    setListaManutencoes(manutencoes)
+                    trocaLocal()
+                } else if (responseManutencao.status !== 204) {
+                    setTextoResposta(`Erro ao listar as manutenções! Erro:${responseManutencao.status}`);
+                    setTipoResposta("Erro")
+                }
+            } catch (error) {
+                setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+                setTipoResposta("Erro");
+            }
+        }
+        buscaDadosAtivo()
+        buscaUsuarios()
+        buscaManutencao()
+        trocaLocal()
+    }, [token, id])
+    useEffect((
+    ) => {
+        if (dadosAtivo.idResponsavel) {
+            setAntigoResponsavel(dadosAtivo.idResponsavel.nome);
+        }
+    }, [dadosAtivo.idResponsavel])
+
+    const [avisoNome, setAvisoNome] = useState<string | undefined>(undefined);
+    const campoNome = CampoSemTitulo(
+        dadosAtivo.nome,
+        "Insira o nome do ativo",
+        true,
+        avisoNome
+    )
+
+    const [avisoCustoAquisicao, setAvisoCustoAquisicao] = useState<string | undefined>(undefined);
+    const campoCustoAquisicao = CampoEditavel(
+        "Custo da Aquisição:",
+        "text",
+        String(dadosAtivo.custoAquisicao * 100),
+        "Insira o custo da aquisição",
+        "Custo",
+        true,
+        avisoCustoAquisicao
+    )
+
+    const campoMarca = CampoEditavel(
+        "Marca:",
+        "text",
+        dadosAtivo.marca,
+        "Insira a marca",
+        "Marca",
+        false
+    )
+
+    const campoCategoria = CampoEditavel(
+        "Categoria:",
+        "text",
+        dadosAtivo.tipo,
+        "Exemplo: automóvel, mobília",
+        "Identificador",
+        false
+    )
+
+    const [avisoIdentificador, setAvisoIdentificador] = useState<string | undefined>(undefined);
+    const campoIdentificador = CampoSemTitulo(
+        dadosAtivo.numeroIdentificacao,
+        "Insira o número",
+        true,
+        avisoIdentificador
+    )
+
+    const [avisoDataAquisicao, setAvisoDataAquisicao] = useState<string | undefined>(undefined);
+    const campoDataAquisicao = CampoData(
+        "Data da aquisição",
+        "Aquisição",
+        dadosAtivo.dataAquisicao,
+        true,
+        avisoDataAquisicao
+    )
+
+    const campoDescricao = campoDescricaoEditavel(
+        "Descrição",
+        dadosAtivo.descricao,
+        "Insira a descrição",
+        false
+    )
+
+    const campoTag = CampoEditavel(
+        "Tag:",
+        "text",
+        dadosAtivo.tag,
+        "Insira as tags",
+        "Tag",
+        false
+    )
+
+    const [avisoDataLimite, setAvisoDataLimite] = useState<string | undefined>(undefined);
+    const campoDataLimite = CampoData(
+        `${tipoAtivo === "Tangível" ? "Data de expiração" : "Garantia"}`,
+        "Expiração",
+        dadosAtivo.dataLimite,
+        true,
+        avisoDataLimite
+    )
+
+    const campoImportancia = CampoDropdown(
+        "Importância:",
+        ["Alta", "Média", "Baixa"],
+        `${dadosAtivo.grauImportancia === 1 ? 'Baixa' :
+            dadosAtivo.grauImportancia === 2 ? 'Média' :
+                'Alta'}`,
+        "Escolha um grau de importância",
+        false
+    )
+
+    const campoPeriodoOperacional = CampoEditavel(
+        `Período de ${tipoAtivo === "Tangível" ? "depreciacao" : "amortização"}:`,
+        "text",
+        dadosAtivo.periodoOperacional,
+        "Exemplo: anos, meses",
+        "Amortização",
+        false
+    )
+
+    const campoTaxaOperacional = CampoEditavel(
+        `Taxa de ${tipoAtivo === "Tangível" ? "depreciacao" : "amortização"}:`,
+        "text",
+        String(dadosAtivo.taxaOperacional),
+        "00%",
+        "Taxa",
+        false
+    )
+
+    const nomesUsuarios: string[] = listaUsuarios.map(usuario => usuario.nome)
+    const [antigoResponsavel, setAntigoResponsavel] = useState('')
+    const campoResponsavel = CampoDropdown(
+        "Responsável:",
+        nomesUsuarios,
+        antigoResponsavel,
+        "Escolha um responsável",
+        false
+    )
+
+    const [local, setLocal] = useState('')
+    const trocaLocal = () => {
+        if (listaManutencoes.length !== 0) {
+            const dataAtual = new Date();
+            const manutencaoAtual = listaManutencoes[0];
+            const dataInicio = new Date(manutencaoAtual.dataInicio);
+            const dataFim = new Date(manutencaoAtual.dataFim);
+            if (dataAtual >= dataInicio && dataAtual <= dataFim) {
+                if (manutencaoAtual.localizacao) {
+                    setLocal(manutencaoAtual.localizacao);
+                } else {
+                    setLocal("Em uso");
+                }
+                return;
+            }
+        }
+        if (departamento) {
+            setLocal(departamento);
+            return;
+        }
+        setLocal("Não alocado");
+    }
+
+    const [status, setStatus] = useState('')
+    const campoStatus = CampoDesativado(
+        "Status",
+        "text",
+        "Status",
+        status,
+        true
+    )
+    useEffect(() => {
+        if (listaManutencoes.length !== 0) {
+            const dataAtual = new Date();
+            const manutencaoAtual = listaManutencoes[0];
+            const dataInicio = new Date(manutencaoAtual.dataInicio);
+            const dataFim = new Date(manutencaoAtual.dataFim);
+            if (dataAtual >= dataInicio && dataAtual <= dataFim) {
+                setStatus("Em Manutenção")
                 return
             }
-            return response.json()
-                .then(data => setUsuarios(data))
-                .catch(error => {
-                    setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
-                    setTipoResposta("Erro");
-                });
-        } catch (error) {
-            setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
-            setTipoResposta("Erro");
         }
-    }
-    async function ListagemManutencao() {
-        try {
-            const resp = await fetch(`http://localhost:8080/manutencao/listagem/${id}`, {
-                method: "GET",
-                headers: {
-                    "Authorization": token
-                }
-            }).then(resp => {
-                if (!resp.ok) {
-                    console.error(`Não foi possível listar as manutenções do ativo! Erro: ${resp.status}`);
-                }
-                return resp.json();
-            })
-                .then(data => {
-                    setManutencoes(
-                        (data as Manutencao[]).sort((a, b) => Date.parse(a.dataInicio) - Date.parse(b.dataInicio))
-                    )
-                })
-        } catch (error) {
-            setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
-            setTipoResposta("Erro");
-        };
-    }
+        if (campoResponsavel.dado) {
+            setStatus("Em uso")
+        } else {
+            setStatus("Não alocado")
 
-    useEffect(() => {
-        if (dados) {
-            setCamposForm({
-                dataAquisicao: dados.dataAquisicao,
-                custoAquisicao: dados.custoAquisicao,
-                taxaOperacional: dados.taxaOperacional,
-                periodoOperacional: dados.periodoOperacional,
-                dataLimite: dados.dataLimite,
-                marca: dados.marca,
-                numeroIdentificacao: dados.numeroIdentificacao,
-                tipo: dados.tipo,
-                grauImportancia: dados.grauImportancia,
-                tag: dados.tag,
-                status: dados.status,
-            })
-            setNomeAtivo(dados.nome)
-            setDescricao(dados.descricao)
-            setIdResponsavel(dados.idResponsavel)
-            setDepartamento(dados.departamento)
-            setImportancia(dados.grauImportancia)
-            mudaLocal()
         }
-    }, [dados]);
-    function mudaLocal() {
-        if (emManutencao()) {
-            setLocal(String(manutencoes[0].localizacao))
-        } else if (departamento) {
-            return (
-                setLocal(departamento)
-            );
-        }
-    }
+    }, [campoResponsavel.dado, listaManutencoes])
 
-    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-    const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);
-    const [manutencoes, setManutencoes] = useState<Manutencao[]>([]);
-    const [showManutencaoModal, setShowManutencaoModal] = useState<boolean>(false);
-    const [manutencaoData, setManutencaoData] = useState<Manutencao>({
-        id: 0,
-        idAtivo: {
-            nome: "",
-            dataAquisicao: "",
-            custoAquisicao: 0,
-            taxaOperacional: 0,
-            periodoOperacional: "",
-            dataLimite: "",
-            marca: "",
-            numeroIdentificacao: "",
-            //anexos: Documento[],
-            descricao: "",
-            tipo: "",
-            grauImportancia: 0,
-            tag: "",
-            status: "",
-            idResponsavel: 0,
-            departamento: "",
-            local: "string"
-        },
-        tipo: '',
-        descricao: '',
-        localizacao: '',
-        custo: 0,
-        dataInicio: '',
-        dataFim: '',
-    });
-    const [manutencao, setManutencao] = useState<Manutencao[]>([]);
-
-    const [camposForm, setCamposForm] = useState({
-        dataAquisicao: "",
-        custoAquisicao: 0,
-        taxaOperacional: 0,
-        periodoOperacional: '',
-        dataLimite: "",
-        marca: '',
-        numeroIdentificacao: '',
-        //anexos: [];
-        tipo: '',
-        grauImportancia: 0,
-        tag: '',
-        status: '',
-    })
-
-    const [idResponsavel, setIdResponsavel] = useState(0)
     const [departamento, setDepartamento] = useState('')
-    const [local, setLocal] = useState('')
-
-    function emManutencao(): boolean {
-        if (manutencoes.length <= 0) {
-            return false;
-        }
-        return Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim);
-    }
-
-    function localAtivo() {
-        if (emManutencao()) {
-            return manutencoes[0].localizacao;
-        } else {
-            setLocal(departamento)
-            return departamento;
-        }
-    }
-
-    const [statusA, setStatusA] = useState('');
     useEffect(() => {
-        if (emManutencao()) {
-            setStatusA('Em manutenção');
+        const usuarioDesejado = listaUsuarios.find(usuario => usuario.nome === campoResponsavel.dado);
+        if (usuarioDesejado) {
+            setDepartamento(usuarioDesejado.departamento)
         }
-        else if (idResponsavel != 0) {
-            setStatusA('Em uso');
-        } else {
-            setStatusA('Não alocado');
-        }
-    }, [idResponsavel, manutencoes]);
+    }, [campoResponsavel.dado])
+    useEffect(() => {
+        trocaLocal()
+    }, [departamento])
 
-    let [textoTipoOperacional, setTextoTipoOperacional] = useState('depreciação')
-    const [nomeAtivo, setNomeAtivo] = useState('')
-    const CampoDataAquisicao = CampoAtivoEditavel("Data Aquisição", camposForm.dataAquisicao, "date")
-    const CampoCustoAquisicao = CampoAtivoEditavel("Custo Aquisição", camposForm.custoAquisicao, "number")
-    const CampoTaxaOperacional = CampoAtivoEditavel(`Taxa  de ${textoTipoOperacional}`, camposForm.taxaOperacional, "number")
-    const CampoPeriodoOperacional = CampoAtivoEditavel(`Periodo de ${textoTipoOperacional}`, camposForm.periodoOperacional, "string")
-    let [textoDataLimite, setTextoDataLimite] = useState('Validade da garantia')
-    const CampoDataLimite = CampoAtivoEditavel(textoDataLimite, camposForm.dataLimite, "date")
-    const CampoMarca = CampoAtivoEditavel("Marca", camposForm.marca, "string")
-    const [descricao, setDescricao] = useState('')
-    const [editarDescricao, setEditarDescricao] = useState(true)
-    const CampoTipo = CampoAtivoEditavel("Categoria", camposForm.tipo, "string")
-    const [importancia, setImportancia] = useState(0)
-    // const CampoImportancia = CampoAtivoEditavel("Importancia", camposForm.grauImportancia, "string")
-    const CampoTag = CampoAtivoEditavel("Tag", camposForm.tag, "string")
-    const CampoStatus = CampoAtivoReadOnly("Status", statusA, "string")
-    const CampoLocal = CampoAtivoReadOnly("Local", local, "string")
-    function handleManutencaoDataChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setManutencaoData(prevData => ({
-            ...prevData,
-            [event.target.name]: event.target.value,
-            ativoId: prevData.idAtivo,
-        }))
-    }
+    const campoDepartemento = CampoDesativado(
+        "Departamento:",
+        "text",
+        "Departamento",
+        departamento,
+        false
+    )
 
-    const tipoMapping: { [key: string]: number } = {
-        "Preventiva": 1,
-        "Corretiva": 2,
-        "Preditiva": 3
-    };
-
-    const reverseTipoMapping: { [key: number]: string } = {
-        1: "Preventiva",
-        2: "Corretiva",
-        3: "Preditiva"
-    };
-
-    function toggleModal() {
-        setShowManutencaoModal(!showManutencaoModal);
-    }
-
-    function handleManutencaoSubmit() {
-        const currentDate = new Date().toISOString().split('T')[0];
-        const manutencaoDataWithDates = {
-            ...manutencaoData,
-            tipo: typeof manutencaoData.tipo === 'string' ? tipoMapping[manutencaoData.tipo] || 0 : manutencaoData.tipo,
-            dataInicio: manutencaoData.dataInicio ? new Date(manutencaoData.dataInicio).toISOString() : currentDate,
-            dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null,
-            ativo: { id: manutencaoData.idAtivo },
-        };
-
-        fetch('http://localhost:8080/manutencao/cadastro', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": token
-            },
-            body: JSON.stringify(manutencaoDataWithDates),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Manutenção cadastrada com sucesso!', data);
-                setShowManutencaoModal(false);
-                setManutencao(prevManutencao => [...prevManutencao, data]);
-                setManutencaoData({
-                    id: 0,
-                    idAtivo: {
-                        nome: "",
-                        dataAquisicao: "",
-                        custoAquisicao: 0,
-                        taxaOperacional: 0,
-                        periodoOperacional: "",
-                        dataLimite: "",
-                        marca: "",
-                        numeroIdentificacao: "",
-                        //anexos: Documento[],
-                        descricao: "",
-                        tipo: "",
-                        grauImportancia: 0,
-                        tag: "",
-                        status: "",
-                        idResponsavel: 0,
-                        departamento: "",
-                        local: "string"
-                    },
-                    tipo: '',
-                    descricao: '',
-                    localizacao: '',
-                    custo: 0,
-                    dataInicio: '',
-                    dataFim: '',
-                });
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        const userId = Number(event.target.value);
-        const user = usuarios.find(u => u?.id === userId);
-        setIdResponsavel(userId)
-        if (user) {
-            setDepartamento(user.departamento)
-        }
-        setSelectedUser(user || null);
-        localAtivo()
-    }
-    function handleDepartamento(event: React.ChangeEvent<HTMLSelectElement>) {
-        setDepartamento(event.target.value)
-    }
-
-    function handleImportancia(event: React.ChangeEvent<HTMLSelectElement>) {
-        setImportancia(Number(event.target.value));
-        textoImportancia()
-    }
-
-    function textoImportancia() {
-        if (importancia === 1) {
-            return 'Baixo';
-        } else if (importancia === 2) {
-            return 'Médio';
-        } else if (importancia === 3) {
-            return 'Alto';
-        } else {
-            return 'Selecione grau de importância';
-        }
-    }
-
-    function handleTextareaDataChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-        setManutencaoData(prevData => ({
-            ...prevData,
-            [event.target.name]: event.target.value,
-            ativoId: prevData.idAtivo,
-        }));
-    };
-    function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        setManutencaoData(prevData => ({
-            ...prevData,
-            [event.target.name]: event.target.value,
-            ativoId: prevData.idAtivo,
-        }));
-    }
-
-    function handleCancel() {
-        setShowManutencaoModal(false);
-    }
+    const CampoLocal = CampoDesativado(
+        "Local:",
+        "text",
+        "Local",
+        local,
+        true
+    )
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        try {
-            if (tipoAtivoTangivel) {
-                const resp = await fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": token
-                    },
-                    body: JSON.stringify({
-                        'id': id,
-                        'ativo': {
-                            'id': id,
-                            'nome': nomeAtivo,
-                            'custoAquisicao': CampoCustoAquisicao.dados,
-                            'tipo': CampoTipo.dados,
-                            'tag': CampoTag.dados,
-                            'grauImportancia': importancia,
-                            'idResponsavel': { 'id': idResponsavel },
-                            'descricao': descricao,
-                            'numeroIdentificacao': camposForm.numeroIdentificacao,
-                            'marca': CampoMarca.dados,
-                            'dataAquisicao': CampoDataAquisicao.dados
-                        },
-                        'garantia': CampoDataLimite.dados,
-                        'taxaDepreciacao': CampoTaxaOperacional.dados,
-                        'periodoDepreciacao': CampoPeriodoOperacional.dados
-                    })
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            console.log('Ativo atualizado com sucesso!');
-                        } else {
-                            console.error('Erro ao atualizar o ativo:', response.statusText);
-                        }
-                    })
-                    .catch(error => {
-                        console.error(`Erro ao processar requisição! Erro:${error}`);
-                    })
-            } else {
-                fetch(`http://localhost:8080/ativoIntangivel/atualizacao/${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": token
-                    },
-                    body: JSON.stringify({
-                        'id': id,
-                        'ativo': {
-                            'id': id,
-                            'nome': nomeAtivo,
-                            'custoAquisicao': CampoCustoAquisicao.dados,
-                            'tipo': CampoTipo.dados,
-                            'tag': CampoTag.dados,
-                            'grauImportancia': importancia,
-                            'idResponsavel': { 'id': idResponsavel },
-                            'descricao': descricao,
-                            'numeroIdentificacao': camposForm.numeroIdentificacao,
-                            'marca': CampoMarca.dados,
-                            'dataAquisicao': CampoDataAquisicao.dados
-                        },
-                        'dataExpiracao': CampoDataLimite.dados,
-                        'taxaAmortizacao': CampoTaxaOperacional.dados,
-                        'periodoAmortizacao': CampoPeriodoOperacional.dados
-                    })
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            console.log('Ativo atualizado com sucesso!');
-                            setTextoResposta('Ativo atualizado com sucesso!');
-                            setTipoResposta('Sucesso');
-                        } else {
-                            setTextoResposta(`Erro ao atualizar ativo! Erro:${response.status}`);
-                            setTipoResposta('Erro');
-                            console.error('Erro ao atualizar o ativo:', response.statusText);
-                            console.log(`id: ${id}; nome: ${nomeAtivo};
-                                        custo: ${CampoCustoAquisicao.dados}; tipo: ${CampoTipo.dados};
-                                        tag: ${CampoTag.dados}; importancia: ${importancia};
-                                        responsavel: ${idResponsavel}; descricao: ${descricao};
-                                        identificador: ${camposForm.numeroIdentificacao};
-                                        marca: ${CampoMarca.dados}; aquisicao: ${CampoDataAquisicao.dados};
-                                        expiracao: ${CampoDataLimite.dados}; taxaAm: ${CampoTaxaOperacional.dados};
-                                        peridoAmo: ${CampoPeriodoOperacional.dados}`)
-                        }
-                    })
-                    .catch(error => {
-                        console.error(`Erro ao processar requisição! Erro:${error}`);
-                    })
-            }
-        } catch (error) {
-            setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
-            setTipoResposta("Erro")
+        event.preventDefault()
+        let certo: boolean = true
+        if (campoNome.dado === '') {
+            setAvisoNome("Insira um nome!")
+            certo = false
         }
-    };
+        if (campoCustoAquisicao.dado === '') {
+            setAvisoCustoAquisicao("Insira um custo de aquisição!")
+            certo = false
+        }
+        if (campoDataAquisicao.dado === '') {
+            setAvisoDataAquisicao("Insira uma data de aquisição!")
+            certo = false
+        }
+        if (campoIdentificador.dado === '') {
+            setAvisoIdentificador("Insira um número identificador!")
+            certo = false
+        }
+        if (campoNome.dado === '') {
+            setAvisoNome("Insira um nome")
+        } if (campoDataLimite.dado === '') {
+            setAvisoDataLimite(`Insira uma ${tipoAtivo === "Tangível" ? "Data de expiração" : "Garantia"}`)
+        }
+        if (certo) {
+            try {
+                const importancia: number =
+                    campoImportancia.dado === 'Alta' ? 3 :
+                        campoImportancia.dado === 'Média' ? 2 :
+                            campoImportancia.dado === 'Baixa' ? 1 :
+                                0
+                let idResponsavel: number = 0
+                const custo = parseFloat(campoCustoAquisicao.dado.replace('R$', '').replace(/\./g, '').replace(',', '.'));
+                const taxa = parseFloat(campoTaxaOperacional.dado.replace('%', ''));
+                const usuarioDesejado = listaUsuarios.find(usuario => usuario.nome === campoResponsavel.dado);
+                if (usuarioDesejado) {
+                    idResponsavel = usuarioDesejado.id
+                }
+                const ativo = {
+                    id,
+                    nome: campoNome.dado,
+                    custoAquisicao: custo,
+                    tipo: campoCategoria.dado,
+                    tag: campoTag.dado,
+                    importancia: importancia,
+                    idResponsavel: { id: idResponsavel },
+                    descricao: campoDescricao.dado,
+                    numeroIdentificacao: campoIdentificador.dado,
+                    marca: campoMarca.dado,
+                    dataAquisicao: campoDataAquisicao.dado
+                }
+                if (tipoAtivo === "Tangível") {
+                    const atualizarAtivoTangivel = await fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "Authorization": token
+                        },
+                        body: JSON.stringify({
+                            id,
+                            ativo,
+                            garantia: campoDataLimite.dado,
+                            taxaDepreciacao: taxa,
+                            periodoDepreciacao: campoPeriodoOperacional.dado
+                        })
+                    })
+                    if (atualizarAtivoTangivel.status === 200) {
+                        setTextoResposta("Ativo Atualizado com sucesso!")
+                        setTipoResposta("Sucesso")
+                    } else {
+                        setTextoResposta(`Erro ao atualizar o ativo! Erro: ${atualizarAtivoTangivel.status}`)
+                        setTipoResposta("Erro")
+                    }
+                } else {
+                    const atualizarAtivoIntangivel = await fetch(`http://localhost:8080/ativoIntangivel/atualizacao/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            "Authorization": token
+                        },
+                        body: JSON.stringify({
+                            id,
+                            ativo,
+                            dataExpiracao: campoDataLimite.dado,
+                            taxaAmortizacao: taxa,
+                            periodoAmortizacao: campoPeriodoOperacional.dado
+                        })
+                    })
+                    if (atualizarAtivoIntangivel.status === 200) {
+                        setTextoResposta("Ativo Atualizado com sucesso!")
+                        setTipoResposta("Sucesso")
+                    } else {
+                        setTextoResposta(`Erro ao atualizar o ativo! Erro: ${atualizarAtivoIntangivel.status}`)
+                        setTipoResposta("Erro")
+                    }
+                }
+            } catch (error) {
+                setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+                setTipoResposta("Erro");
+            }
+        }
+    }
 
     return (
         <div className="atualizarAtivo">
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
-            <Modal open={showManutencaoModal} onClose={handleManutencaoSubmit} onCancel={handleCancel} title="Pedido de manutenção">
-                <div>
-                    <div className="containerModal">
-                        <div className='modal-man'>
-                            <h3>Local</h3>
-                            <input name="localizacao" value={manutencaoData.localizacao} onChange={handleManutencaoDataChange} />
-                        </div>
-                        <div className='modal-man'>
-                            <h3>Custo</h3>
-                            <input name="custo" value={manutencaoData.custo} onChange={handleManutencaoDataChange} />
-                        </div>
-                    </div>
-                    <div className="containerModal">
-                        <div className='modal-man'>
-                            <h3>Data de envio</h3>
-                            <input type="date" name="dataInicio" value={manutencaoData.dataInicio} onChange={handleManutencaoDataChange} />
-                        </div>
-                        <div className='modal-man'>
-                            <h3>Data de retorno</h3>
-                            <input type="date" name="dataFim" value={manutencaoData.dataFim} onChange={handleManutencaoDataChange} />
-                        </div>
-                    </div>
-                    <div className="containerModal">
-                        <div className='modal-man'>
-                            <h3>Descrição</h3>
-                            <textarea className="textarea-description" name="descricao" value={manutencaoData.descricao} onChange={handleTextareaDataChange} maxLength={100} />
-                        </div>
-                        <div className='modal-man'>
-                            <h3>Tipo</h3>
-                            <select name="tipo" value={reverseTipoMapping[Number(manutencaoData.tipo)]} onChange={handleSelectDataChange}>
-                                <option value="">Selecione</option>
-                                <option value="Preventiva">Preventiva</option>
-                                <option value="Corretiva">Corretiva</option>
-                                <option value="Preditiva">Preditiva</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </Modal>
-            <h1 className='tituloFormsAtualizarAtivo'>{`Ativos > (ID: ${id} / Número Identificador: ${dados?.numeroIdentificacao})`}</h1>
+            <div className='tituloFormsAtualizarAtivo'>
+                <span>
+                    {`Ativo > (ID: ${id} / Número Identificador: `}
+                </span>
+                {campoIdentificador.codigo}
+                <span>
+                    {`)`}
+                </span>
+            </div>
             <form className="formsAtualizarAtivo" onSubmit={handleSubmit}>
                 <div>
                     <div className='divisaoFormsEditar1'>
-                        <input type="text" name="nome" value={nomeAtivo} onChange={(e) => setNomeAtivo(e.target.value)} />
+                        {campoNome.codigo}
                     </div>
                     <div className='divisaoFormsEditar2'>
                         <div>
                             <div>
-                                {CampoDataAquisicao.codigo}
-                                {CampoTaxaOperacional.codigo}
-                                {CampoDataLimite.codigo}
+                                {campoDataAquisicao.codigo}
+                                {campoTaxaOperacional.codigo}
+                                {campoDataLimite.codigo}
                             </div>
                             <div>
-                                {CampoCustoAquisicao.codigo}
-                                {CampoPeriodoOperacional.codigo}
-                                {CampoMarca.codigo}
+                                {campoCustoAquisicao.codigo}
+                                {campoPeriodoOperacional.codigo}
+                                {campoMarca.codigo}
                             </div>
                         </div>
-                        <div className="campoAtivoEditavel">
-                            <span>Descrição</span>
-                            <div className={`divTextaareaEditavel ${editarDescricao ? 'desativado' : 'ativado'}`}>
-                                <textarea className='campoDescricaoEditavel' placeholder='Digite a descrição...' disabled={editarDescricao} value={descricao} onChange={(e) => setDescricao(e.target.value)} />
-                                <img src={lapis} alt="Editar" className="lapisEditar" onClick={() => setEditarDescricao(!editarDescricao)} />
-                            </div>
-                        </div>
+                        {campoDescricao.codigo}
                     </div>
                 </div>
                 <div>
                     <div className='divisaoFormsEditar3'>
                         <div>
-                            {CampoTipo.codigo}
-                            <div>
-                                <label>Importância </label>
-                                <div className='inputContainer'>
-                                    <select className='input' name='importancia' value={importancia} onChange={handleImportancia}>
-                                        <option value={0} disabled>Selecione grau de importância</option>
-                                        <option value={3}>Alto</option>
-                                        <option value={2}>Média</option>
-                                        <option value={1}>Baixo</option>
-                                    </select>
-                                </div>
-                            </div>
+                            {campoCategoria.codigo}
+                            {campoImportancia.codigo}
                         </div>
                         <div>
-                            {CampoTag.codigo}
-                            {CampoStatus.codigo}
+                            {campoTag.codigo}
+                            {campoStatus}
                         </div>
                     </div>
                     <div className='divisaoFormsEditar4'>
                         <div>
-                            <div>
-                                <label>Responsável </label>
-                                <div className='inputContainer'>
-                                    <select className='input' name='responsavel' value={idResponsavel} onChange={handleUserChange}>
-                                        {usuarios.map(usuario => (
-                                            <option key={usuario?.id} value={usuario?.id}>{usuario?.nome}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label>Departamento </label>
-                                <div className='inputContainer'>
-                                    <select className='input' name='departamento' value={departamento || ''} onChange={handleDepartamento}>
-                                        <option value={''}>Selecione departamento</option>
-                                        <option value={'Departamento 1'}>Departamento 1</option>
-                                        <option value={'Departamento 2'}>Departamento 2</option>
-                                    </select>
-                                </div>
-                            </div>
-                            {CampoLocal.codigo}
+                            {campoResponsavel.codigo}
+                            {departamento && campoDepartemento}
+                            {CampoLocal}
                         </div>
                         <div className='botoesFormsEditar'>
                             <Link className='button' to={`/HistoricoManutencao/${id}`}>Histórico <br />Manutenção</Link>
-                            <button className='button' onClick={toggleModal}>Adicionar pedido <br />de manutenção</button>
-                            <input type="submit" placeholder='Atualizar' />
+                            <Link className='button' to={`/Historico/${id}`}> Linha do tempo</Link>
+                            <input type="submit" value='Atualizar' />
                         </div>
                     </div>
                 </div>
-            </form >
+            </form>
         </div >
     );
 }

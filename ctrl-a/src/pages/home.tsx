@@ -81,12 +81,12 @@ export default function Home() {
             <input
               className='botaoLogin'
               type='submit'
-              placeholder='Entrar'
+              value='Entrar'
             />
             <p className='pergunta'>
               Não possui cadastro ainda?{' '}
               <span>&nbsp;</span>
-              <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>
+              <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>              
             </p>
 
           </form>

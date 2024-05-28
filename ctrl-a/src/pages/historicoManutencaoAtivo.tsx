@@ -1,21 +1,39 @@
-
 import { useState, useEffect } from 'react';
 import './css/historicoManutencao.css'
 import Modal from '../components/modal/modal';
 import { useParams } from 'react-router-dom';
 import getLocalToken from '../utils/getLocalToken';
 import { FaPencilAlt } from 'react-icons/fa';
+import moment from 'moment-timezone';
+import RespostaSistema from '../components/respostaSistema';
 
 export default function HistoricoManutencao() {
+    const [textoResposta, setTextoResposta] = useState('');
+    const [tipoResposta, setTipoResposta] = useState('');
+
+    function fechaPopUp() {
+        setTextoResposta('');
+        setTipoResposta('');
+    }
+
+    useEffect(() => {
+        if (tipoResposta === "Sucesso") {
+            const timer = setTimeout(() => {
+                fechaPopUp();
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [tipoResposta]);
+
     interface ManutencaoData {
         id: number;
-        tipo: string | number;
+        tipo: number;
         descricao: string;
         localizacao: string;
-        custo: string;
+        custo: number;
         dataInicio: string;
         dataFim: string;
-        ativoId: number;
+        ativoId: number
     }
 
     interface TabelaManutencaoProps {
@@ -38,22 +56,34 @@ export default function HistoricoManutencao() {
         const [isHovered, setIsHovered] = useState(false);
 
         function aparecerBotaoDeMudarDataRetorno() {
-            if (dataFim && !isHovered) {
-                return (
-                    <>{new Date(dataFim).toLocaleDateString()}</>
-                )
-            } else {
+            if (!dataFim) {
                 return (
                     <button type="button" className="btnIcon" onClick={() => {
-                        toggleAtualizacaoModal()
+                        toggleAtualizacaoModal();
                         setManutencaoData(prevData => ({
                             ...prevData,
                             id: id
-                        }))
+                        }));
                     }}>
                         <FaPencilAlt />
                     </button>
-                )
+                );
+            } else if (isHovered) {
+                return (
+                    <button type="button" className="btnIcon" onClick={() => {
+                        toggleAtualizacaoModal();
+                        setManutencaoData(prevData => ({
+                            ...prevData,
+                            id: id
+                        }));
+                    }}>
+                        <FaPencilAlt />
+                    </button>
+                );
+            } else {
+                return (
+                    <>{moment(dataFim).format("DD/MM/YYYY")}</>
+                );
             }
         }
 
@@ -67,7 +97,7 @@ export default function HistoricoManutencao() {
                 <td className="descricao">{descricao}</td>
                 <td className="local">{localizacao}</td>
                 <td className="custo">{custo}</td>
-                <td className="dataEnvio">{new Date(dataInicio).toLocaleDateString()}</td>
+                <td className="dataEnvio">{moment(dataInicio).format("DD/MM/YYYY")}</td>
                 <td className="dataRetorno">{aparecerBotaoDeMudarDataRetorno()}</td>
             </tr>
 
@@ -116,12 +146,12 @@ export default function HistoricoManutencao() {
     const [manutencaoData, setManutencaoData] = useState<ManutencaoData>({
         id: 0,
         ativoId: Number(id_ativo),
-        tipo: '',
+        tipo: 0,
         descricao: '',
         localizacao: '',
-        custo: '',
+        custo: 0,
         dataInicio: '',
-        dataFim: '',
+        dataFim: ''
     });
 
     const [manutencao, setManutencao] = useState<ManutencaoData[]>([]);
@@ -164,7 +194,7 @@ export default function HistoricoManutencao() {
         setManutencaoData(prevData => ({
             ...prevData,
             [event.target.name]: event.target.value,
-            ativoId: prevData.ativoId,
+            ativoId: prevData.ativoId
         }));
     }
 
@@ -172,14 +202,14 @@ export default function HistoricoManutencao() {
         setManutencaoData(prevData => ({
             ...prevData,
             [event.target.name]: event.target.value,
-            ativoId: prevData.ativoId,
+            ativoId: prevData.ativoId
         }));
     };
     function handleSelectDataChange(event: React.ChangeEvent<HTMLSelectElement>) {
         setManutencaoData(prevData => ({
             ...prevData,
             [event.target.name]: event.target.value,
-            ativoId: prevData.ativoId,
+            ativoId: prevData.ativoId
         }));
     }
     function handleCancel() {
@@ -196,7 +226,7 @@ export default function HistoricoManutencao() {
             tipo: typeof manutencaoData.tipo === 'string' ? tipoMapping[manutencaoData.tipo] || 0 : manutencaoData.tipo,
             dataInicio: manutencaoData.dataInicio ? new Date(manutencaoData.dataInicio).toISOString() : currentDate,
             dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null,
-            ativo: { id: manutencaoData.ativoId },
+            ativo: { id: manutencaoData.ativoId }
         };
 
         fetch('http://localhost:8080/manutencao/cadastro', {
@@ -205,7 +235,9 @@ export default function HistoricoManutencao() {
                 'Content-Type': 'application/json',
                 "Authorization": token
             },
-            body: JSON.stringify(manutencaoDataWithDates),
+            body: JSON.stringify({
+                ...manutencaoDataWithDates,
+            }),
         })
             .then(response => {
                 if (!response.ok) {
@@ -215,15 +247,16 @@ export default function HistoricoManutencao() {
             })
             .then(data => {
                 console.log('Manutenção cadastrada com sucesso!', data);
+
                 setShowManutencaoModal(false);
                 setManutencao(prevManutencao => [...prevManutencao, data]);
                 setManutencaoData({
                     id: 0,
                     ativoId: Number(id_ativo),
-                    tipo: '',
+                    tipo: 0,
                     descricao: '',
                     localizacao: '',
-                    custo: '',
+                    custo: 0,
                     dataInicio: '',
                     dataFim: '',
                 });
@@ -233,30 +266,37 @@ export default function HistoricoManutencao() {
     const token = getLocalToken();
 
     useEffect(() => {
-        console.log('Fetching manutencoes...');
-
-        fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`, {
-            headers: {
-                "Authorization": token
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+        const buscaDadosAtivo = async () => {
+            try {
+                const responseManutencoes = await fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`, {
+                    headers: {
+                        "Authorization": token
+                    }
+                });
+                if (responseManutencoes.status === 200) {
+                    const dadosManutencoes = await responseManutencoes.json();
+                    console.log(dadosManutencoes);
+                    if (Array.isArray(dadosManutencoes)) {
+                        setManutencao(dadosManutencoes);
+                    } else {
+                        setTextoResposta('Erro: Dados recebidos não são uma lista.');
+                        setTipoResposta('Erro');
+                    }
+                } else if (responseManutencoes.status !== 204) {
+                    setTextoResposta(`Erro ao listar Manutenções! Erro:${responseManutencoes.status}`);
+                    setTipoResposta('Erro');
                 }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Received data:', data);
-                setManutencao(data);
-            })
-            .catch(error => console.error('Error:', error));
-    }, [id_ativo, update]);
-
-    const handleAtualizacaoAtualizar = () => {
-        const data = {
-            dataFim: manutencaoData.dataFim ? new Date(manutencaoData.dataFim).toISOString() : null
+            } catch (error) {
+                setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
+                setTipoResposta("Erro");
+            }
         }
+        buscaDadosAtivo();
+    }, [id_ativo, update, token]);
+    function handleAtualizacaoAtualizar() {
+        const data = {
+            dataFim: manutencaoData.dataFim
+        };
 
         fetch(`http://localhost:8080/manutencao/atualizacao/${manutencaoData.id}`, {
             method: 'PUT',
@@ -275,26 +315,38 @@ export default function HistoricoManutencao() {
             .then(data => {
                 console.log('Data de retorno atualizada com sucesso!', data);
                 toggleAtualizacaoModal();
-                setManutencaoData({
-                    id: 0,
-                    ativoId: Number(id_ativo),
-                    tipo: '',
-                    descricao: '',
-                    localizacao: '',
-                    custo: '',
-                    dataInicio: '',
-                    dataFim: '',
-                });
+
+                fetch(`http://localhost:8080/manutencao/listagem/${id_ativo}`, {
+                    headers: {
+                        "Authorization": token
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then((data: ManutencaoData[]) => {
+                        const formattedData = data.map((item: ManutencaoData) => ({
+                            ...item,
+                            dataInicio: moment(item.dataInicio).format('YYYY-MM-DD'),
+                            dataFim: item.dataFim ? moment(item.dataFim).format('YYYY-MM-DD') : '',
+                        }));
+
+                        setManutencao(formattedData);
+                    })
+                    .catch(error => console.error('Error:', error));
             })
             .catch(error => console.error('Error:', error));
+    };
 
-    }
 
 
     return (
         <div className="dashboardMan">
             <div className="tituloMan tituloBotao">
-                <h1>Manutenção do Ativo ID </h1>
+                <h1>Manutenção do Ativo ID {id_ativo} </h1>
                 <button className='btnManutencao' onClick={toggleModal}>Adicionar pedido de manutenção</button>
             </div>
             <Modal open={showManutencaoModal} onClose={handleManutencaoSubmit} onCancel={handleCancel} title="Pedido de manutenção">
@@ -316,7 +368,12 @@ export default function HistoricoManutencao() {
                         </div>
                         <div className='modal-man'>
                             <h3>Data de retorno</h3>
-                            <input type="date" name="dataFim" value={manutencaoData.dataFim} onChange={handleManutencaoDataChange} />
+                            <input
+                                type="date"
+                                name="dataFim"
+                                value={manutencaoData.dataFim || ''}
+                                onChange={handleManutencaoDataChange}
+                            />
                         </div>
                     </div>
                     <div className="containerModal">
@@ -358,7 +415,12 @@ export default function HistoricoManutencao() {
                         </div>
                         <div className='modal-man'>
                             <h3>Data de retorno</h3>
-                            <input type="date" name="dataFim" value={manutencaoData.dataFim} onChange={handleManutencaoDataChange} />
+                            <input
+                                type="date"
+                                name="dataFim"
+                                value={manutencaoData.dataFim || ''}
+                                onChange={handleManutencaoDataChange}
+                            />
                         </div>
                     </div>
                     <div className="containerModal">
@@ -380,8 +442,9 @@ export default function HistoricoManutencao() {
                 </div>
             </Modal>
             <div className="buscaFiltro">
+
                 <select value={Pesquisa} onChange={handleFilterChange} className="mySelect">
-                    <option value="">Filtro</option>
+                    <option value="">Tipo</option>
                     {tipos.map(tipo => (
                         <option key={tipo} value={tipo}>
                             {tipo}

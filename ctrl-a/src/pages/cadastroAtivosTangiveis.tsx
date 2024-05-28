@@ -1,57 +1,85 @@
 import { useState } from 'react';
-import CampoAtivoPadrao from '../components/CampoAtivoPadrao';
+import CampoPadrao from '../components/CampoPadrao';
+import CampoData from '../components/CampoData';
+import CampoDropdown from '../components/CampoDropdown';
 
 export default function CadastroAtivosTangiveis() {
-    const tag = CampoAtivoPadrao("Tag", "text", "Insira as tags...", false)
-    const [importancia, setImportancia] = useState(0);
-    // const importancia = CampoAtivoPadrao("Grau de importância", "text", "Insira o grau de importância...")
-    const garantia = CampoAtivoPadrao("Validade de garantia", "date", "dd/mm/aaaa", true)
-    // const anexo = CampoAtivoPadrao("Anexo", "file", "insira o anexo")
-    const periodoDepreciacao = CampoAtivoPadrao("Período de depreciação", "text", "anos, meses...", false)
-    const taxaDepreciacao = CampoAtivoPadrao("Taxa de depreciação", "number", "00%", false)
+    const tag = CampoPadrao(
+        "Tag:",
+        "text",
+        "Insira as tags...",
+        "Tag",
+        false
+    )
 
-    function handleImportancia(event: React.ChangeEvent<HTMLSelectElement>) {
-        setImportancia(Number(event.target.value));
+    const [validarGarantia, setValidarGarantia] = useState<string | undefined>(undefined);
+    const garantia = CampoData(
+        "Validade de garantia:",
+        "Expiração",
+        "",
+        true,
+        validarGarantia
+    )
+
+    const importancia = CampoDropdown(
+        "Importância:",
+        ["Alta", "Média", "Baixa"],
+        "",
+        "Escolha um grau de importância",
+        false
+    )
+
+    const periodoDepreciacao = CampoPadrao(
+        "Período de depreciação:",
+        "text",
+        "Exemplo: anos, meses",
+        "Depreciação",
+        false
+    )
+
+    const taxaDepreciacao = CampoPadrao(
+        "Taxa de depreciação:",
+        "text",
+        "00%",
+        "Taxa",
+        false
+    )
+
+    function limpar() {
+        tag.limpar()
+        garantia.limpar()
+        importancia.limpar()
+        periodoDepreciacao.limpar()
+        taxaDepreciacao.limpar()
     }
 
-    return {
-        'dados': {
-            "tag": tag.dados,
-            "garantia": garantia.dados,
-            //"anexo": anexo.dados,
-            "importancia": importancia,
-            "periodoDepreciacao": periodoDepreciacao.dados,
-            "taxaDepreciacao": taxaDepreciacao.dados,
-        },
-        'setDados': {
-            "setTag": tag.setDados,
-            "setImportancia": setImportancia,
-            "setGarantia": garantia.setDados,
-            "setPeriodoDepreciacao": periodoDepreciacao.setDados,
-            "setTaxaDepreciacao": taxaDepreciacao.setDados
-        },
-        'código': (
-            <>
+    const codigo = (
+        <>
+            <div className='colunaFormsAtivo'>
+                {tag.codigo}
+                {garantia.codigo}
+                {/* anexo.codigo */}
+            </div>
+            <div className='colunaFormsAtivo'>
+                {importancia.codigo}
+                {periodoDepreciacao.codigo}
+                {taxaDepreciacao.codigo}
+            </div>
+        </>
+    )
 
-                <div className='colunaFormsAtivo'>
-                    {tag.codigo}
-                    {garantia.codigo}
-                    {/* anexo.codigo */}
-                </div>
-                <div className='colunaFormsAtivo'>
-                    <div className='selectImportanciaAtivo'>
-                        <label>Importância: </label>
-                        <select className='input' name='importancia' value={importancia} onChange={handleImportancia}>
-                            <option value={0} disabled>Selecione o grau de importância</option>
-                            <option value={3}>Alto</option>
-                            <option value={2}>Média</option>
-                            <option value={1}>Baixo</option>
-                        </select>
-                    </div>
-                    {periodoDepreciacao.codigo}
-                    {taxaDepreciacao.codigo}
-                </div>
-            </>
-        )
+    return {
+        dados: {
+            tag: tag.dado,
+            garantia: garantia.dado,
+            importancia: importancia.dado,
+            periodoDepreciacao: periodoDepreciacao.dado,
+            taxaDepreciacao: taxaDepreciacao.dado
+        },
+        validacoes: {
+            setValidarGarantia
+        },
+        codigo,
+        limpar
     }
 }

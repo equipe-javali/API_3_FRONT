@@ -1,0 +1,19 @@
+.notificacao {
+    position: relative;    
+}
+
+.notificacao li {
+    list-style-type: circle;
+    margin-bottom: 20px;    
+}
+
+.notificacao-item {
+    border-bottom: 1px solid #747272;    
+    /* padding: auto; */
+    height:max-content;
+    width: 100%;
+    display: flex;
+    
+}
+
+

@@ -30,14 +30,11 @@ tr.linhaMan td {
     padding: var(--paddingDashboardMan);
 }
 
-.dashboardMan .buscaFiltro {
-    visibility: visible;
-}
-
 table.tabelaMan {
     width: 100%;
     border-collapse: collapse;
     overflow-x: auto;
+    
 }
 
 table.tabelaMan #cabecalho {
@@ -112,22 +109,29 @@ tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     opacity: var(--opacityAtributosDashboard);
 }
 
+.dashboardMan .buscaFiltro {    
+        display: flex; 
+        align-items: center; 
+        flex-wrap: wrap;
+        gap: 20px; 
+        margin-bottom: 20px;
+      }
 .dashboardMan .mySelect {
-    width: 19%;
-    padding: 9px;
-    border-radius: 4px;
-    background-color: var(--cor4);
-    color: var(--branco);   
-    margin-right: 20px;
-    margin-left: 3px;
-    margin-bottom: 10px;
+    flex: 1;             
+  min-width: 200px;  
+  max-width: 300px;  
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--cor3);
+  color: var(--branco);
 }
 
 .dashboardMan .myInput {
-    width: 79%;
-    padding: 8px;
-    border-radius: 4px;
-    background-color: var(--cor3);
+    flex: 2;            
+  min-width: 200px;  
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--cor3);
 }
 
 .dashboardMan .myInput::placeholder {
@@ -135,7 +139,7 @@ tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     opacity: 0.7;
 }
 
-.tituloBotao {
+.dashboardMan .tituloBotao {
     display: flex;
     align-items:center;
     justify-content: space-between;
@@ -143,11 +147,11 @@ tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     margin-bottom: 15px;
 }
 
-.tabelaMargin {
+.dashboardMan .tabelaMargin {
     margin-top: 20px;
 }
 
-.btnManutencao {
+.dashboardMan .btnManutencao {
     all: unset;
     min-width: 25%;
     padding: 7px;    
@@ -159,14 +163,14 @@ tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     cursor: pointer;
 }
 
-.containerModal {
+.dashboardMan .containerModal {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;
 }
 
-.modal-man {
+.dashboardMan .modal-man {
     flex: 1;
     margin-bottom: 10px;
     margin-top: 10px;
@@ -174,7 +178,7 @@ tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     margin-right: 40px;
 }
 
-.modal-man input,
+.dashboardMan .modal-man input,
 .modal-man select,
 .modal-man textarea {
     width: 100%; 
@@ -182,7 +186,7 @@ tr.linhaMan:nth-child(even) .btnAtribuir:hover, tr.linhaMan .btnAtribuir:hover {
     font-size: 16px; 
 }
 
-.modal-head {
+.dashboardMan .modal-head {
     margin-top: 20px; 
 }
 
