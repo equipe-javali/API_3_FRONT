@@ -94,7 +94,7 @@ export default function HistoricoManutencao() {
                     <LinhaManutencao
                         key={man.id}
                         id={man.id}
-                        ativoId={man.ativoId}
+                        ativoId={man.ativoId}                        
                         tipo={man.tipo}
                         descricao={man.descricao}
                         localizacao={man.localizacao}
@@ -217,7 +217,9 @@ export default function HistoricoManutencao() {
                 'Content-Type': 'application/json',
                 "Authorization": token
             },
-            body: JSON.stringify(manutencaoDataWithDates),
+            body: JSON.stringify({
+                ...manutencaoDataWithDates,
+            }),
         })
             .then(response => {
                 if (!response.ok) {

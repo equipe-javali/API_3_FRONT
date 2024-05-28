@@ -4,6 +4,7 @@ import getLocalToken from "../utils/getLocalToken";
 import { useParams } from "react-router-dom";
 import { parseISO, format } from 'date-fns';
 
+
 interface EventoHistorico {
   idAtivo: number;
   ultimaAtualizacaoAtivo?: string;

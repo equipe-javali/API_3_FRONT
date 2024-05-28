@@ -281,8 +281,8 @@ export default function AtualizarUsuario() {
 
     return (
         <>
+            <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <form className='divAtualizarUsuario' onSubmit={handleSubmit}>
-                <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
                 <div className='primeiroBlocoAtualizarUsuario'>
                     <div>
                         <div>
