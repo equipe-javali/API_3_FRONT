@@ -249,9 +249,9 @@
     appearance: none; /* Remover o estilo padrão em navegadores que suportam */
 }
 
-.mySelect option {
+/* .mySelect option {
     background-color: white;
-}
+} */
 
 .buscaAtivos {
     margin-bottom: 22px; 
