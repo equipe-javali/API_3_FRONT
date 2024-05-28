@@ -500,12 +500,9 @@ export default function AtualizarAtivo() {
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <div className='tituloFormsAtualizarAtivo'>
                 <span>
-                    {`Ativo > (ID: ${id} / Número Identificador: `}
+                    {`Ativo > ID: ${id} / Número Identificador: `}
                 </span>
                 {campoIdentificador.codigo}
-                <span>
-                    {`)`}
-                </span>
             </div>
             <form className="formsAtualizarAtivo" onSubmit={handleSubmit}>
                 <div>
