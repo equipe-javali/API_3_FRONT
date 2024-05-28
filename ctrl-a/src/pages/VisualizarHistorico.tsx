@@ -162,15 +162,30 @@ export default function VisualizarHistorico() {
       }
 
       const historicoFiltrado = historicoCompleto
-        .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
-        .sort((a, b) => {
-          const dateComparison = b.dataAlteracao.localeCompare(a.dataAlteracao);
-          if (dateComparison !== 0) {
-            return dateComparison;
-          }
+  .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
+  .sort((a, b) => {
+    const dateComparison = b.dataAlteracao.localeCompare(a.dataAlteracao);
+    if (dateComparison !== 0) {
+      return dateComparison;
+    }
 
-          return (b.id ? b.id : 0) - (a.id ? a.id : 0);
-        });
+    
+    if (
+      a.tipo === "manutencao" &&
+      b.tipo === "retornoManutencao" &&
+      a.tipoManutencao === b.tipoManutencao
+    ) {
+      return 1;
+    } else if (
+      a.tipo === "retornoManutencao" &&
+      b.tipo === "manutencao" &&
+      a.tipoManutencao === b.tipoManutencao
+    ) {
+      return 0;
+    }
+
+    return (b.id ? b.id : 0) - (a.id ? a.id : 0);
+  });
 
       if (historicoFiltrado.length > 0) {
         setHistorico(historicoFiltrado);
