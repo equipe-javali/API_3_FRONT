@@ -26,6 +26,7 @@ interface EventoHistorico {
   dataFim?: string;
   dataAlteracao: string;
   responsavel?: string;
+  nomeUsuarioAnterior?: string;
 }
 
 const meses = [
@@ -81,11 +82,21 @@ export default function VisualizarHistorico() {
                 (item.ativo && item.ativo.id === Number(id))
             );
 
+            let nomeUsuarios: string[] = [];
+            let nomeUsuarioAnterior = "";
+
             const eventosMapeados = eventosFiltrados.map((item: any) => {
               let tipo: string = "manutencao";
 
               if (item.nomeUsuario) {
                 tipo = "usuario";
+                if (
+                  nomeUsuarios[nomeUsuarios.length - 1] !== item.nomeUsuario
+                ) {
+                  nomeUsuarios.push(item.nomeUsuario);
+                }
+                nomeUsuarioAnterior =
+                  nomeUsuarios[nomeUsuarios.length - 2] || "";
               } else if (item.departamentoUsuario) {
                 tipo = "local";
               } else if (item.dataCadastroAtivo) {
@@ -103,6 +114,7 @@ export default function VisualizarHistorico() {
                   item.dataInicio,
                 nomeAtivo: item.nomeAtivo || item.ativo?.nome,
                 nomeUsuario: item.nomeUsuario || "",
+                nomeUsuarioAnterior,
                 departamentoUsuario: item.departamentoUsuario || "",
                 tipo,
                 tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
@@ -174,7 +186,7 @@ export default function VisualizarHistorico() {
                     const ano = dataAlteracao.getFullYear();
 
                     let tituloEvento = "";
-                    let descricaoEvento = "";
+                    let descricaoEvento: React.ReactNode = "";
 
                     if (evento.tipo === "manutencao") {
                       tituloEvento = evento.dataFim
@@ -183,7 +195,12 @@ export default function VisualizarHistorico() {
                       descricaoEvento = `${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`;
                     } else if (evento.tipo === "usuario") {
                       tituloEvento = "Troca de Responsável";
-                      descricaoEvento = `${evento.nomeUsuario} (${evento.departamentoUsuario})`;
+                      descricaoEvento = (
+                        <ul>
+                          <li>Responsável anterior: {evento.nomeUsuarioAnterior}</li>
+                          <li>Responsável atual: {evento.nomeUsuario}</li>
+                        </ul>
+                      );
                     } else if (evento.tipo === "local") {
                       tituloEvento = "Troca de Departamento";
                       descricaoEvento = `Novo departamento: ${evento.departamentoUsuario}`;
