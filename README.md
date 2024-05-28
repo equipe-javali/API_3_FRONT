@@ -28,3 +28,4 @@ Cada branch é referente a uma tarefa ou um conjunto de tarefas para gerar cada 
 
 - Merge: branch usada para fazer o merge das branchs antes de fazer na main - Geral
 - 1: Criar formulário para esqueci a minha senha
+- 12: Criar o manual do usuário - Silmara
