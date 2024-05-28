@@ -1,3 +1,11 @@
+.manual-container {
+    padding: 20px;
+}
+
+.TituloManual {
+    margin-bottom: 20px;
+}
+
 .TituloManual h1 {
     padding-top: 2%;
     padding-left: 2%;
@@ -7,4 +15,31 @@
     font-family: Arial, sans-serif;
     color: var(--branco);
     text-align: left;
-  }
+}
+
+.accordion-item {
+    border-bottom: 1px solid #ccc;
+}
+
+.accordion-item .accordion-title {
+    background-color: var(--cor8);
+    color: var(--branco);
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.accordion-item .accordion-title:hover {
+    background-color: var(--cor20);
+}
+
+.accordion-item .accordion-title.active {
+    background-color: var(--cor23);
+}
+
+.accordion-content {
+    padding: 10px;
+    border: 1px solid var(--branco);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
