@@ -61,7 +61,7 @@ export default function VisualizarHistorico() {
       const urls = [
         `http://localhost:8080/historicoAtivoTangivel/listagemAtivo/${id}`,
         `http://localhost:8080/historicoAtivoIntangivel/listagemAtivo/${id}`,
-        `http://localhost:8080/manutencao/listagem/${id}`,
+        `http://localhost:8080/manutencao/listagem/${id}`
       ];
 
       const responses = await Promise.all(
@@ -70,142 +70,136 @@ export default function VisualizarHistorico() {
 
       const historicoCompleto: EventoHistorico[] = [];
       for (const response of responses) {
-        if (response.ok) {
-          const data = await response.text();
+        if (!response.ok) {
+          console.log("Resposta vazia do servidor");
+          continue;
+        }
 
-          if (data) {
-            const jsonData = JSON.parse(data);
-
-            const eventosFiltrados = jsonData.filter(
-              (item: any) =>
-                item.idAtivo === Number(id) ||
-                (item.ativo && item.ativo.id === Number(id))
-            );
-
-            let nomeUsuarios: string[] = [];
-            let nomeUsuarioAnterior = "";
-
-            const eventosMapeados: any[] = [];
-
-            eventosFiltrados.forEach((item: any) => {
-              let tipo: string = "manutencao";
-
-              if (item.nomeUsuario) {
-                tipo = "usuario";
-                if (
-                  nomeUsuarios[nomeUsuarios.length - 1] !== item.nomeUsuario
-                ) {
-                  nomeUsuarios.push(item.nomeUsuario);
-                }
-                nomeUsuarioAnterior =
-                  nomeUsuarios[nomeUsuarios.length - 2] || "";
-              } else if (item.departamentoUsuario) {
-                tipo = "local";
-              } else if (item.dataCadastroAtivo) {
-                tipo = "cadastro";
-              } else if (item.responsavel) {
-                tipo = "responsavel";
-              }
-
-              eventosMapeados.push({
-                id: item.id,
-                idAtivo: item.idAtivo || item.ativo.id,
-                dataAlteracao:
-                  item.ultimaAtualizacaoAtivo ||
-                  item.dataCadastroAtivo ||
-                  item.dataInicio,
-                nomeAtivo: item.nomeAtivo || item.ativo?.nome,
-                nomeUsuario: item.nomeUsuario || "",
-                nomeUsuarioAnterior,
-                departamentoUsuario: item.departamentoUsuario || "",
-                tipo,
-                tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
-                descricaoManutencao: item.descricao,
-                custoManutencao: item.custo,
-                dataCadastroAtivo: item.dataCadastroAtivo,
-                localManutencao: item.localManutencao,
-              });
-
-              if (item.dataFim && tipo === "manutencao") {
-                eventosMapeados.push({
-                  id: item.id,
-                  idAtivo: item.idAtivo || item.ativo.id,
-                  dataAlteracao:
-                    item.ultimaAtualizacaoAtivo ||
-                    item.dataCadastroAtivo ||
-                    item.dataFim,
-                  nomeAtivo: item.nomeAtivo || item.ativo?.nome,
-                  nomeUsuario: item.nomeUsuario || "",
-                  nomeUsuarioAnterior,
-                  departamentoUsuario: item.departamentoUsuario || "",
-                  tipo: "retornoManutencao",
-                  tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
-                  descricaoManutencao: item.descricao,
-                  custoManutencao: item.custo,
-                  dataFim: item.dataFim,
-                  dataCadastroAtivo: item.dataCadastroAtivo,
-                  localManutencao: item.localManutencao,
-                });
-              }
-            });
-
-            historicoCompleto.push(...eventosMapeados);
-          } else {
-            console.log("Resposta vazia do servidor");
-          }
-        } else {
+        const data = await response.text();
+        if (!data) {
           console.error(
             `Erro ao buscar histórico da URL ${response.url}: ${response.status}`
           );
-          setNomeAtivo("Ativo não encontrado");
+        }
+
+        const jsonData = JSON.parse(data);
+        const eventosFiltrados = jsonData.filter(
+          (item: any) =>
+            item.idAtivo === Number(id) ||
+            (item.ativo && item.ativo.id === Number(id))
+        );
+
+        let nomeUsuarios: string[] = [];
+        let nomeUsuarioAnterior = "";
+
+        const eventosMapeados: any[] = [];
+
+        for (let i = 0; i < eventosFiltrados.length; i++) {
+          const item = eventosFiltrados[i];
+
+
+          let tipo = "";
+          if (item.nomeUsuario) {
+            tipo = "usuario";
+            if (nomeUsuarios[nomeUsuarios.length - 1] !== item.nomeUsuario) {
+              nomeUsuarios.push(item.nomeUsuario);
+            }
+            nomeUsuarioAnterior = nomeUsuarios[nomeUsuarios.length - 2] || "";
+          } else if (item.departamentoUsuario) {
+            tipo = "local";
+          } else if (item.ultimaAtualizacaoAtivo === null) {
+            tipo = "cadastro";
+          } else if (item.responsavel) {
+            tipo = "responsavel";
+          } else if (item.dataFim && new Date(item.dataFim) <= new Date()) {
+            eventosMapeados.push({
+              id: item.id,
+              idAtivo: item.idAtivo || item.ativo.id,
+              dataAlteracao:
+                item.ultimaAtualizacaoAtivo ||
+                item.dataCadastroAtivo ||
+                item.dataInicio,
+              nomeAtivo: item.nomeAtivo || item.ativo?.nome,
+              nomeUsuario: item.nomeUsuario || "",
+              nomeUsuarioAnterior,
+              departamentoUsuario: item.departamentoUsuario || "",
+              tipo: "envioManutencao",
+              tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
+              descricaoManutencao: item.descricao,
+              custoManutencao: item.custo,
+              dataCadastroAtivo: item.dataCadastroAtivo,
+              localManutencao: item.localManutencao,
+            });
+
+            tipo = "retornoManutencao";
+          } else if (item.dataInicio) {
+            tipo = "envioManutencao";
+          } else { continue; }
+
+          eventosMapeados.push({
+            id: item.id,
+            idAtivo: item.idAtivo || item.ativo.id,
+            dataAlteracao:
+              item.ultimaAtualizacaoAtivo ||
+              item.dataCadastroAtivo ||
+              (tipo === "retornoManutencao" ? item.dataFim : item.dataInicio),
+            nomeAtivo: item.nomeAtivo || item.ativo?.nome,
+            nomeUsuario: item.nomeUsuario || "",
+            nomeUsuarioAnterior,
+            departamentoUsuario: item.departamentoUsuario || "",
+            tipo,
+            tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
+            descricaoManutencao: item.descricao,
+            custoManutencao: item.custo,
+            dataCadastroAtivo: item.dataCadastroAtivo,
+            localManutencao: item.localManutencao,
+          });
+
+          historicoCompleto.push(...eventosMapeados);
+        }
+
+        const historicoFiltrado = historicoCompleto
+          .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
+          .sort((a, b) => {
+            const dateComparison = b.dataAlteracao.localeCompare(a.dataAlteracao);
+            if (dateComparison !== 0) {
+              return dateComparison;
+            }
+
+            if (
+              a.tipo === "envioManutencao" &&
+              b.tipo === "retornoManutencao" &&
+              a.tipoManutencao === b.tipoManutencao
+            ) { return 1; }
+            else if (
+              a.tipo === "retornoManutencao" &&
+              b.tipo === "envioManutencao" &&
+              a.tipoManutencao === b.tipoManutencao
+            ) { return 0; }
+
+            return (b.id ? b.id : 0) - (a.id ? a.id : 0);
+          });
+
+        if (historicoFiltrado.length > 0) {
+          setHistorico(historicoFiltrado);
+          setNomeAtivo(historicoFiltrado[0].nomeAtivo);
+        } else {
+          const eventoCadastro = {
+            idAtivo: Number(id),
+            dataAlteracao: new Date().toISOString(),
+            nomeAtivo: "Ativo sem histórico",
+            tipo: "cadastro",
+          };
+          setHistorico([eventoCadastro]);
+          setNomeAtivo(eventoCadastro.nomeAtivo);
         }
       }
-
-      const historicoFiltrado = historicoCompleto
-  .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
-  .sort((a, b) => {
-    const dateComparison = b.dataAlteracao.localeCompare(a.dataAlteracao);
-    if (dateComparison !== 0) {
-      return dateComparison;
-    }
-
-    
-    if (
-      a.tipo === "manutencao" &&
-      b.tipo === "retornoManutencao" &&
-      a.tipoManutencao === b.tipoManutencao
-    ) {
-      return 1;
-    } else if (
-      a.tipo === "retornoManutencao" &&
-      b.tipo === "manutencao" &&
-      a.tipoManutencao === b.tipoManutencao
-    ) {
-      return 0;
-    }
-
-    return (b.id ? b.id : 0) - (a.id ? a.id : 0);
-  });
-
-      if (historicoFiltrado.length > 0) {
-        setHistorico(historicoFiltrado);
-        setNomeAtivo(historicoFiltrado[0].nomeAtivo);
-      } else {
-        const eventoCadastro = {
-          idAtivo: Number(id),
-          dataAlteracao: new Date().toISOString(),
-          nomeAtivo: "Ativo sem histórico",
-          tipo: "cadastro",
-        };
-        setHistorico([eventoCadastro]);
-        setNomeAtivo(eventoCadastro.nomeAtivo);
-      }
     } catch (error) {
-      console.error("Erro ao carregar dados:", error);
+      console.error("Erro ao carregar históricos:", error);
       setHistorico([]);
-      setNomeAtivo("Erro ao carregar histórico");
     }
   }
+
 
   return (
     <div className="VisualizarHistorico">
@@ -223,10 +217,6 @@ export default function VisualizarHistorico() {
                 {historico.length > 0 ? (
                   historico.map((evento: EventoHistorico) => {
                     const dataAlteracao = parseISO(evento.dataAlteracao);
-                    const dataCadastro = evento.dataCadastroAtivo
-                      ? parseISO(evento.dataCadastroAtivo)
-                      : null;
-
                     const dia = dataAlteracao.getDate();
                     const mes = meses[dataAlteracao.getMonth()];
                     const ano = dataAlteracao.getFullYear();
@@ -234,7 +224,7 @@ export default function VisualizarHistorico() {
                     let tituloEvento = "";
                     let descricaoEvento: React.ReactNode = "";
 
-                    if (evento.tipo === "manutencao") {
+                    if (evento.tipo === "envioManutencao") {
                       tituloEvento = "Envio para Manutenção";
                       descricaoEvento = `${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`;
                     } else if (evento.tipo === "retornoManutencao") {
@@ -298,12 +288,11 @@ export default function VisualizarHistorico() {
                 ) : (
                   <div className="uia-timeline__event">
                     <div className="uia-timeline__event__date">
-                      {historico[0] && historico[0].dataCadastroAtivo
-                        ? format(
-                            parseISO(historico[0].dataCadastroAtivo),
-                            "dd/MM/yyyy"
-                          )
-                        : ""}
+                      {historico[0] && historico[0].dataCadastroAtivo ?
+                        format(
+                          parseISO(historico[0].dataCadastroAtivo),
+                          "dd/MM/yyyy"
+                        ) : ""}
                     </div>
                     <div className="uia-timeline__event__content">
                       <h2>Cadastro do Ativo</h2>
