@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import './css/cadastrarUsuarioAdm.css';
 import getLocalToken from "../utils/getLocalToken";
 import { Link } from "react-router-dom";
@@ -6,8 +6,24 @@ import CampoDropdown from "../components/CampoDropdown";
 import CampoData from "../components/CampoData";
 import CampoPadrao from "../components/CampoPadrao";
 import CampoSenha from "../components/CampoSenha";
+import RespostaSistema from "../components/respostaSistema";
 
 export default function CriarUsuarioAdm() {
+  const [textoResposta, setTextoResposta] = useState('');
+  const [tipoResposta, setTipoResposta] = useState('');
+  function fechaPopUp() {
+    setTextoResposta('')
+    setTipoResposta('')
+  }
+  useEffect(() => {
+    if (tipoResposta === "Sucesso") {
+      const timer = setTimeout(() => {
+        fechaPopUp();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [tipoResposta]);
+
   const [avisoNome, setAvisoNome] = useState<string | undefined>(undefined);
   const campoNome = CampoPadrao(
     "Nome:",
@@ -73,7 +89,6 @@ export default function CriarUsuarioAdm() {
     true,
     avisoSenha
   )
-  const [aviso, setAviso] = useState("")
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -133,47 +148,22 @@ export default function CriarUsuarioAdm() {
         const userResponse = await fetch('http://localhost:8080/usuario/cadastro', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            "Authorization": token
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             usuario: data
           })
         });
-        if (userResponse.ok) {
-          const userData = await userResponse.json();
-          const { id } = userData;
-          const loginData = {
-            usuario: {
-              id,
-            },
-            senha: campoSenha.dado
-          };
-          const loginResponse = await fetch('http://localhost:8080/usuarioLogin/cadastro', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              "Authorization": token
-            },
-            body: JSON.stringify(loginData)
-          });
-          if (loginResponse.ok) {
-            setAviso("Usuário cadastrado com sucesso!");
-            setTimeout(() => {
-              setAviso('');
-            }, 2000);
-            campoCPF.limpar()
-            campoDepartamento.limpar()
-            campoEmail.limpar()
-            campoNascimento.limpar()
-            campoNome.limpar()
-            campoTelefone.limpar()
-            campoSenha.limpar()
-          } else {
-            console.error('Falha ao cadastrar login do usuário');
-            const loginResponseData = await loginResponse.json();
-            console.log(loginResponseData);
-          }
+        if (userResponse.status === 201) {
+          setTextoResposta("Usuário cadastrado com sucesso!")
+          setTipoResposta("Sucesso")
+          campoCPF.limpar()
+          campoDepartamento.limpar()
+          campoEmail.limpar()
+          campoNascimento.limpar()
+          campoNome.limpar()
+          campoTelefone.limpar()
+          campoSenha.limpar()
         } else if (userResponse.status === 400) {
           const userResponseData = await userResponse.text();
           if (userResponseData === "O CPF já existe") {
@@ -181,23 +171,20 @@ export default function CriarUsuarioAdm() {
           } else if (userResponseData === "O e-mail já existe") {
             setAvisoEmail(`${userResponseData}!`)
           }
-        }
-        else {
-          console.error('Falha ao cadastrar usuário');
-          const userResponseData = await userResponse.json();
-          console.log(userResponseData);
-          setTimeout(() => {
-            setAviso('');
-          }, 2000);
+        } else {
+          setTextoResposta(`Erro ao cadastrar usuario! Erro:${userResponse.status}`);
+          setTipoResposta('Erro');
         }
       } catch (error) {
-        console.error(error);
+        setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
+        setTipoResposta("Erro");
       }
     };
   }
 
   return (
     <div className="CadastroAdm">
+      <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
       <form onSubmit={handleSubmit} className="form-cadastro">
         <Link className="retornarLogin" to={'/'}>◀ Voltar</Link>
         <h1 className="titulo">Cadastrar Adm</h1>
@@ -210,7 +197,6 @@ export default function CriarUsuarioAdm() {
         {campoDepartamento.codigo}
         <input type="submit" value="Cadastrar" />
         <label className="legenda">* Campo de preenchimento obrigatório.</label>
-        {aviso !== '' && <p>{aviso}</p>}
       </form>
     </div>
   );
