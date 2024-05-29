@@ -12,6 +12,7 @@ interface EventoHistorico {
   nomeAtivo: string;
   nomeUsuario?: string;
   departamentoUsuario?: string;
+  departamentoUsuarioAnterior?: string;
   tipo?: string;
   custoAquisicaoAtivo?: number;
   garantiaAtivoTangivel?: string;
@@ -84,6 +85,8 @@ export default function VisualizarHistorico() {
 
             let nomeUsuarios: string[] = [];
             let nomeUsuarioAnterior = "";
+            let departamentosUsuarios: string[] = [];
+            let departamentoUsuarioAnterior = "";
 
             const eventosMapeados: any[] = [];
 
@@ -96,9 +99,12 @@ export default function VisualizarHistorico() {
                   nomeUsuarios[nomeUsuarios.length - 1] !== item.nomeUsuario
                 ) {
                   nomeUsuarios.push(item.nomeUsuario);
+                  departamentosUsuarios.push(item.departamentoUsuario || "");
                 }
                 nomeUsuarioAnterior =
                   nomeUsuarios[nomeUsuarios.length - 2] || "";
+                departamentoUsuarioAnterior =
+                  departamentosUsuarios[departamentosUsuarios.length - 2] || "";
               } else if (item.departamentoUsuario) {
                 tipo = "local";
               } else if (item.dataCadastroAtivo) {
@@ -117,6 +123,7 @@ export default function VisualizarHistorico() {
                 nomeAtivo: item.nomeAtivo || item.ativo?.nome,
                 nomeUsuario: item.nomeUsuario || "",
                 nomeUsuarioAnterior,
+                departamentoUsuarioAnterior,
                 departamentoUsuario: item.departamentoUsuario || "",
                 tipo,
                 tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
@@ -162,30 +169,29 @@ export default function VisualizarHistorico() {
       }
 
       const historicoFiltrado = historicoCompleto
-  .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
-  .sort((a, b) => {
-    const dateComparison = b.dataAlteracao.localeCompare(a.dataAlteracao);
-    if (dateComparison !== 0) {
-      return dateComparison;
-    }
+        .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
+        .sort((a, b) => {
+          const dateComparison = b.dataAlteracao.localeCompare(a.dataAlteracao);
+          if (dateComparison !== 0) {
+            return dateComparison;
+          }
 
-    
-    if (
-      a.tipo === "manutencao" &&
-      b.tipo === "retornoManutencao" &&
-      a.tipoManutencao === b.tipoManutencao
-    ) {
-      return 1;
-    } else if (
-      a.tipo === "retornoManutencao" &&
-      b.tipo === "manutencao" &&
-      a.tipoManutencao === b.tipoManutencao
-    ) {
-      return 0;
-    }
+          if (
+            a.tipo === "manutencao" &&
+            b.tipo === "retornoManutencao" &&
+            a.tipoManutencao === b.tipoManutencao
+          ) {
+            return 1;
+          } else if (
+            a.tipo === "retornoManutencao" &&
+            b.tipo === "manutencao" &&
+            a.tipoManutencao === b.tipoManutencao
+          ) {
+            return 0;
+          }
 
-    return (b.id ? b.id : 0) - (a.id ? a.id : 0);
-  });
+          return (b.id ? b.id : 0) - (a.id ? a.id : 0);
+        });
 
       if (historicoFiltrado.length > 0) {
         setHistorico(historicoFiltrado);
@@ -245,9 +251,13 @@ export default function VisualizarHistorico() {
                       descricaoEvento = (
                         <ul>
                           <li>
-                            Responsável anterior: {evento.nomeUsuarioAnterior}
+                            Responsável: {evento.nomeUsuario} (
+                            {evento.departamentoUsuario})
                           </li>
-                          <li>Responsável atual: {evento.nomeUsuario}</li>
+                          <li>
+                            Responsável anterior: {evento.nomeUsuarioAnterior} (
+                            {evento.departamentoUsuarioAnterior})
+                          </li>
                         </ul>
                       );
                     } else if (evento.tipo === "local") {
