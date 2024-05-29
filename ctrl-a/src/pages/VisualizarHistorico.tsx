@@ -14,16 +14,10 @@ interface EventoHistorico {
   departamentoUsuario?: string;
   departamentoUsuarioAnterior?: string;
   tipo?: string;
-  custoAquisicaoAtivo?: number;
-  garantiaAtivoTangivel?: string;
-  taxaDepreciacaoAtivoTangivel?: number;
-  periodoDepreciacaoAtivoTangivel?: string;
-  dataExpiracaoAtivoIntangivel?: string;
-  taxaAmortizacaoAtivoIntangivel?: number;
-  periodoAmortizacaoAtivoIntangivel?: string;
   tipoManutencao?: string;
   descricaoManutencao?: string;
   custoManutencao?: number;
+  localizacao?: string;
   dataFim?: string;
   dataAlteracao: string;
   responsavel?: string;
@@ -76,6 +70,7 @@ export default function VisualizarHistorico() {
 
           if (data) {
             const jsonData = JSON.parse(data);
+            console.log(jsonData);
 
             const eventosFiltrados = jsonData.filter(
               (item: any) =>
@@ -96,7 +91,7 @@ export default function VisualizarHistorico() {
               if (item.nomeUsuario) {
                 tipo = "usuario";
                 if (
-                  nomeUsuarios[nomeUsuarios.length - 1] !== item.nomeUsuario
+                  nomeUsuarios[nomeUsuarios.length - 0] !== item.nomeUsuario
                 ) {
                   nomeUsuarios.push(item.nomeUsuario);
                   departamentosUsuarios.push(item.departamentoUsuario || "");
@@ -130,7 +125,7 @@ export default function VisualizarHistorico() {
                 descricaoManutencao: item.descricao,
                 custoManutencao: item.custo,
                 dataCadastroAtivo: item.dataCadastroAtivo,
-                localManutencao: item.localManutencao,
+                localizacao: item.localizacao,
               });
 
               if (item.dataFim && tipo === "manutencao") {
@@ -151,7 +146,7 @@ export default function VisualizarHistorico() {
                   custoManutencao: item.custo,
                   dataFim: item.dataFim,
                   dataCadastroAtivo: item.dataCadastroAtivo,
-                  localManutencao: item.localManutencao,
+                  localizacao: item.locallizacao,
                 });
               }
             });
@@ -228,10 +223,7 @@ export default function VisualizarHistorico() {
               <div className="uia-timeline__annual-sections">
                 {historico.length > 0 ? (
                   historico.map((evento: EventoHistorico) => {
-                    const dataAlteracao = parseISO(evento.dataAlteracao);
-                    const dataCadastro = evento.dataCadastroAtivo
-                      ? parseISO(evento.dataCadastroAtivo)
-                      : null;
+                    const dataAlteracao = parseISO(evento.dataAlteracao);                   
 
                     const dia = dataAlteracao.getDate();
                     const mes = meses[dataAlteracao.getMonth()];
@@ -242,23 +234,29 @@ export default function VisualizarHistorico() {
 
                     if (evento.tipo === "manutencao") {
                       tituloEvento = "Envio para Manutenção";
-                      descricaoEvento = `${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`;
+                      descricaoEvento = (
+                        <div>
+                          <p>{evento.tipoManutencao} - {evento.descricaoManutencao}</p>
+                          {evento.custoManutencao && <p>Custo: R$ {evento.custoManutencao.toFixed(2)}</p>}
+                          {evento.localizacao && <p>Local: {evento.localizacao}</p>} 
+                        </div>
+                      );
                     } else if (evento.tipo === "retornoManutencao") {
                       tituloEvento = "Retorno da Manutenção";
-                      descricaoEvento = `${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`;
-                    } else if (evento.tipo === "usuario") {
-                      tituloEvento = "Troca de Responsável";
                       descricaoEvento = (
-                        <ul>
-                          <li>
-                            Responsável: {evento.nomeUsuario} (
-                            {evento.departamentoUsuario})
-                          </li>
-                          <li>
-                            Responsável anterior: {evento.nomeUsuarioAnterior} (
-                            {evento.departamentoUsuarioAnterior})
-                          </li>
-                        </ul>
+                        <div>
+                          <p>{evento.tipoManutencao} - {evento.descricaoManutencao}</p>
+                          {evento.custoManutencao && <p>Custo: R$ {evento.custoManutencao.toFixed(2)}</p>}
+                          {evento.localizacao && <p>Local: {evento.localizacao}</p>} 
+                        </div>
+                      );
+                    }  else if (evento.tipo === "usuario") {
+                      tituloEvento = "Troca de Responsável";                      
+                      descricaoEvento = (
+                        <div>
+                          <p>Responsável: {evento.nomeUsuario} ({evento.departamentoUsuario})</p>
+                          <p>Responsável anterior: {evento.nomeUsuarioAnterior} ({evento.departamentoUsuarioAnterior})</p>
+                        </div>
                       );
                     } else if (evento.tipo === "local") {
                       tituloEvento = "Troca de Departamento";
