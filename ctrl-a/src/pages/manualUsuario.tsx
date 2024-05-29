@@ -9,10 +9,9 @@ export default function ManualUsuario() {
   };
 
   const data = [
-    { title: 'Como fazer algo 1', content: 'Informações detalhadas sobre como fazer algo 1...' },
-    { title: 'Como fazer algo 2', content: 'Informações detalhadas sobre como fazer algo 2...' },
-    { title: 'Como fazer algo 3', content: 'Informações detalhadas sobre como fazer algo 3...' },
-    // Adicione quantos itens desejar
+    { title: 'Como cadastrar administradores', content: 'Informações detalhadas sobre como fazer algo 1...' },
+    { title: 'Como cadastrar usuários', content: 'Informações detalhadas sobre como fazer algo 2...' },
+    { title: 'Como cadastrar ativos', content: 'Informações detalhadas sobre como fazer algo 3...' },
   ];
 
   return (

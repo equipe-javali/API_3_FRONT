@@ -1,25 +1,22 @@
-.cadastroUsuário {
-  padding-left: 30px;
-  padding-right: 30px;
+.cadastroUsuário form{
+  margin: 20px;
   min-height: calc(100vh - var(--heightHeader) - var(--gapformsAtualizarAtivo) - 20px);
 }
 
 /* personalização especifica da página */
 
 .cadastroUsuário h2 {
-  margin-top: var(--paddingTopDivFormsAtivo);
-  margin-bottom: 20px; /* Mantém o espaçamento original */
-  font-size: 3.9vh;
+  margin-top: 2%;
+  margin-bottom: 20px;
+  font-size: 4vh;
   font-family: Arial, sans-serif;
   color: var(--branco);
   text-align: left;
-  padding-left: 0.2%;
-
+  padding-left: 2%;
 }
 
 .cadastroUsuário #primeira-parte {
   margin: 0 var(--paddingLeftDivFormsAtivo);
-  margin-bottom: var(--paddingVerticalFormsAtivo); /* Adiciona espaçamento entre o quadradão e o h2 */
   background-color: var(--cor8);
   border-radius: 4px;
   padding: var(--paddingVerticalFormsAtivo) var(--paddingHorizontalFormsAtivo);
