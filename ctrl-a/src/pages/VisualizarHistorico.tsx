@@ -65,10 +65,10 @@ export default function VisualizarHistorico() {
       ];
 
       const responses = await Promise.all(
-        urls.map((url) => fetch(url, { headers: { Authorization: token } }))
+        urls.map(async (url) => await fetch(url, { headers: { Authorization: token } }))
       );
 
-      const historicoCompleto: EventoHistorico[] = [];
+      let historicoCompleto: EventoHistorico[] = [];
       for (const response of responses) {
         if (!response.ok) {
           console.log("Resposta vazia do servidor");
@@ -82,43 +82,32 @@ export default function VisualizarHistorico() {
           );
         }
 
-        const jsonData = JSON.parse(data);
-        const eventosFiltrados = jsonData.filter(
-          (item: any) =>
-            item.idAtivo === Number(id) ||
-            (item.ativo && item.ativo.id === Number(id))
-        );
+        const jsonData = JSON.parse(data).sort((a: any, b: any) => {
+          if (!a.id) a.id = Number.MAX_VALUE;
+          if (!b.id) b.id = Number.MAX_VALUE;
+          return a.id - b.id;
+        });
+        for (let i = 0; i < jsonData.length; i++) {
+          const item = jsonData[i];
 
-        let nomeUsuarios: string[] = [];
-        let nomeUsuarioAnterior = "";
+          let tipo = "NENHUM";
 
-        const eventosMapeados: any[] = [];
-
-        for (let i = 0; i < eventosFiltrados.length; i++) {
-          const item = eventosFiltrados[i];
-
-
-          let tipo = "";
+          let nomeUsuarioAnterior = "Sem responsável";
           if (item.nomeUsuario) {
-            tipo = "usuario";
-            if (nomeUsuarios[nomeUsuarios.length - 1] !== item.nomeUsuario) {
-              nomeUsuarios.push(item.nomeUsuario);
+            if (jsonData[i - 1].nomeUsuario != item.nomeUsuario) {
+              nomeUsuarioAnterior = jsonData[i - 1].nomeUsuario || "Sem responsável";
+              tipo = "usuario";
             }
-            nomeUsuarioAnterior = nomeUsuarios[nomeUsuarios.length - 2] || "";
-          } else if (item.departamentoUsuario) {
-            tipo = "local";
-          } else if (item.ultimaAtualizacaoAtivo === null) {
-            tipo = "cadastro";
-          } else if (item.responsavel) {
-            tipo = "responsavel";
-          } else if (item.dataFim && new Date(item.dataFim) <= new Date()) {
-            eventosMapeados.push({
+          } else if (item.ultimaAtualizacaoAtivo === null) { tipo = "cadastro"; }
+          else if (item.responsavel) { tipo = "responsavel"; }
+          else if (item.dataFim && new Date(item.dataFim) <= new Date()) {
+            historicoCompleto.push({
               id: item.id,
               idAtivo: item.idAtivo || item.ativo.id,
               dataAlteracao:
+                item.dataInicio ||
                 item.ultimaAtualizacaoAtivo ||
-                item.dataCadastroAtivo ||
-                item.dataInicio,
+                item.dataCadastroAtivo,
               nomeAtivo: item.nomeAtivo || item.ativo?.nome,
               nomeUsuario: item.nomeUsuario || "",
               nomeUsuarioAnterior,
@@ -127,22 +116,20 @@ export default function VisualizarHistorico() {
               tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
               descricaoManutencao: item.descricao,
               custoManutencao: item.custo,
-              dataCadastroAtivo: item.dataCadastroAtivo,
-              localManutencao: item.localManutencao,
+              dataCadastroAtivo: item.dataCadastroAtivo
             });
 
             tipo = "retornoManutencao";
-          } else if (item.dataInicio) {
-            tipo = "envioManutencao";
-          } else { continue; }
+          } else if (item.dataInicio) { tipo = "envioManutencao"; }
+          else { continue; }
 
-          eventosMapeados.push({
+          historicoCompleto.push({
             id: item.id,
             idAtivo: item.idAtivo || item.ativo.id,
             dataAlteracao:
+              (tipo === "retornoManutencao" ? item.dataFim : item.dataInicio) ||
               item.ultimaAtualizacaoAtivo ||
-              item.dataCadastroAtivo ||
-              (tipo === "retornoManutencao" ? item.dataFim : item.dataInicio),
+              item.dataCadastroAtivo,
             nomeAtivo: item.nomeAtivo || item.ativo?.nome,
             nomeUsuario: item.nomeUsuario || "",
             nomeUsuarioAnterior,
@@ -151,11 +138,8 @@ export default function VisualizarHistorico() {
             tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
             descricaoManutencao: item.descricao,
             custoManutencao: item.custo,
-            dataCadastroAtivo: item.dataCadastroAtivo,
-            localManutencao: item.localManutencao,
+            dataCadastroAtivo: item.dataCadastroAtivo
           });
-
-          historicoCompleto.push(...eventosMapeados);
         }
 
         const historicoFiltrado = historicoCompleto
@@ -215,7 +199,7 @@ export default function VisualizarHistorico() {
               <div className="uia-timeline__line"></div>
               <div className="uia-timeline__annual-sections">
                 {historico.length > 0 ? (
-                  historico.map((evento: EventoHistorico) => {
+                  historico.map((evento: EventoHistorico, index) => {
                     const dataAlteracao = parseISO(evento.dataAlteracao);
                     const dia = dataAlteracao.getDate();
                     const mes = meses[dataAlteracao.getMonth()];
@@ -234,10 +218,8 @@ export default function VisualizarHistorico() {
                       tituloEvento = "Troca de Responsável";
                       descricaoEvento = (
                         <ul>
-                          <li>
-                            Responsável anterior: {evento.nomeUsuarioAnterior}
-                          </li>
                           <li>Responsável atual: {evento.nomeUsuario}</li>
+                          <li>Responsável anterior: {evento.nomeUsuarioAnterior}</li>
                         </ul>
                       );
                     } else if (evento.tipo === "local") {
@@ -246,9 +228,7 @@ export default function VisualizarHistorico() {
                     } else if (
                       evento.dataCadastroAtivo ||
                       (historico.length === 0 && evento.tipo === "cadastro")
-                    ) {
-                      tituloEvento = "Cadastro do Ativo";
-                    }
+                    ) { tituloEvento = "Cadastro do Ativo"; }
 
                     return (
                       <div
@@ -269,8 +249,14 @@ export default function VisualizarHistorico() {
                                 <h3 className="ra-heading">{tituloEvento}</h3>
                                 <span className="uia-card__time">
                                   <time dateTime={evento.dataAlteracao}>
-                                    <span className="uia-card__day">{dia}</span>
-                                    <span> {mes}</span>
+                                    {index == 0 ? <span className="uia-card__day">Atual</span> :
+                                      <>
+                                        <span className="uia-card__day">{dia}</span>
+                                        <span>{mes}</span>
+                                      </>
+                                    }
+                                    {/* <span className="uia-card__day">{dia}</span>
+                                    <span>{mes}</span> */}
                                   </time>
                                 </span>
                               </div>
