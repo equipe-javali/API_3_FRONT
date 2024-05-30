@@ -12,17 +12,12 @@ interface EventoHistorico {
   nomeAtivo: string;
   nomeUsuario?: string;
   departamentoUsuario?: string;
+  departamentoUsuarioAnterior?: string;
   tipo?: string;
-  custoAquisicaoAtivo?: number;
-  garantiaAtivoTangivel?: string;
-  taxaDepreciacaoAtivoTangivel?: number;
-  periodoDepreciacaoAtivoTangivel?: string;
-  dataExpiracaoAtivoIntangivel?: string;
-  taxaAmortizacaoAtivoIntangivel?: number;
-  periodoAmortizacaoAtivoIntangivel?: string;
   tipoManutencao?: string;
   descricaoManutencao?: string;
   custoManutencao?: number;
+  localizacao?: string;
   dataFim?: string;
   dataAlteracao: string;
   responsavel?: string;
@@ -210,17 +205,29 @@ export default function VisualizarHistorico() {
 
                     if (evento.tipo === "envioManutencao") {
                       tituloEvento = "Envio para Manutenção";
-                      descricaoEvento = `${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`;
+                      descricaoEvento = (
+                        <div>
+                          <p>{evento.tipoManutencao} - {evento.descricaoManutencao}</p>
+                          {evento.custoManutencao && <p>Custo: R$ {evento.custoManutencao.toFixed(2)}</p>}
+                          {evento.localizacao && <p>Local: {evento.localizacao}</p>}
+                        </div>
+                      );
                     } else if (evento.tipo === "retornoManutencao") {
                       tituloEvento = "Retorno da Manutenção";
-                      descricaoEvento = `${evento.tipoManutencao} - ${evento.descricaoManutencao} (Custo: ${evento.custoManutencao})`;
+                      descricaoEvento = (
+                        <div>
+                          <p>{evento.tipoManutencao} - {evento.descricaoManutencao}</p>
+                          {evento.custoManutencao && <p>Custo: R$ {evento.custoManutencao.toFixed(2)}</p>}
+                          {evento.localizacao && <p>Local: {evento.localizacao}</p>}
+                        </div>
+                      );
                     } else if (evento.tipo === "usuario") {
                       tituloEvento = "Troca de Responsável";
                       descricaoEvento = (
-                        <ul>
-                          <li>Responsável atual: {evento.nomeUsuario}</li>
-                          <li>Responsável anterior: {evento.nomeUsuarioAnterior}</li>
-                        </ul>
+                        <div>
+                          <p>Responsável: {evento.nomeUsuario} ({evento.departamentoUsuario})</p>
+                          <p>Responsável anterior: {evento.nomeUsuarioAnterior} {evento.departamentoUsuarioAnterior ? `(${evento.departamentoUsuarioAnterior})` : ""}</p>
+                        </div>
                       );
                     } else if (evento.tipo === "local") {
                       tituloEvento = "Troca de Departamento";
