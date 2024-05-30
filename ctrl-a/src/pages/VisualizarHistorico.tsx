@@ -75,13 +75,15 @@ export default function VisualizarHistorico() {
           console.error(
             `Erro ao buscar histórico da URL ${response.url}: ${response.status}`
           );
+          continue;
         }
 
         const jsonData = JSON.parse(data).sort((a: any, b: any) => {
-          if (!a.id) a.id = Number.MAX_VALUE;
-          if (!b.id) b.id = Number.MAX_VALUE;
+          if (!a.id) a.id = Number.MAX_SAFE_INTEGER;
+          if (!b.id) b.id = Number.MAX_SAFE_INTEGER;
           return a.id - b.id;
         });
+        console.log(jsonData);
         for (let i = 0; i < jsonData.length; i++) {
           const item = jsonData[i];
 
