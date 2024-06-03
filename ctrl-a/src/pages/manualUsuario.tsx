@@ -3,16 +3,34 @@ import './css/manualUsuario.css';
 
 export default function ManualUsuario() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Adicionando estado para o termo de pesquisa
 
   const toggleAccordion = (index: number) => {
-    setActiveIndex(prevIndex => prevIndex === index ? null : index); // Usando uma função de atualização para setActiveIndex
+    setActiveIndex(prevIndex => prevIndex === index ? null : index);
+  };
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
 
   const data = [
-    { title: 'Como cadastrar administradores', content: 'Informações detalhadas sobre como fazer algo 1...' },
-    { title: 'Como cadastrar usuários', content: 'Informações detalhadas sobre como fazer algo 2...' },
+    { title: 'Como recuperar sua senha', content: 'Informações detalhadas sobre como fazer algo 3...' },
+    { title: 'Como cadastrar usuários e administradores', content: 'Informações detalhadas sobre como fazer algo 1...' },
+    { title: 'Como atualizar e excluir usuários', content: 'Informações detalhadas sobre como fazer algo 2...' },
     { title: 'Como cadastrar ativos', content: 'Informações detalhadas sobre como fazer algo 3...' },
+    { title: 'Como atualizar e excluir ativos', content: 'Informações detalhadas sobre como fazer algo 3...' },
+    { title: 'Como enviar um ativo para a manutenção', content: 'Informações detalhadas sobre como fazer algo 3...' },
+    { title: 'Como ver o histórico da manutenção de um ativo', content: 'Informações detalhadas sobre como fazer algo 3...' },
+    { title: 'Como ver o histórico do ativo', content: 'Informações detalhadas sobre como fazer algo 3...' },
   ];
+
+  const filteredData = data.filter(item =>
+    removeAccents(item.title.toLowerCase()).includes(removeAccents(searchTerm.toLowerCase()))
+  );
+  
+  function removeAccents(str: string) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }  
 
   return (
     <div className="manual-container">
@@ -21,8 +39,17 @@ export default function ManualUsuario() {
           <h1>Manual do Usuário</h1>
         </header>
       </div>
+
+      <input
+        type="text"
+        className="search-bar"
+        placeholder="Pesquisar..."
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+
       <div className="accordion">
-        {data.map((item, index: number) => (
+        {filteredData.map((item, index: number) => (
           <div key={index} className="accordion-item">
             <div
               className={`accordion-title ${activeIndex === index ? 'active' : ''}`}
@@ -40,4 +67,4 @@ export default function ManualUsuario() {
       </div>
     </div>
   );
-};
+}
