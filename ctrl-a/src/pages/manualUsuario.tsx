@@ -23,12 +23,12 @@ export default function ManualUsuario() {
     { 
       title: 'Como recuperar sua senha', 
       type: 'text', 
-      content: 'Informações detalhadas sobre como fazer algo 3...' 
+      content: 'Acesse a (página de recuperação de senha - link) e insira seu email'
     },
     { 
       title: 'Como cadastrar usuários e administradores', 
       type: 'text', 
-      content: 'Informações detalhadas sobre como fazer algo 1...' 
+      content: 'Acesse a (página de criação de usuário - link) e preencha o formulário' 
     },
     { 
       title: 'Como atualizar e excluir usuários', 
@@ -57,6 +57,11 @@ export default function ManualUsuario() {
     },
     { 
       title: 'Como ver o histórico de atualização de um ativo', 
+      type: 'text', 
+      content: 'Informações detalhadas sobre como fazer algo 3...' 
+    },
+    { 
+      title: 'Como acessar os relatórios', 
       type: 'text', 
       content: 'Informações detalhadas sobre como fazer algo 3...' 
     },
