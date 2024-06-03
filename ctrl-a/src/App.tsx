@@ -27,7 +27,7 @@ export default function App() {
           <Route path="/AtualizarAtivo/:id" element={< AtualizarAtivo />} />
           <Route path="/EdicaoUsuario/:id" element={< AtualizarUsuario />} />
           <Route path="/Historico/:id" element={< VisualizarHistorico />} />
-          <Route path="/ManualUsuario" element={< ManualUsuario/>} />
+          <Route path="/Manual" element={< ManualUsuario/>} />
           <Route path="*" element={<DashboardAtivos />} />
         </Route>
         <Route path="*" element={<Home />} />
