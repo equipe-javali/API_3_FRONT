@@ -71,7 +71,7 @@ export default function ManualUsuario() {
     {
       title: 'Imagem ilustrativa',
       type: 'image',
-      content: 'caminho/para/imagem.jpg'
+      content: ' '
     },
     {
       title: 'Vídeo explicativo',
@@ -107,7 +107,7 @@ export default function ManualUsuario() {
     <div className="manual-container">
       <div className='TituloManual'>
         <header>
-          <h1>Manual do Usuário</h1>
+          <h1>Manual de Usuário</h1>
         </header>
       </div>
 

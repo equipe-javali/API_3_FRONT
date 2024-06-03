@@ -101,7 +101,6 @@
 }
 
 
-/* Para telas com largura de 600px ou menos */
 @media (max-width: 600px) {
   header {
     padding-top: 2px;
