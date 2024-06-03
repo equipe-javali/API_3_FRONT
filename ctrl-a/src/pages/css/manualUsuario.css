@@ -58,3 +58,15 @@
     display: block;
     margin: 0 auto;
 }
+
+.accordion-content img,
+.accordion-content iframe {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.accordion-content a {
+    color: var(--cor2);
+    text-decoration: none;
+  }
