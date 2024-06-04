@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './css/manualUsuario.css'; 
 import { Link } from 'react-router-dom';
+import './css/manualUsuario.css'; 
 
 interface ManualItem {
   title: string;
@@ -11,6 +11,7 @@ interface ManualItem {
 export default function ManualUsuario() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const toggleAccordion = (index: number) => {
     setActiveIndex(prevIndex => prevIndex === index ? null : index);
@@ -20,13 +21,18 @@ export default function ManualUsuario() {
     setSearchTerm(event.target.value);
   };
 
+  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(event.target.value);
+    setSearchTerm('');
+  };
+
   const data: ManualItem[] = [
     { 
       title: 'Como recuperar sua senha em caso de perda', 
       type: 'text', 
       content: [
         'Acesse o seguinte link e insira seu email cadastrado:',
-        <Link to="/ListaUsuarios">Página de recuperação de senha</Link>,
+        <Link to="/RedefinirSenha">Página de recuperação de senha</Link>,
         'Após isso, será enviado um código de acesso no email inserido, para que assim possa recuperar sua senha.'
       ]
     },
@@ -52,7 +58,18 @@ export default function ManualUsuario() {
       ]
     },
     { 
-      title: 'Como atualizar e excluir usuários', 
+      title: 'Como atualizar usuários', 
+      type: 'text', 
+      content: [
+        'Acesse o seguinte link e busque pelo usuário que deseja atualizar',
+        <Link to="/ListaUsuarios">Listagem de usuários</Link>,
+        'Após isso, clique no botão à direita, que se assemelha à um lápis',
+        'Uma nova aba será aberta, contendo todas as informações do respectivo usuário. Basta encontrar a informação que deseja alterar e modificá-la.',
+        'Por fim, clique em "atualizar" e pronto! Seu usuário estará atualizado com as novas informações.'
+      ]
+    },
+    { 
+      title: 'Como excluir usuários', 
       type: 'text', 
       content: [
         ' '
@@ -71,10 +88,14 @@ export default function ManualUsuario() {
       ]
     },
     { 
-      title: 'Como atualizar e excluir ativos', 
+      title: 'Como atualizar ativos', 
       type: 'text', 
       content: [
-        ' '
+        'Acesse o seguinte link e busque pelo ativo que deseja atualizar',
+        <Link to="/ListaAtivos">Listagem de ativos</Link>,
+        'Após isso, clique no botão à direita, que se assemelha à um lápis',
+        'Uma nova aba será aberta, contendo todas as informações do respectivo ativo. Basta encontrar a informação que deseja alterar e modificá-la.',
+        'Por fim, clique em "atualizar" e pronto! Seu ativo estará atualizado com as novas informações.'
       ]
     },
     { 
@@ -107,7 +128,10 @@ export default function ManualUsuario() {
     }
   ];
 
-  const filteredData = data.filter(item =>
+  const filteredData = data.filter(item => {
+    if (!selectedCategory) return true; // Se nenhuma categoria selecionada, retorna true para todos os itens
+    return item.title.toLowerCase().includes(selectedCategory.toLowerCase());
+  }).filter(item =>
     removeAccents(item.title.toLowerCase()).includes(removeAccents(searchTerm.toLowerCase()))
   );
   
@@ -138,13 +162,27 @@ export default function ManualUsuario() {
         </header>
       </div>
 
-      <input
-        type="text"
-        className="search-bar"
-        placeholder="Pesquisar..."
-        value={searchTerm}
-        onChange={handleSearch}
-      />
+      <div className="search-bar-wrapper">
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="Pesquisar..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <div className="select-wrapper">
+          <select value={selectedCategory} onChange={handleCategoryChange}>
+            <option value="">Todas</option>
+            <option value="Usuário">Usuários</option>
+            <option value="Ativo">Ativos</option>
+            <option value="Senha">Senha</option>
+            <option value="Histórico">Histórico</option>
+            <option value="Manutenção">Manutenção</option>
+            <option value="Relatórios">Relatórios</option>
+          </select>
+        </div>
+      </div>
+
 
       <div className="accordion">
         {filteredData.map((item, index: number) => (
