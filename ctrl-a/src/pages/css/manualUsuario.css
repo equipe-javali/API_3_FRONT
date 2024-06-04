@@ -41,6 +41,7 @@
     margin-bottom: 10px;
 }
 
+
 .search-bar {
     width: calc(100% - 20px); 
     padding: 10px; 
@@ -70,3 +71,8 @@
     color: var(--cor2);
     text-decoration: none;
   }
+
+  .accordion-content p {
+    margin-bottom: 10px;
+  }
+  
