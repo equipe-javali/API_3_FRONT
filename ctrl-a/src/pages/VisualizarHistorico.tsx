@@ -118,7 +118,7 @@ export default function VisualizarHistorico() {
 
   return (
     <div className="VisualizarHistorico">
-      <h1>Histórico do {nomeAtivo}</h1>
+      <h2>Histórico do {nomeAtivo}</h2>
       <div className="Caixa_Historico">
         <div className="page" data-uia-timeline-skin="4" data-uia-timeline-adapter-skin-4="uia-card-skin-#1">
           <div className="uia-timeline">

@@ -1,0 +1,109 @@
+/* Estilos gerais */
+.accordion {
+    padding: 20px;
+}
+
+.TituloManual h1 {
+    padding-top: 2%;
+    padding-left: 2%;
+    padding-bottom: 1%;
+    margin-top: 5px;
+    font-size: 4vh;
+    font-family: Arial, sans-serif;
+    color: var(--branco);
+    text-align: left;
+}
+
+.accordion-item {
+    border-bottom: 1px solid #ccc;
+}
+
+.accordion-item .accordion-title {
+    background-color: var(--cor8);
+    color: var(--branco);
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.accordion-item .accordion-title:hover {
+    background-color: var(--cor20);
+}
+
+.accordion-item .accordion-title.active {
+    background-color: var(--cor23);
+}
+
+.accordion-content {
+    padding: 10px;
+    border: 1px solid var(--branco);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: var(--cor24);
+}
+
+.accordion-content img,
+.accordion-content iframe {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.accordion-content a {
+    color: var(--cor2);
+    text-decoration: none;
+  }
+
+  .accordion-content p {
+    margin-bottom: 10px;
+  }
+  
+
+.search-bar-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 0 10px; 
+}
+
+.search-bar {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none;
+    background-color: var(--cor20);
+    color: var(--branco);
+}
+
+.select-wrapper {
+    margin-left: 10px; 
+    width: 200px; 
+}
+
+.select-wrapper select {
+    padding: 10px 20px; 
+    border-radius: 20px; 
+    border: 1px solid #ccc;
+    background-color: var(--cor20); 
+    color: var(--branco);
+    font-size: 16px;
+    cursor: pointer; 
+    outline: none; 
+    width: 100%; 
+}
+
+.select-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none; 
+}
+
+.select-wrapper select option {
+    background-color: var(--cor20); 
+    color: var(--branco);
+}
