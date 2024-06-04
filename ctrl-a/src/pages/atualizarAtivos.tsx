@@ -10,6 +10,13 @@ import CampoSemTitulo from '../components/CampoSemTitulo';
 import CampoDropdown from '../components/CampoDropdown';
 import { Link } from 'react-router-dom';
 import CampoDesativado from '../components/CampoDesativado';
+import DownloadArquivo from '../components/DownloadArquivo';
+
+type notafiscal = {
+    "nome": string,
+    "tipoDocumento": string,
+    "documento": string
+}
 
 interface Ativo {
     nome: string;
@@ -20,7 +27,7 @@ interface Ativo {
     dataLimite: string;
     marca: string;
     numeroIdentificacao: string;
-    //anexos: Documento[];
+    idNotaFiscal: notafiscal;
     descricao: string;
     tipo: string;
     grauImportancia: number;
@@ -86,7 +93,11 @@ export default function AtualizarAtivo() {
         dataLimite: "",
         marca: "",
         numeroIdentificacao: "",
-        //anexos: Documento[];
+        idNotaFiscal: {
+            nome: "",
+            tipoDocumento: "",
+            documento: ""
+        },
         descricao: "",
         tipo: "",
         grauImportancia: 0,
@@ -107,7 +118,7 @@ export default function AtualizarAtivo() {
                 })
                 if (responseIntangivel.status === 200) {
                     const dadosAtivo = await responseIntangivel.json();
-                    console.log(dadosAtivo)
+                    console.log(dadosAtivo);
                     setDadosAtivo({
                         ...dadosAtivo.ativo,
                         periodoOperacional: dadosAtivo.periodoAmortizacao,
@@ -539,7 +550,14 @@ export default function AtualizarAtivo() {
                                 {campoMarca.codigo}
                             </div>
                         </div>
-                        {campoDescricao.codigo}
+                        <div>
+                            {campoDescricao.codigo}
+                            <DownloadArquivo
+                                titulo={"Nota Fiscal"}
+                                texto={"Download"}
+                                dadosArquivo={dadosAtivo.idNotaFiscal}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div>
