@@ -22,7 +22,7 @@ export default function ManualUsuario() {
 
   const data: ManualItem[] = [
     { 
-      title: 'Como recuperar sua senha', 
+      title: 'Como recuperar sua senha em caso de perda', 
       type: 'text', 
       content: [
         'Acesse o seguinte link e insira seu email cadastrado:',
@@ -31,76 +31,79 @@ export default function ManualUsuario() {
       ]
     },
     { 
-      title: 'Como cadastrar usuários e administradores', 
+      title: 'Como alterar sua senha', 
       type: 'text', 
       content: [
-        'Acesse a (página de criação de usuário - link) e preencha o formulário'
+        'Primeiramente, acesse seu perfil, no ícone de usuário no canto superior direito.',
+        'Após isso, navegue até a área de senha, insira a nova senha que deseja e finalize ao clicar no botão "atualizar". ',
+        'Pronto! Sua nova senha já foi atualizada.'
+      ]
+    },
+    { 
+      title: 'Como cadastrar usuários', 
+      type: 'text', 
+      content: [
+        'Acesse o seguinte link e preencha o formulário:',
+        <Link to="/CadastroUsuario">Página de cadastro de usuário</Link>,
+        'Clique em "cadastrar" para finalizar e pronto! O novo usuário foi cadastrado.',
+        ' ','Caso deseje confirmar o cadastro, acesse a seguinte página:',
+        <Link to="/ListaUsuarios">Listagem de usuários</Link>,
+        "E busque pelo nome do usuário cadastrado."    
       ]
     },
     { 
       title: 'Como atualizar e excluir usuários', 
       type: 'text', 
       content: [
-        'Informações detalhadas sobre como fazer algo 2...'
+        ' '
       ]
     },
     { 
       title: 'Como cadastrar ativos', 
       type: 'text', 
       content: [
-        'Informações detalhadas sobre como fazer algo 3...'
+        'Acesse o seguinte link e preencha o formulário:',
+        <Link to="/CadastroAtivo">Página de cadastro de ativos</Link>,
+        'Clique em "cadastrar" para finalizar e pronto! O novo ativo foi cadastrado.',
+        ' ','Caso deseje confirmar o cadastro, acesse a seguinte página:',
+        <Link to="/ListaAtivos">Listagem de ativos</Link>,
+        "E busque pelo nome do ativo cadastrado."    
       ]
     },
     { 
       title: 'Como atualizar e excluir ativos', 
       type: 'text', 
       content: [
-        'Informações detalhadas sobre como fazer algo 3...'
+        ' '
       ]
     },
     { 
       title: 'Como enviar um ativo para a manutenção', 
       type: 'text', 
       content: [
-        'Informações detalhadas sobre como fazer algo 3...'
+        ' '
       ]
     },
     { 
       title: 'Como ver o histórico da manutenção de um ativo', 
       type: 'text', 
       content: [
-        'Informações detalhadas sobre como fazer algo 3...'
+        ' '
       ]
     },
     { 
       title: 'Como ver o histórico de atualização de um ativo', 
       type: 'text', 
       content: [
-        'Informações detalhadas sobre como fazer algo 3...'
+        ' '
       ]
     },
     { 
       title: 'Como acessar os relatórios', 
       type: 'text', 
       content: [
-        'Informações detalhadas sobre como fazer algo 3...'
+        ' '
       ]
-    },
-    // Exemplos para conteúdos futuros
-    {
-      title: 'Link útil',
-      type: 'link',
-      content: 'https://exemplo.com'
-    },
-    {
-      title: 'Imagem ilustrativa',
-      type: 'image',
-      content: ' '
-    },
-    {
-      title: 'Vídeo explicativo',
-      type: 'video',
-      content: 'https://www.youtube.com/watch?v=videoID'
     }
   ];
 
