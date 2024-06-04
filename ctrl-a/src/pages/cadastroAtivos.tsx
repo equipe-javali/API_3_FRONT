@@ -240,9 +240,9 @@ export default function CadastroAtivos() {
             <div className='divFormsAtivo'>
                 <div>
                     <h1> Cadastrar ativo{proximo === 0 ?
-                        '.' :
-                        CampoTipo.dado === 'Tangível' ? ' tangível.' :
-                            ' intangível.'}</h1>
+                        '' :
+                        CampoTipo.dado === 'Tangível' ? ' tangível' :
+                            ' intangível'}</h1>
                 </div>
                 <form
                     onSubmit={handleSubmit}

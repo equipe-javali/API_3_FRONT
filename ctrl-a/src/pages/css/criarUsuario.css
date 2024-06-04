@@ -1,6 +1,8 @@
-.cadastroUsuário {
+.cadastroUsuário form {
   margin: 20px;
   min-height: calc(100vh - var(--heightHeader) - var(--gapformsAtualizarAtivo) - 20px);
+
+
 }
 
 /* personalização especifica da página */
@@ -9,6 +11,17 @@
   margin: 10px;
   background-color: var(--cor8);
   border-radius: 4px;
+}
+
+.cadastroUsuário h2 {
+  padding-top: 2%;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 4vh;
+  font-family: Arial, sans-serif;
+  color: var(--branco);
+  text-align: left;
+  padding-left: 2%;
 }
 
 .cadastroUsuário .primeira-parte {
