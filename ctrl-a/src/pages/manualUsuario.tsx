@@ -72,7 +72,10 @@ export default function ManualUsuario() {
       title: 'Como excluir usuários', 
       type: 'text', 
       content: [
-        ' '
+        'Acesse o seguinte link e busque pelo usuário que deseja excluir',
+        <Link to="/ListaUsuarios">Listagem de usuários</Link>,
+        'Após isso, clique no botão à direita, que se assemelha à uma lixeira',
+        'Pronto, o usuário foi excluído.'
       ]
     },
     { 
@@ -99,17 +102,35 @@ export default function ManualUsuario() {
       ]
     },
     { 
+      title: 'Como excluir ativos', 
+      type: 'text', 
+      content: [
+        'Acesse o seguinte link e busque pelo ativo que deseja excluir',
+        <Link to="/ListaAtivos">Listagem de ativos</Link>,
+        'Após isso, clique no botão à direita, que se assemelha à uma lixeira',
+        'Pronto, o ativo foi excluído.'
+      ]
+    },
+    { 
       title: 'Como enviar um ativo para a manutenção', 
       type: 'text', 
       content: [
-        ' '
+        'Acesse o seguinte link e busque pelo ativo que deseja enviar para a manutenção',
+        <Link to="/ListaAtivos">Listagem de ativos</Link>,
+        'Após isso, clique no botão à direita, que se assemelha à uma ferramenta, o que vai abrir uma nova janela',
+        'Nela você pode clicar e programar uma nova manutenção.',
+        'Quando a manutenção estiver mais próxima, será enviada uma notificação avisando.'
       ]
     },
     { 
       title: 'Como ver o histórico da manutenção de um ativo', 
       type: 'text', 
       content: [
-        ' '
+        'Acesse o seguinte link e busque pelo ativo que deseja enviar para a manutenção',
+        <Link to="/ListaAtivos">Listagem de ativos</Link>,
+        'Após isso, clique no botão à direita, que se assemelha à uma ferramenta, o que vai abrir uma nova janela',
+        'Nela você pode clicar em "histórico" e visualizar as manutenções já feitas.',
+      
       ]
     },
     { 
@@ -123,7 +144,10 @@ export default function ManualUsuario() {
       title: 'Como acessar os relatórios', 
       type: 'text', 
       content: [
-        ' '
+        'Acesse o seguinte link:',
+        <Link to="/Relatórios">Página de relatórios</Link>,
+        'Configure a visualização que deseja, selecionando o período de tempo e os dados a serem considerados.',
+        'Caso deseje, é possível baixar o relatório que foi gerado, a partir do botão de exportação.'
       ]
     }
   ];
