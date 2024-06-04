@@ -8,6 +8,7 @@ import CampoPadrao from '../components/CampoPadrao'
 import CampoData from '../components/CampoData'
 import CampoRadio from '../components/CampoRadio';
 import CampoDescricao from '../components/CampoDescricao'
+import CampoArquivo from '../components/CampoArquivo'
 
 export default function CadastroAtivos() {
     const paginaAtivosTangiveis = CadastroAtivosTangiveis()
@@ -80,6 +81,13 @@ export default function CadastroAtivos() {
         false
     )
 
+    const campoNotaFiscal = CampoArquivo(
+        "Nota Fiscal",
+        false,
+        "Formatos aceitos: (PNG, PDF)",
+        [".png", ".pdf"]
+    )
+
     const [proximo, setProximo] = useState(0)
 
     const [textoResposta, setTextoResposta] = useState('')
@@ -135,7 +143,8 @@ export default function CadastroAtivos() {
                                     "descricao": campoDescricao.dado,
                                     "numeroIdentificacao": campoIdentificador.dado,
                                     "marca": campoMarca.dado,
-                                    "dataAquisicao": campoDataAquisicao.dado
+                                    "dataAquisicao": campoDataAquisicao.dado,
+                                    "idNotaFiscal": campoNotaFiscal.dado
                                 },
                                 "garantia": paginaAtivosTangiveis.dados.garantia,
                                 "taxaDepreciacao": parseFloat(paginaAtivosTangiveis.dados.taxaDepreciacao.replace('%', '')),
@@ -293,6 +302,7 @@ export default function CadastroAtivos() {
                         </div>
                         <div className='colunaFormsAtivo'>
                             {campoDescricao.codigo}
+                            {campoNotaFiscal.codigo}
                         </div>
                         <div className='divBotaoForms'>
                             <div />

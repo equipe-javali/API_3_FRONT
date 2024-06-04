@@ -1,46 +1,49 @@
 :root {
   --gapformsAtualizarAtivo: 20px;
   --divisaoCampoForms1: 55%;
-  --divisaoCampoForms2: calc(100% - var(--divisaoCampoForms1) - var(--gapformsAtualizarAtivo));
+  --divisaoCampoForms2: calc(100% - var(--divisaoCampoForms1) - var(--gapformsAtualizarAtivo)); /* Ajustado para incluir o gap */
 }
 
 .atualizarAtivo {
   min-height: calc(100vh - var(--heightHeader) - var(--gapformsAtualizarAtivo));
   padding: var(--gapformsAtualizarAtivo);
+  display: flex;
+  flex-direction: column;
 }
 
 .formsAtualizarAtivo,
-.formsAtualizarAtivo>div {
+.formsAtualizarAtivo > div {
   height: 100%;
   width: 100%;
 }
 
-.formsAtualizarAtivo>div {
+.formsAtualizarAtivo > div {
   flex: 1;
 }
-
 
 .tituloFormsAtualizarAtivo *,
 .divisaoFormsEditar1 * {
   font-size: 25px;
 }
 
+/* Flexbox para os principais containers */
 .atualizarAtivo,
 .tituloFormsAtualizarAtivo,
 .formsAtualizarAtivo,
-.formsAtualizarAtivo>div,
-.divisaoFormsEditar2>div,
-.divisaoFormsEditar2>div:first-child>div,
+.formsAtualizarAtivo > div,
+.divisaoFormsEditar2 > div,
+.divisaoFormsEditar2 > div:first-child > div,
 .divisaoFormsEditar3,
-.divisaoFormsEditar3>div,
+.divisaoFormsEditar3 > div,
 .divisaoFormsEditar4,
-.divisaoFormsEditar4>div {
+.divisaoFormsEditar4 > div {
   display: flex;
   gap: var(--gapformsAtualizarAtivo);
 }
 
+/* Estilos específicos para cada container */
 .tituloFormsAtualizarAtivo {
-  align-items: top;
+  align-items: flex-start;
   height: min-content;
   gap: 0;
 }
@@ -54,16 +57,17 @@
   flex-direction: column;
 }
 
+/* Estilos para as divisões do formulário */
 .divisaoFormsEditar1,
 .divisaoFormsEditar2,
 .divisaoFormsEditar3,
-.divisaoFormsEditar4>div:first-child {
+.divisaoFormsEditar4 > div:first-child {
   background-color: var(--cor8);
   border-radius: 5px;
   padding: 10px;
 }
 
-.divisaoFormsEditar2>div:last-child {
+.divisaoFormsEditar2 > div:last-child {
   padding-top: var(--gapformsAtualizarAtivo);
 }
 
@@ -71,7 +75,7 @@
   height: 100%;
 }
 
-.divisaoFormsEditar4>div:first-child {
+.divisaoFormsEditar4 > div:first-child {
   width: 60%;
 }
 
@@ -96,24 +100,25 @@
   height: 100%;
 }
 
+/* Alinhamento e quebra de linha */
 .formsAtualizarAtivo,
 .divisaoFormsEditar2,
 .divisaoFormsEditar2>div,
 .divisaoFormsEditar4,
-.divisaoFormsEditar4>div:first-child {
+.divisaoFormsEditar4 > div:first-child {
   justify-content: space-between;
 }
 
 .divisaoFormsEditar2>div>div,
 .divisaoFormsEditar3,
-.divisaoFormsEditar3>div,
-.divisaoFormsEditar4>div:last-child {
+.divisaoFormsEditar3 > div,
+.divisaoFormsEditar4 > div:last-child {
   justify-content: space-around;
 }
 
 .formsAtualizarAtivo,
 .tituloFormsAtualizarAtivo,
-.divisaoFormsEditar2>div:first-child,
+.divisaoFormsEditar2 > div:first-child,
 .divisaoFormsEditar3,
 .divisaoFormsEditar4 {
   flex-wrap: wrap;
@@ -132,7 +137,8 @@
   flex: 1;
 }
 
-.botoesFormsEditar>* {
+/* Estilos dos botões */
+.botoesFormsEditar > * {
   text-align: center;
   width: 100%;
   color: var(--branco1);
@@ -143,13 +149,12 @@
   padding: 8px;
 }
 
-.botoesFormsEditar>*:first-child,
-.botoesFormsEditar>*:nth-child(2) {
+.botoesFormsEditar > *:first-child,
+.botoesFormsEditar > *:nth-child(2) {
   background-color: var(--cor12);
 }
 
-
-.botoesFormsEditar>*:last-child {
+.botoesFormsEditar > *:last-child {
   background-color: var(--cor5);
 }
 

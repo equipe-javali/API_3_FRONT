@@ -10,6 +10,13 @@ import CampoSemTitulo from '../components/CampoSemTitulo';
 import CampoDropdown from '../components/CampoDropdown';
 import { Link } from 'react-router-dom';
 import CampoDesativado from '../components/CampoDesativado';
+import DownloadArquivo from '../components/DownloadArquivo';
+
+type notafiscal = {
+    "nome": string,
+    "tipoDocumento": string,
+    "documento": string
+}
 
 interface Ativo {
     nome: string;
@@ -20,7 +27,7 @@ interface Ativo {
     dataLimite: string;
     marca: string;
     numeroIdentificacao: string;
-    //anexos: Documento[];
+    idNotaFiscal: notafiscal;
     descricao: string;
     tipo: string;
     grauImportancia: number;
@@ -68,6 +75,7 @@ export default function AtualizarAtivo() {
         setTipoResposta('')
     }
     useEffect(() => {
+
         if (tipoResposta === "Sucesso") {
             const timer = setTimeout(() => {
                 fechaPopUp();
@@ -85,7 +93,11 @@ export default function AtualizarAtivo() {
         dataLimite: "",
         marca: "",
         numeroIdentificacao: "",
-        //anexos: Documento[];
+        idNotaFiscal: {
+            nome: "",
+            tipoDocumento: "",
+            documento: ""
+        },
         descricao: "",
         tipo: "",
         grauImportancia: 0,
@@ -106,7 +118,7 @@ export default function AtualizarAtivo() {
                 })
                 if (responseIntangivel.status === 200) {
                     const dadosAtivo = await responseIntangivel.json();
-                    console.log(dadosAtivo)
+                    console.log(dadosAtivo);
                     setDadosAtivo({
                         ...dadosAtivo.ativo,
                         periodoOperacional: dadosAtivo.periodoAmortizacao,
@@ -139,6 +151,7 @@ export default function AtualizarAtivo() {
                         setTextoResposta(`Erro ao procurar ativos tangíveis! Erro:${responseIntangivel.status}`);
                         setTipoResposta('Erro');
                     }
+
                 }
             } catch (error) {
                 setTextoResposta(`Erro ao processar requisição! Erro:${error}`);
@@ -152,7 +165,7 @@ export default function AtualizarAtivo() {
                         "Authorization": token
                     }
                 })
-                if (responseUsuario.status === 200){
+                if (responseUsuario.status === 200) {
                     const usuarios: Usuario[] = await responseUsuario.json();
                     console.log(usuarios);
                     setListaUsuarios(usuarios);
@@ -172,7 +185,7 @@ export default function AtualizarAtivo() {
                         "Authorization": token
                     }
                 })
-                if (responseManutencao.status === 200){
+                if (responseManutencao.status === 200) {
                     const manutencoes: Manutencao[] = await responseManutencao.json()
                     console.log(manutencoes)
                     setListaManutencoes(manutencoes)
@@ -357,10 +370,12 @@ export default function AtualizarAtivo() {
                 return
             }
         }
+
         if (campoResponsavel.dado) {
             setStatus("Em uso")
         } else {
             setStatus("Não alocado")
+
 
         }
     }, [campoResponsavel.dado, listaManutencoes])
@@ -423,25 +438,38 @@ export default function AtualizarAtivo() {
                         campoImportancia.dado === 'Média' ? 2 :
                             campoImportancia.dado === 'Baixa' ? 1 :
                                 0
-                let idResponsavel: number = 0
                 const custo = parseFloat(campoCustoAquisicao.dado.replace('R$', '').replace(/\./g, '').replace(',', '.'));
                 const taxa = parseFloat(campoTaxaOperacional.dado.replace('%', ''));
                 const usuarioDesejado = listaUsuarios.find(usuario => usuario.nome === campoResponsavel.dado);
+                let ativo: Object
                 if (usuarioDesejado) {
-                    idResponsavel = usuarioDesejado.id
-                }
-                const ativo = {
-                    id,
-                    nome: campoNome.dado,
-                    custoAquisicao: custo,
-                    tipo: campoCategoria.dado,
-                    tag: campoTag.dado,
-                    importancia: importancia,
-                    idResponsavel: { id: idResponsavel },
-                    descricao: campoDescricao.dado,
-                    numeroIdentificacao: campoIdentificador.dado,
-                    marca: campoMarca.dado,
-                    dataAquisicao: campoDataAquisicao.dado
+                    const idResponsavel = usuarioDesejado.id
+                    ativo = {
+                        id,
+                        nome: campoNome.dado,
+                        custoAquisicao: custo,
+                        tipo: campoCategoria.dado,
+                        tag: campoTag.dado,
+                        importancia: importancia,
+                        idResponsavel: { id: idResponsavel },
+                        descricao: campoDescricao.dado,
+                        numeroIdentificacao: campoIdentificador.dado,
+                        marca: campoMarca.dado,
+                        dataAquisicao: campoDataAquisicao.dado
+                    }
+                } else {
+                    ativo = {
+                        id,
+                        nome: campoNome.dado,
+                        custoAquisicao: custo,
+                        tipo: campoCategoria.dado,
+                        tag: campoTag.dado,
+                        importancia: importancia,
+                        descricao: campoDescricao.dado,
+                        numeroIdentificacao: campoIdentificador.dado,
+                        marca: campoMarca.dado,
+                        dataAquisicao: campoDataAquisicao.dado
+                    }
                 }
                 if (tipoAtivo === "Tangível") {
                     const atualizarAtivoTangivel = await fetch(`http://localhost:8080/ativoTangivel/atualizacao/${id}`, {
@@ -522,7 +550,14 @@ export default function AtualizarAtivo() {
                                 {campoMarca.codigo}
                             </div>
                         </div>
-                        {campoDescricao.codigo}
+                        <div>
+                            {campoDescricao.codigo}
+                            <DownloadArquivo
+                                titulo={"Nota Fiscal"}
+                                texto={"Download"}
+                                dadosArquivo={dadosAtivo.idNotaFiscal}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div>
