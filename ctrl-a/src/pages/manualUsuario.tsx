@@ -61,7 +61,7 @@ export default function ManualUsuario() {
       title: 'Como atualizar usuários', 
       type: 'text', 
       content: [
-        'Acesse o seguinte link e busque pelo usuário que deseja atualizar',
+        'Acesse o seguinte link e busque pelo usuário que deseja atualizar:',
         <Link to="/ListaUsuarios">Listagem de usuários</Link>,
         'Após isso, clique no botão à direita, que se assemelha à um lápis',
         'Uma nova aba será aberta, contendo todas as informações do respectivo usuário. Basta encontrar a informação que deseja alterar e modificá-la.',
@@ -72,7 +72,7 @@ export default function ManualUsuario() {
       title: 'Como excluir usuários', 
       type: 'text', 
       content: [
-        'Acesse o seguinte link e busque pelo usuário que deseja excluir',
+        'Acesse o seguinte link e busque pelo usuário que deseja excluir:',
         <Link to="/ListaUsuarios">Listagem de usuários</Link>,
         'Após isso, clique no botão à direita, que se assemelha à uma lixeira',
         'Pronto, o usuário foi excluído.'
@@ -94,7 +94,7 @@ export default function ManualUsuario() {
       title: 'Como atualizar ativos', 
       type: 'text', 
       content: [
-        'Acesse o seguinte link e busque pelo ativo que deseja atualizar',
+        'Acesse o seguinte link e busque pelo ativo que deseja atualizar:',
         <Link to="/ListaAtivos">Listagem de ativos</Link>,
         'Após isso, clique no botão à direita, que se assemelha à um lápis',
         'Uma nova aba será aberta, contendo todas as informações do respectivo ativo. Basta encontrar a informação que deseja alterar e modificá-la.',
@@ -105,7 +105,7 @@ export default function ManualUsuario() {
       title: 'Como excluir ativos', 
       type: 'text', 
       content: [
-        'Acesse o seguinte link e busque pelo ativo que deseja excluir',
+        'Acesse o seguinte link e busque pelo ativo que deseja excluir:',
         <Link to="/ListaAtivos">Listagem de ativos</Link>,
         'Após isso, clique no botão à direita, que se assemelha à uma lixeira',
         'Pronto, o ativo foi excluído.'
@@ -113,31 +113,36 @@ export default function ManualUsuario() {
     },
     { 
       title: 'Como enviar um ativo para a manutenção', 
-      type: 'text', 
+      type: 'text',
       content: [
-        'Acesse o seguinte link e busque pelo ativo que deseja enviar para a manutenção',
+        'Acesse o seguinte link e busque pelo ativo que deseja enviar para a manutenção:',
         <Link to="/ListaAtivos">Listagem de ativos</Link>,
         'Após isso, clique no botão à direita, que se assemelha à uma ferramenta, o que vai abrir uma nova janela',
-        'Nela você pode clicar e programar uma nova manutenção.',
-        'Quando a manutenção estiver mais próxima, será enviada uma notificação avisando.'
+        'Nela uma nova janela será aberta, onde poderá ser programada uma nova manutenção.',
+        'Conforme a data da manutenção se aproxima, uma notificação avisando da data será enviada como lembrete.'
+      
       ]
     },
     { 
       title: 'Como ver o histórico da manutenção de um ativo', 
       type: 'text', 
       content: [
-        'Acesse o seguinte link e busque pelo ativo que deseja enviar para a manutenção',
+        'Acesse o seguinte link e busque pelo ativo que deseja ver o histórico de manutenções:',
         <Link to="/ListaAtivos">Listagem de ativos</Link>,
-        'Após isso, clique no botão à direita, que se assemelha à uma ferramenta, o que vai abrir uma nova janela',
-        'Nela você pode clicar em "histórico" e visualizar as manutenções já feitas.',
-      
+        'Após isso, clique no botão à direita, que se assemelha à um lápis.',
+        'Uma nova aba será aberta, nela, você clica em "histórico manutenção".',
+        'Pronto! Você já pode visualizar o histórico.'
       ]
     },
     { 
-      title: 'Como ver o histórico de atualização de um ativo', 
+      title: 'Como ver a linha do tempo de um ativo', 
       type: 'text', 
       content: [
-        ' '
+        'Acesse o seguinte link e busque pelo ativo que deseja ver a linha do tempo:',
+        <Link to="/ListaAtivos">Listagem de ativos</Link>,
+        'Após isso, clique no botão à direita, que se assemelha à um lápis.',
+        'Uma nova aba será aberta, nela, você clica em "linha do tempo".',
+        'Pronto! Você já pode visualizar a linha do tempo.'
       ]
     },
     { 
