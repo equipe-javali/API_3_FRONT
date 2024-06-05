@@ -82,10 +82,11 @@ export default function CadastroAtivos() {
     )
 
     const campoNotaFiscal = CampoArquivo(
-        "Nota Fiscal",
-        false,
-        "Formatos aceitos: (PNG, PDF)",
-        [".png", ".pdf"]
+        "Nota Fiscal:",
+        [".png", ".pdf"],
+        "Enviar nota fiscal",
+        5,
+        false
     )
 
     const [proximo, setProximo] = useState(0)
@@ -117,6 +118,8 @@ export default function CadastroAtivos() {
         if (campoIdentificador.dado === '') {
             setAvisoIdentificador("Insira um número identificador!")
             certo = false
+        } if (campoNotaFiscal.erroCampo) {
+            certo = false
         }
         if (certo) {
             const custo = parseFloat(campoCustoAquisicao.dado.replace('R$', '').replace(/\./g, '').replace(',', '.'));
@@ -124,7 +127,6 @@ export default function CadastroAtivos() {
                 if (CampoTipo.dado === "Tangível") {
                     if (paginaAtivosTangiveis.dados.garantia === '') {
                         paginaAtivosTangiveis.validacoes.setValidarGarantia("Insira uma garantia!")
-                        certo = false
                     } else {
                         const importancia: number =
                             paginaAtivosTangiveis.dados.importancia === 'Alta' ? 3 :
@@ -144,7 +146,11 @@ export default function CadastroAtivos() {
                                     "numeroIdentificacao": campoIdentificador.dado,
                                     "marca": campoMarca.dado,
                                     "dataAquisicao": campoDataAquisicao.dado,
-                                    "idNotaFiscal": campoNotaFiscal.dado
+                                    "idNotaFiscal": {
+                                        "nome": campoNotaFiscal.dado.nome,
+                                        "tipoDocumento": campoNotaFiscal.dado.tipoArquivo,
+                                        "documento": campoNotaFiscal.dado.documento
+                                    }
                                 },
                                 "garantia": paginaAtivosTangiveis.dados.garantia,
                                 "taxaDepreciacao": parseFloat(paginaAtivosTangiveis.dados.taxaDepreciacao.replace('%', '')),
@@ -161,6 +167,16 @@ export default function CadastroAtivos() {
                                 if (response.status === 201) {
                                     setTextoResposta("Ativo cadastrado com sucesso!")
                                     setTipoResposta("Sucesso")
+                                    campoNome.limpar()
+                                    campoCustoAquisicao.limpar()
+                                    campoCustoAquisicao.limpar()
+                                    campoMarca.limpar()
+                                    campoIdentificador.limpar()
+                                    campoNotaFiscal.limpar()
+                                    campoDataAquisicao.limpar()
+                                    campoCategoria.limpar()
+                                    campoDescricao.limpar()
+                                    paginaAtivosTangiveis.limpar()
                                 }
                                 else {
                                     setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
@@ -175,7 +191,6 @@ export default function CadastroAtivos() {
                 } else {
                     if (paginaAtivosIntangiveis.dados.expiracao === '') {
                         paginaAtivosIntangiveis.validacoes.setValidarExpiracao("Insira uma data de Expiração!")
-                        certo = false
                     } else {
                         const importancia: number =
                             paginaAtivosIntangiveis.dados.importancia === 'Alta' ? 3 :
@@ -194,7 +209,12 @@ export default function CadastroAtivos() {
                                     "descricao": campoDescricao.dado,
                                     "numeroIdentificacao": campoIdentificador.dado,
                                     "marca": campoMarca.dado,
-                                    "dataAquisicao": campoDataAquisicao.dado
+                                    "dataAquisicao": campoDataAquisicao.dado,
+                                    "idNotaFiscal": {
+                                        "nome": campoNotaFiscal.dado.nome,
+                                        "tipoDocumento": campoNotaFiscal.dado.tipoArquivo,
+                                        "documento": campoNotaFiscal.dado.documento
+                                    }
                                 },
                                 "dataExpiracao": paginaAtivosIntangiveis.dados.expiracao,
                                 "taxaAmortizacao": parseFloat(paginaAtivosIntangiveis.dados.taxaAmortizacao.replace('%', '')),
@@ -211,6 +231,16 @@ export default function CadastroAtivos() {
                                 if (response.status === 201) {
                                     setTextoResposta("Ativo cadastrado com sucesso!")
                                     setTipoResposta("Sucesso")
+                                    campoNome.limpar()
+                                    campoCustoAquisicao.limpar()
+                                    campoCustoAquisicao.limpar()
+                                    campoMarca.limpar()
+                                    campoIdentificador.limpar()
+                                    campoNotaFiscal.limpar()
+                                    campoDataAquisicao.limpar()
+                                    campoCategoria.limpar()
+                                    campoDescricao.limpar()
+                                    paginaAtivosIntangiveis.limpar()
                                 }
                                 else {
                                     setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
@@ -222,18 +252,6 @@ export default function CadastroAtivos() {
                                 setTipoResposta("Erro")
                             })
                     }
-                }
-                if (certo) {
-                    campoNome.limpar()
-                    campoCustoAquisicao.limpar()
-                    campoCustoAquisicao.limpar()
-                    campoMarca.limpar()
-                    campoIdentificador.limpar()
-                    campoDataAquisicao.limpar()
-                    campoCategoria.limpar()
-                    campoDescricao.limpar()
-                    paginaAtivosIntangiveis.limpar()
-                    paginaAtivosTangiveis.limpar()
                 }
             } catch (error) {
                 setTextoResposta(`Erro ao processar requisição! Erro:${error}`)
@@ -299,10 +317,10 @@ export default function CadastroAtivos() {
                         </div>
                         <div className='colunaFormsAtivo'>
                             {CampoTipo.codigo}
+                            {campoNotaFiscal.codigo}
                         </div>
                         <div className='colunaFormsAtivo'>
                             {campoDescricao.codigo}
-                            {campoNotaFiscal.codigo}
                         </div>
                         <div className='divBotaoForms'>
                             <div />
