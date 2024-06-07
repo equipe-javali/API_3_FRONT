@@ -1,0 +1,53 @@
+.relatorios {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.relatorios .filtro-datas {
+    display: flex;
+    align-items: center;
+    gap: 100px;
+}
+
+.relatorios .filtro-datas>button {
+    all: unset;
+    width: 300px;
+    height: 30px;
+    padding: 5px;
+    text-align: center;
+    background-color: var(--cor4);
+    border-radius: 5px;
+}
+
+.relatorios .filtro-datas>button:hover {
+    cursor: pointer;
+    background-color: #853f85be;
+}
+
+.relatorios .filtro-escolha {
+    width: 100%;
+    margin: 5px 0 5px 0;
+    display: flex;
+}
+
+.relatorios .filtro-escolha>button {
+    all: unset;
+    padding: 10px;
+}
+
+.relatorios .filtro-escolha .btn-escolha {
+    border-bottom: var(--branco1) 0.5px solid;
+}
+
+.relatorios .filtro-escolha .btn-borda {
+    border-left: var(--branco1) 0.5px solid;
+    border-right: var(--branco1) 0.5px solid;
+    border-top: var(--branco1) 0.5px solid;
+}
+
+.relatorios .filtro-escolha .linha {
+    border-bottom: solid 0.5px var(--branco1);
+    width: 80%;
+}

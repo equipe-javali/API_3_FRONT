@@ -2,6 +2,7 @@ import { useState } from "react"
 import CampoData from "../components/CampoData"
 import RelatorioAtivos from "./relatorioAtivos"
 import RelatorioManutencoes from "./relatorioManutencoes"
+import "./css/relatorios.css"
 
 export default function Relatorios() {
     const dataInicial = CampoData("Data inicial:", "data", "", false)
@@ -20,11 +21,13 @@ export default function Relatorios() {
                 <button className="btn-exportar">Exportar</button>
             </div>
             <div className="filtro-escolha">
-                <button className="btn-ativos" onClick={ativos}>ATIVOS</button>
-                <button className="btn-manutencoes" onClick={manutencoes}>MANUTENÇÕES</button>
+                <button className={changeRelatorio == "ativos" ? "btn-borda" : "btn-escolha"} onClick={ativos}>ATIVOS</button>
+                <button className={changeRelatorio == "manutencoes" ? "btn-borda" : "btn-escolha"} onClick={manutencoes}>MANUTENÇÕES</button>
+                <div className="linha"></div>
             </div>
             <div className="container-relatorios">
-                {changeRelatorio == "ativos" ? <RelatorioAtivos dataInicial={dataInicial.dado} dataFinal={dataFinal.dado} /> 
+                {changeRelatorio == "ativos" ? 
+                <RelatorioAtivos dataInicial={dataInicial.dado} dataFinal={dataFinal.dado} /> 
                 : <RelatorioManutencoes dataInicial={dataInicial.dado} dataFinal={dataFinal.dado}/>}
             </div>
         </div>

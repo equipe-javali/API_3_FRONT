@@ -1,0 +1,67 @@
+.relatorios-ativos .linha1Ativos, .relatorios-ativos .linha2Ativos {
+    display: flex;
+    align-items: center;
+    margin-bottom: 50px;
+    gap: 50px;
+}
+
+.linha1Ativos .totalAtivos, .linha1Ativos .valorTotalAtivos{
+    padding: 20px;
+    text-align: center;
+    font-size: medium;
+    border-radius: 10px;
+    background-color: var(--cor8);
+}
+
+.linha1Ativos .totalAtivos .valorCard, .linha1Ativos .valorTotalAtivos .valorCard{
+    font-size: 350%;
+}
+
+.linha1Ativos .totalAtivos {
+    width: 20%;
+}
+
+.linha1Ativos .valorTotalAtivos{
+    width: 50%;
+}
+
+.relatorios-ativos .linha1Ativos .btnsTiposAtivos{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.linha1Ativos .btnsTiposAtivos .btnAtivos{
+    all: unset;
+    width: 150px;
+    height: 20px;
+    padding: 2%;
+    text-align: center;
+    border-radius: 10px;
+    background-color: var(--cor9);
+}
+
+.linha1Ativos .btnsTiposAtivos .btnAtivos:hover{
+    cursor: pointer;
+}
+
+.linha1Ativos .btnsTiposAtivos .btnSelected{
+    background-color: var(--cor4);
+}
+
+
+.linha2Ativos .statusAtivos, .linha2Ativos .qntdLocalAtivos{
+    padding: 20px;
+    font-size: medium;
+    border-radius: 10px;
+    background-color: var(--cor8);
+}
+
+.linha2Ativos .statusAtivos{
+    width: 20%;
+    text-align: center;
+}
+
+.linha2Ativos .qntdLocalAtivos {
+    width: 70%;
+}
