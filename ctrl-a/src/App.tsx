@@ -11,6 +11,8 @@ import Home from './pages/home';
 import HistoricoManutencao from './pages/historicoManutencaoAtivo';
 import VisualizarHistorico from './pages/VisualizarHistorico'
 import AtualizarUsuario from './pages/atualizarUsuario';
+import EsqueciSenha from './pages/esqueciSenha';
+import Relatorios from './pages/relatorios';
 import ManualUsuario from './pages/manualUsuario';
 export default function App() {
   return (
@@ -18,6 +20,7 @@ export default function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="/CadastroUsuarioAdm" element={<CriarUsuarioAdm />} />
+        <Route path="/RedefinirSenha" element={<EsqueciSenha />} />
         <Route element={<BaseLateralHeader />}>
           <Route path="/ListaAtivos" element={<DashboardAtivos />} />
           <Route path="/ListaUsuarios" element={<VisualizarUsuario />} />
@@ -27,6 +30,7 @@ export default function App() {
           <Route path="/AtualizarAtivo/:id" element={< AtualizarAtivo />} />
           <Route path="/EdicaoUsuario/:id" element={< AtualizarUsuario />} />
           <Route path="/Historico/:id" element={< VisualizarHistorico />} />
+          <Route path="/Relatorios" element={< Relatorios />} />
           <Route path="/Manual" element={< ManualUsuario/>} />
           <Route path="*" element={<DashboardAtivos />} />
         </Route>
