@@ -42,23 +42,28 @@ export default class Notificacao extends Component<Props, State> {
 
   buscarDadosAtualizados = () => {
     const token = getLocalToken();
+    const handleFetchResponse = async (response: Response) => {
+      if (response.status === 204) {
+        return [];
+      } else if (!response.ok) {
+        throw new Error(
+          `Erro na requisição: ${response.status} - ${response.statusText}`
+        );
+      } else {
+        return response.json();
+      }
+    };
 
     Promise.all([
       fetch("http://localhost:8080/ativoTangivel/listagemTodos", {
         headers: { Authorization: token },
-      }).then((res) => res.json()),
+      }).then(handleFetchResponse),
       fetch("http://localhost:8080/ativoIntangivel/listagemTodos", {
         headers: { Authorization: token },
-      }).then((res) => {
-        if (res.status === 204) {          
-          return []; 
-        } else {
-          return res.json();
-        }
-      }),      
+      }).then(handleFetchResponse),
       fetch("http://localhost:8080/manutencao/listagemTodos", {
         headers: { Authorization: token },
-      }).then((res) => res.json()),
+      }).then(handleFetchResponse),
     ])
       .then(([ativosTangiveisData, ativosIntangiveisData, manutencoesData]) => {
         if (
@@ -76,7 +81,7 @@ export default class Notificacao extends Component<Props, State> {
 
         const ativosGarantia = ativosTangiveisData
           .filter((ativo: any) => {
-            const dataGarantia = moment(ativo.garantia); 
+            const dataGarantia = moment(ativo.garantia);
             const today = moment();
             return (
               dataGarantia.isValid() && dataGarantia.diff(today, "days") <= 10
@@ -115,7 +120,6 @@ export default class Notificacao extends Component<Props, State> {
             dataFim: manutencao.dataFim,
             ativo: manutencao.ativo,
           }));
-
         this.setState(
           { ativosGarantia, ativosExpiracao, manutencoesProximas },
           () => {
@@ -135,7 +139,6 @@ export default class Notificacao extends Component<Props, State> {
   render() {
     const { ativosGarantia, ativosExpiracao, manutencoesProximas } = this.state;
 
-    // Verifica se há alguma notificação
     const temNotificacoes =
       ativosGarantia.length > 0 ||
       ativosExpiracao.length > 0 ||

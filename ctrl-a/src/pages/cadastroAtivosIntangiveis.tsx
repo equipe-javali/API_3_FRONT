@@ -29,11 +29,11 @@ export default function CadastroAtivosIntangiveis() {
         false
     )
 
-    const periodoAmortizacao = CampoPadrao(
+    const periodoAmortizacao = CampoDropdown(
         "Período de amortização:",
-        "text",
-        "Exemplo: anos, meses",
-        "Amortização",
+        [ "diário", "mensal", "semestral", "anual"],
+        "",
+        "Escolha um período de amortização",
         false
     )
 
@@ -61,7 +61,7 @@ export default function CadastroAtivosIntangiveis() {
                 {/* anexo.codigo */}
             </div>
             <div className='colunaFormsAtivo'>
-                {importancia.dado}
+                {importancia.codigo}
                 {periodoAmortizacao.codigo}
                 {taxaAmortizacao.codigo}
             </div>

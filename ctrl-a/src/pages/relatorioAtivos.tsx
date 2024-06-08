@@ -1,14 +1,34 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import "./css/relatorioAtivos.css"
 
 export default function RelatorioAtivos({ dataInicial, dataFinal }: { dataInicial: string, dataFinal: string }) {
-    const [selectedButton, setSelectedButton] = useState("geral")
-    let selected = (value: string) => {setSelectedButton(value)}
+    const [selectedButton, setSelectedButton] = useState("geral");
+    const [dadosAtivos, setDadosAtivos] = useState([]); 
+  
+    let selected = (value: string) => {
+      setSelectedButton(value);
+    };
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `/api/ativos?dataInicial=${dataInicial}&dataFinal=${dataFinal}&tipo=${selectedButton}`
+          );
+          const data = await response.json();
+          setDadosAtivos(data); 
+        } catch (error) {
+          console.error("Erro ao buscar dados:", error);
+          
+        }
+      };
+  
+      fetchData(); 
+    }, [dataInicial, dataFinal, selectedButton]); 
 
     return (
         <div className="relatorios-ativos">
-            {/* variáveis para manipular as datas selecionadas no filtro */}
-            {/* quando criar o fetch, utilizar estas variáveis para a filtragem */}
+            
             {dataInicial}
             {dataFinal}
             <div className="linha1Ativos">
