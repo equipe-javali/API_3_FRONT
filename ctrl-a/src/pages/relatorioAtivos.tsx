@@ -25,7 +25,7 @@ export default function RelatorioAtivos({
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/ativo/listagemTodos?dataicial=${dataInicial}&dataFinal=${dataFinal}&tipo=${selectedButton}`
+          `http://localhost:8080/ativo/listagemTodos?datainicial=${dataInicial}&dataFinal=${dataFinal}&tipo=${selectedButton}`
           , {
             headers: {
                 'Content-Type': 'application/json',

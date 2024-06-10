@@ -52,6 +52,8 @@ interface RelatorioManutencoesProps {
         loading: true, 
         error: null,
       });
+    const totalManutencoes = dadosManutencoes.length;
+    const valorTotalManutencoes = dadosManutencoes.reduce((acc, manutencao) => acc + manutencao.custo, 0);
     
     const [ativos, setAtivos] = useState<Ativo[]>([]);
     const [loading, setLoading] = useState(true); 
@@ -156,9 +158,18 @@ interface RelatorioManutencoesProps {
       {dataInicial}
       {dataFinal}
       <div className="linha1Manutencoes">
+      <div className="totalManutencoes">
+          <p>TOTAL DE MANUTENÇÕES</p>
+          <p className="valorCard">{totalManutencoes}</p>
+        </div>
         <div className="valorTotalManutencoes">
           <p>VALOR TOTAL DAS MANUTENÇÕES</p>
-          <p className="valorCard">R$2000,00</p>
+          <p className="valorCard">
+            R$
+            {valorTotalManutencoes.toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })}
+          </p>
         </div>
         <div className="btnsTipoManutencoes">
           <div className="linha1btns">
@@ -231,9 +242,7 @@ interface RelatorioManutencoesProps {
             </div>
           </>
         )}
-
-        {chartData.loading && <p>Carregando dados...</p>} 
-        {chartData.error && <p>{chartData.error}</p>}
+        
       </div>
     </div>
   );

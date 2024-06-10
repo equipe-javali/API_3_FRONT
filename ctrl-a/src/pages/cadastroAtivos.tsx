@@ -222,7 +222,7 @@ export default function CadastroAtivos() {
                                     "numeroIdentificacao": campoIdentificador.dado,
                                     "marca": campoMarca.dado,
                                     "dataAquisicao": campoDataAquisicao.dado,
-                                    "valorResidual": custo,
+                                    "valorResidual": valorResidual,
                                     "idNotaFiscal": {
                                         "nome": campoNotaFiscal.dado.nome,
                                         "tipoDocumento": campoNotaFiscal.dado.tipoArquivo,
@@ -255,6 +255,7 @@ export default function CadastroAtivos() {
                                     campoCategoria.limpar()
                                     campoDescricao.limpar()
                                     paginaAtivosIntangiveis.limpar()
+                                    campoValorResidual.limpar()
                                 }
                                 else {
                                     setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
