@@ -164,7 +164,7 @@ export default function CadastroAtivos() {
                                     }
                                 },
                                 "garantia": paginaAtivosTangiveis.dados.garantia,
-                                "taxaDepreciacao": parseFloat(paginaAtivosTangiveis.dados.taxaDepreciacao.replace('%', '')),
+                                "taxaDepreciacao": paginaAtivosTangiveis.dados.taxaDepreciacao,
                                 "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao
                             }),
                             headers: {
@@ -230,7 +230,7 @@ export default function CadastroAtivos() {
                                     }
                                 },
                                 "dataExpiracao": paginaAtivosIntangiveis.dados.expiracao,
-                                "taxaAmortizacao": parseFloat(paginaAtivosIntangiveis.dados.taxaAmortizacao.replace('%', '')),
+                                "taxaAmortizacao": paginaAtivosIntangiveis.dados.taxaAmortizacao,
                                 "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao
                             }),
                             headers: {
