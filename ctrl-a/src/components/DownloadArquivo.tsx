@@ -34,7 +34,7 @@ export default function DownloadArquivo(props: props) {
             <div>
                 <span>{props.titulo}</span>
                 <div className="inputCampoSenha">
-                    <a href={downloadLink()} download>{props.texto}</a>
+                    <a href={downloadLink()} download={props.dadosArquivo.nome}>{props.texto}</a>
                 </div>
             </div>
         </div>
