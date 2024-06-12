@@ -1,5 +1,5 @@
 import './css/atualizarAtivo.css';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import RespostaSistema from '../components/respostaSistema';
 import getLocalToken from '../utils/getLocalToken';
@@ -12,11 +12,6 @@ import { Link } from 'react-router-dom';
 import CampoDesativado from '../components/CampoDesativado';
 import DownloadArquivo from '../components/DownloadArquivo';
 
-type notafiscal = {
-    "nome": string,
-    "tipoDocumento": string,
-    "documento": string
-}
 
 interface Ativo {
     nome: string;
@@ -27,7 +22,7 @@ interface Ativo {
     dataLimite: string;
     marca: string;
     numeroIdentificacao: string;
-    idNotaFiscal: notafiscal;
+    idNotaFiscal: NotaFiscal;
     descricao: string;
     tipo: string;
     grauImportancia: number;
@@ -64,28 +59,15 @@ type Manutencao = {
     localizacao: string;
 };
 
-export default function AtualizarAtivo() {
-    const { id } = useParams<{ id: string }>();
-    const token = getLocalToken();
-    const navegar = useNavigate();
+type NotaFiscal = {
+    "nome": string,
+    "tipoDocumento": string,
+    "documento": string
+}
 
+export default function AtualizarAtivo() {
     const [textoResposta, setTextoResposta] = useState('');
     const [tipoResposta, setTipoResposta] = useState('');
-    function fechaPopUp() {
-        setTextoResposta('')
-        setTipoResposta('')
-    }
-
-    useEffect(() => {
-
-        if (tipoResposta === "Sucesso") {
-            const timer = setTimeout(() => {
-                fechaPopUp();
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [tipoResposta]);
-
     const [dadosAtivo, setDadosAtivo] = useState<Ativo>({
         nome: "",
         dataAquisicao: "",
@@ -107,9 +89,179 @@ export default function AtualizarAtivo() {
         status: "",
         departamento: ""
     });
-    const [tipoAtivo, setTipoAtivo] = useState("Tangível")
+    const [tipoAtivo, setTipoAtivo] = useState("Tangível");
     const [listaUsuarios, setListaUsuarios] = useState<Usuario[]>([]);
     const [listaManutencoes, setListaManutencoes] = useState<Manutencao[]>([]);
+    const [avisoNome, setAvisoNome] = useState<string | undefined>(undefined);
+    const [avisoCustoAquisicao, setAvisoCustoAquisicao] = useState<string | undefined>(undefined);
+    const [avisoIdentificador, setAvisoIdentificador] = useState<string | undefined>(undefined);
+    const [avisoDataAquisicao, setAvisoDataAquisicao] = useState<string | undefined>(undefined);
+    const [avisoDataLimite, setAvisoDataLimite] = useState<string | undefined>(undefined);
+    const [antigoResponsavel, setAntigoResponsavel] = useState('');
+    const [local, setLocal] = useState('');
+    const [status, setStatus] = useState('');
+    const [departamento, setDepartamento] = useState('');
+
+    const { id } = useParams<{ id: string }>();
+    const token = getLocalToken();
+    const navegar = useNavigate();
+    const nomesUsuarios: string[] = listaUsuarios.map(usuario => usuario.nome)
+
+    const trocaLocal = useCallback(() =>{
+        if (listaManutencoes.length !== 0) {
+            const dataAtual = new Date();
+            const manutencaoAtual = listaManutencoes[0];
+            const dataInicio = new Date(manutencaoAtual.dataInicio);
+            const dataFim = new Date(manutencaoAtual.dataFim);
+            if (dataAtual >= dataInicio && dataAtual <= dataFim) {
+                if (manutencaoAtual.localizacao) {
+                    setLocal(manutencaoAtual.localizacao);
+                } else {
+                    setLocal("Em uso");
+                }
+                return;
+            }
+        }
+        if (departamento) {
+            setLocal(departamento);
+        } else {
+            setLocal("Não alocado");
+        }
+        return
+    },[departamento, listaManutencoes])
+
+    const campoNome = CampoSemTitulo(
+        dadosAtivo.nome,
+        "Insira o nome do ativo",
+        true,
+        avisoNome
+    )
+
+    const campoCustoAquisicao = CampoEditavel(
+        "Custo da Aquisição:",
+        "text",
+        String(dadosAtivo.custoAquisicao * 100),
+        "Insira o custo da aquisição",
+        "Custo",
+        true,
+        avisoCustoAquisicao
+    )
+
+    const campoMarca = CampoEditavel(
+        "Marca:",
+        "text",
+        dadosAtivo.marca,
+        "Insira a marca",
+        "Marca",
+        false
+    )
+
+    const campoCategoria = CampoEditavel(
+        "Categoria:",
+        "text",
+        dadosAtivo.tipo,
+        "Exemplo: automóvel, mobília",
+        "Identificador",
+        false
+    )
+
+    const campoIdentificador = CampoSemTitulo(
+        dadosAtivo.numeroIdentificacao,
+        "Insira o número",
+        true,
+        avisoIdentificador
+    )
+
+    const campoDataAquisicao = CampoData(
+        "Data da aquisição",
+        "Aquisição",
+        dadosAtivo.dataAquisicao,
+        true,
+        avisoDataAquisicao
+    )
+
+    const campoDescricao = campoDescricaoEditavel(
+        "Descrição",
+        dadosAtivo.descricao,
+        "Insira a descrição",
+        false
+    )
+
+    const campoTag = CampoEditavel(
+        "Tag:",
+        "text",
+        dadosAtivo.tag,
+        "Insira as tags",
+        "Tag",
+        false
+    )
+
+    const campoDataLimite = CampoData(
+        `${tipoAtivo === "Tangível" ? "Data de expiração" : "Garantia"}`,
+        "Expiração",
+        dadosAtivo.dataLimite,
+        true,
+        avisoDataLimite
+    )
+
+    const campoImportancia = CampoDropdown(
+        "Importância:",
+        ["Alta", "Média", "Baixa"],
+        `${dadosAtivo.grauImportancia === 1 ? 'Baixa' :
+            dadosAtivo.grauImportancia === 2 ? 'Média' :
+                'Alta'}`,
+        "Escolha um grau de importância",
+        false
+    )
+
+    const campoPeriodoOperacional = CampoEditavel(
+        `Período de ${tipoAtivo === "Tangível" ? "depreciacao" : "amortização"}:`,
+        "text",
+        dadosAtivo.periodoOperacional,
+        "Exemplo: anos, meses",
+        "Amortização",
+        false
+    )
+
+    const campoTaxaOperacional = CampoEditavel(
+        `Taxa de ${tipoAtivo === "Tangível" ? "depreciacao" : "amortização"}:`,
+        "text",
+        String(dadosAtivo.taxaOperacional),
+        "00%",
+        "Taxa",
+        false
+    )
+    const campoResponsavel = CampoDropdown(
+        "Responsável:",
+        nomesUsuarios,
+        antigoResponsavel,
+        "Escolha um responsável",
+        false
+    )
+
+    const campoStatus = CampoDesativado(
+        "Status",
+        "text",
+        "Status",
+        status,
+        true
+    )
+
+    const campoDepartemento = CampoDesativado(
+        "Departamento:",
+        "text",
+        "Departamento",
+        departamento,
+        false
+    )
+
+    const CampoLocal = CampoDesativado(
+        "Local:",
+        "text",
+        "Local",
+        local,
+        true
+    )
 
     useEffect(() => {
         const buscaDadosAtivo = async () => {
@@ -250,7 +402,7 @@ export default function AtualizarAtivo() {
         buscaUsuarios()
         buscaManutencao()
         trocaLocal()
-    }, [token, id, navegar])
+    }, [token, id, navegar, trocaLocal])
 
     useEffect((
     ) => {
@@ -259,155 +411,13 @@ export default function AtualizarAtivo() {
         }
     }, [dadosAtivo.idResponsavel])
 
-    const [avisoNome, setAvisoNome] = useState<string | undefined>(undefined);
-    const campoNome = CampoSemTitulo(
-        dadosAtivo.nome,
-        "Insira o nome do ativo",
-        true,
-        avisoNome
-    )
-
-    const [avisoCustoAquisicao, setAvisoCustoAquisicao] = useState<string | undefined>(undefined);
-    const campoCustoAquisicao = CampoEditavel(
-        "Custo da Aquisição:",
-        "text",
-        String(dadosAtivo.custoAquisicao * 100),
-        "Insira o custo da aquisição",
-        "Custo",
-        true,
-        avisoCustoAquisicao
-    )
-
-    const campoMarca = CampoEditavel(
-        "Marca:",
-        "text",
-        dadosAtivo.marca,
-        "Insira a marca",
-        "Marca",
-        false
-    )
-
-    const campoCategoria = CampoEditavel(
-        "Categoria:",
-        "text",
-        dadosAtivo.tipo,
-        "Exemplo: automóvel, mobília",
-        "Identificador",
-        false
-    )
-
-    const [avisoIdentificador, setAvisoIdentificador] = useState<string | undefined>(undefined);
-    const campoIdentificador = CampoSemTitulo(
-        dadosAtivo.numeroIdentificacao,
-        "Insira o número",
-        true,
-        avisoIdentificador
-    )
-
-    const [avisoDataAquisicao, setAvisoDataAquisicao] = useState<string | undefined>(undefined);
-    const campoDataAquisicao = CampoData(
-        "Data da aquisição",
-        "Aquisição",
-        dadosAtivo.dataAquisicao,
-        true,
-        avisoDataAquisicao
-    )
-
-    const campoDescricao = campoDescricaoEditavel(
-        "Descrição",
-        dadosAtivo.descricao,
-        "Insira a descrição",
-        false
-    )
-
-    const campoTag = CampoEditavel(
-        "Tag:",
-        "text",
-        dadosAtivo.tag,
-        "Insira as tags",
-        "Tag",
-        false
-    )
-
-    const [avisoDataLimite, setAvisoDataLimite] = useState<string | undefined>(undefined);
-    const campoDataLimite = CampoData(
-        `${tipoAtivo === "Tangível" ? "Data de expiração" : "Garantia"}`,
-        "Expiração",
-        dadosAtivo.dataLimite,
-        true,
-        avisoDataLimite
-    )
-
-    const campoImportancia = CampoDropdown(
-        "Importância:",
-        ["Alta", "Média", "Baixa"],
-        `${dadosAtivo.grauImportancia === 1 ? 'Baixa' :
-            dadosAtivo.grauImportancia === 2 ? 'Média' :
-                'Alta'}`,
-        "Escolha um grau de importância",
-        false
-    )
-
-    const campoPeriodoOperacional = CampoEditavel(
-        `Período de ${tipoAtivo === "Tangível" ? "depreciacao" : "amortização"}:`,
-        "text",
-        dadosAtivo.periodoOperacional,
-        "Exemplo: anos, meses",
-        "Amortização",
-        false
-    )
-
-    const campoTaxaOperacional = CampoEditavel(
-        `Taxa de ${tipoAtivo === "Tangível" ? "depreciacao" : "amortização"}:`,
-        "text",
-        String(dadosAtivo.taxaOperacional),
-        "00%",
-        "Taxa",
-        false
-    )
-
-    const nomesUsuarios: string[] = listaUsuarios.map(usuario => usuario.nome)
-    const [antigoResponsavel, setAntigoResponsavel] = useState('')
-    const campoResponsavel = CampoDropdown(
-        "Responsável:",
-        nomesUsuarios,
-        antigoResponsavel,
-        "Escolha um responsável",
-        false
-    )
-
-    const [local, setLocal] = useState('')
-    const trocaLocal = () => {
-        if (listaManutencoes.length !== 0) {
-            const dataAtual = new Date();
-            const manutencaoAtual = listaManutencoes[0];
-            const dataInicio = new Date(manutencaoAtual.dataInicio);
-            const dataFim = new Date(manutencaoAtual.dataFim);
-            if (dataAtual >= dataInicio && dataAtual <= dataFim) {
-                if (manutencaoAtual.localizacao) {
-                    setLocal(manutencaoAtual.localizacao);
-                } else {
-                    setLocal("Em uso");
-                }
-                return;
-            }
+    useEffect(() => {
+        const usuarioDesejado = listaUsuarios.find(usuario => usuario.nome === campoResponsavel.dado);
+        if (usuarioDesejado) {
+            setDepartamento(usuarioDesejado.departamento)
         }
-        if (departamento) {
-            setLocal(departamento);
-        } else {
-            setLocal("Não alocado");
-        }
-        return
-    }
+    }, [campoResponsavel.dado, listaUsuarios])
 
-    const [status, setStatus] = useState('')
-    const campoStatus = CampoDesativado(
-        "Status",
-        "text",
-        "Status",
-        status,
-        true
-    )
     useEffect(() => {
         if (listaManutencoes.length !== 0) {
             const dataAtual = new Date();
@@ -429,32 +439,18 @@ export default function AtualizarAtivo() {
         }
     }, [campoResponsavel.dado, listaManutencoes])
 
-    const [departamento, setDepartamento] = useState('')
     useEffect(() => {
-        const usuarioDesejado = listaUsuarios.find(usuario => usuario.nome === campoResponsavel.dado);
-        if (usuarioDesejado) {
-            setDepartamento(usuarioDesejado.departamento)
+        if (tipoResposta === "Sucesso") {
+            const timer = setTimeout(() => {
+                fechaPopUp();
+            }, 3000);
+            return () => clearTimeout(timer);
         }
-    }, [campoResponsavel.dado])
+    }, [tipoResposta]);
+
     useEffect(() => {
         trocaLocal()
-    }, [departamento])
-
-    const campoDepartemento = CampoDesativado(
-        "Departamento:",
-        "text",
-        "Departamento",
-        departamento,
-        false
-    )
-
-    const CampoLocal = CampoDesativado(
-        "Local:",
-        "text",
-        "Local",
-        local,
-        true
-    )
+    }, [departamento, trocaLocal])
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -570,6 +566,11 @@ export default function AtualizarAtivo() {
                 setTipoResposta("Erro");
             }
         }
+    }
+
+    function fechaPopUp() {
+        setTextoResposta('');
+        setTipoResposta('');
     }
 
     return (
