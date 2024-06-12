@@ -79,6 +79,10 @@
   width: 60%;
 }
 
+.divNotaFiscalEditar{
+  margin-top: var(--gapformsAtualizarAtivo);
+}
+
 .divisaoFormsEditar2 {
   display: flex;
 }
