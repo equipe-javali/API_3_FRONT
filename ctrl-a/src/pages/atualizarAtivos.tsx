@@ -1,6 +1,6 @@
 import './css/atualizarAtivo.css';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import RespostaSistema from '../components/respostaSistema';
 import getLocalToken from '../utils/getLocalToken';
 import CampoEditavel from '../components/CampoEditavel';
@@ -67,6 +67,7 @@ type Manutencao = {
 export default function AtualizarAtivo() {
     const { id } = useParams<{ id: string }>();
     const token = getLocalToken();
+    const navegar = useNavigate();
 
     const [textoResposta, setTextoResposta] = useState('');
     const [tipoResposta, setTipoResposta] = useState('');
@@ -74,6 +75,7 @@ export default function AtualizarAtivo() {
         setTextoResposta('')
         setTipoResposta('')
     }
+
     useEffect(() => {
 
         if (tipoResposta === "Sucesso") {
@@ -108,6 +110,7 @@ export default function AtualizarAtivo() {
     const [tipoAtivo, setTipoAtivo] = useState("Tangível")
     const [listaUsuarios, setListaUsuarios] = useState<Usuario[]>([]);
     const [listaManutencoes, setListaManutencoes] = useState<Manutencao[]>([]);
+
     useEffect(() => {
         const buscaDadosAtivo = async () => {
             try {
@@ -119,6 +122,27 @@ export default function AtualizarAtivo() {
                 if (responseIntangivel.status === 200) {
                     const dadosAtivo = await responseIntangivel.json();
                     console.log(dadosAtivo);
+                    if (!dadosAtivo.ativo.idNotaFiscal) {
+                        fetch(`http://localhost:8080/ativo/exclusao/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                "Authorization": token
+                            }
+                        })
+                            .then(response => {
+                                setTextoResposta(`Esse ativo não possuí nota-fiscal e será deletado!`);
+                                setTipoResposta('Erro');
+                                setTimeout(() => {
+                                    fechaPopUp();
+                                    navegar("/CadastroAtivo")
+                                }, 3000);
+                            })
+                            .catch(error => {
+                                setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+                                setTipoResposta('Erro');
+                            });
+                    }
                     setDadosAtivo({
                         ...dadosAtivo.ativo,
                         periodoOperacional: dadosAtivo.periodoAmortizacao,
@@ -138,6 +162,27 @@ export default function AtualizarAtivo() {
                     if (responseTangivel.status === 200) {
                         const dadosAtivo = await responseTangivel.json();
                         console.log(dadosAtivo)
+                        if (!dadosAtivo.ativo.idNotaFiscal) {
+                            fetch(`http://localhost:8080/ativo/exclusao/${id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    "Authorization": token
+                                }
+                            })
+                                .then(response => {
+                                    setTextoResposta(`Esse ativo não possuí nota-fiscal e será deletado!`);
+                                    setTipoResposta('Erro');
+                                    setTimeout(() => {
+                                        fechaPopUp();
+                                        navegar("/CadastroAtivo")
+                                    }, 3000);
+                                })
+                                .catch(error => {
+                                    setTextoResposta(`Erro ao processar requisição! Erro: ${error}`);
+                                    setTipoResposta('Erro');
+                                });
+                        }
                         setDadosAtivo({
                             ...dadosAtivo.ativo,
                             taxaOperacional: dadosAtivo.taxaDepreciacao,
@@ -158,6 +203,7 @@ export default function AtualizarAtivo() {
                 setTipoResposta("Erro");
             }
         }
+
         const buscaUsuarios = async () => {
             try {
                 const responseUsuario = await fetch('http://localhost:8080/usuario/listagemTodos', {
@@ -178,6 +224,7 @@ export default function AtualizarAtivo() {
                 setTipoResposta("Erro");
             }
         }
+
         const buscaManutencao = async () => {
             try {
                 const responseManutencao = await fetch(`http://localhost:8080/manutencao/listagem/${id}`, {
@@ -203,7 +250,8 @@ export default function AtualizarAtivo() {
         buscaUsuarios()
         buscaManutencao()
         trocaLocal()
-    }, [token, id])
+    }, [token, id, navegar])
+
     useEffect((
     ) => {
         if (dadosAtivo.idResponsavel) {
@@ -346,9 +394,10 @@ export default function AtualizarAtivo() {
         }
         if (departamento) {
             setLocal(departamento);
-            return;
+        } else {
+            setLocal("Não alocado");
         }
-        setLocal("Não alocado");
+        return
     }
 
     const [status, setStatus] = useState('')
@@ -550,13 +599,14 @@ export default function AtualizarAtivo() {
                                 {campoMarca.codigo}
                             </div>
                         </div>
+                        <div className='divNotaFiscalEditar'>
+                            {DownloadArquivo(
+                                'Nota Fiscal:',
+                                dadosAtivo.idNotaFiscal
+                            )}
+                        </div>
                         <div>
                             {campoDescricao.codigo}
-                            <DownloadArquivo
-                                titulo={"Nota Fiscal"}
-                                texto={"Download"}
-                                dadosArquivo={dadosAtivo.idNotaFiscal}
-                            />
                         </div>
                     </div>
                 </div>
