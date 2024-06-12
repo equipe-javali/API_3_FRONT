@@ -288,3 +288,8 @@
     max-height: calc(4.8 * var(--minHeightDivCampoPadrao));
     max-width: min-content;
 }
+
+.linkDowloadArquivo{
+    font-size: var(--fontSizeInputCampoPadrao);
+    color: var(--corTextInput);
+}
