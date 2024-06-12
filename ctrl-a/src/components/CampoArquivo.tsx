@@ -18,6 +18,7 @@ export default function CampoArquivo(
     const [erroCampo, setErroCampo] = useState(false);
     useEffect(() => {
         aviso && setAvisoArquivo(aviso)
+        aviso && setErroCampo(true)
     }, [aviso])
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

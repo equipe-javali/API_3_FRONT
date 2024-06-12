@@ -81,12 +81,14 @@ export default function CadastroAtivos() {
         false
     )
 
+    const [avisoNotaFiscal, setAvisoNotaFiscal] = useState<string | undefined>(undefined);
     const campoNotaFiscal = CampoArquivo(
         "Nota Fiscal:",
         [".png", ".pdf"],
         "Enviar nota fiscal",
         5,
-        false
+        true,
+        avisoNotaFiscal
     )
 
     const [proximo, setProximo] = useState(0)
@@ -118,7 +120,14 @@ export default function CadastroAtivos() {
         if (campoIdentificador.dado === '') {
             setAvisoIdentificador("Insira um número identificador!")
             certo = false
-        } if (campoNotaFiscal.erroCampo) {
+        }
+        if (campoNotaFiscal.dado.nome === '' &&
+            campoNotaFiscal.dado.tipoArquivo === '' &&
+            campoNotaFiscal.dado.documento.length === 0
+        ) {
+            setAvisoNotaFiscal('Insira uma nota fiscal')
+            certo = false
+        } else if (campoNotaFiscal.erroCampo) {
             certo = false
         }
         if (certo) {
