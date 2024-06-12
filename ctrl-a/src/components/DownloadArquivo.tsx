@@ -1,42 +1,38 @@
+import { useEffect, useState } from "react";
 import "./css/CampoPadrao.css";
 
-type arquivo = {
-    "nome": string,
-    "tipoDocumento": string,
-    "documento": string
-}
-
-type props = {
+export default function DowloadArquivo(
     titulo: string,
-    texto: string,
-    dadosArquivo: arquivo
-}
-
-export default function DownloadArquivo(props: props) {
-    function binDecode(): Uint8Array {
-        const binaryString = window.atob(props.dadosArquivo.documento);
-        const binaryLen = binaryString.length;
-        const bytes = new Uint8Array(binaryLen);
-        for (let i = 0; i < binaryLen; i++) {
-            const ascii = binaryString.charCodeAt(i);
-            bytes[i] = ascii;
+    arquivo?: {
+        nome: string,
+        tipoDocumento: string,
+        documento: string
+    },
+) {
+    const [linkDowload, setLinkDowload] = useState<string | undefined>(undefined)
+    useEffect(() => {
+        if (arquivo) {
+            const textoBinario = window.atob(arquivo.documento);
+            const tamanho = textoBinario.length;
+            const bytes = new Uint8Array(tamanho);
+            for (let i = 0; i < tamanho; i++) {
+                const ascii = textoBinario.charCodeAt(i);
+                bytes[i] = ascii;
+            }
+            const blob = new Blob([bytes], { type: arquivo.tipoDocumento });
+            setLinkDowload(window.URL.createObjectURL(blob))
         }
-        return bytes;
-    }
-
-    function downloadLink(): string {
-        const blob = new Blob([binDecode()], { type: props.dadosArquivo.tipoDocumento });
-        return window.URL.createObjectURL(blob);
-    }
-
-    return (
-        <div className={`divCampoSenha`}>
-            <div>
-                <span>{props.titulo}</span>
-                <div className="inputCampoSenha">
-                    <a href={downloadLink()} download={props.dadosArquivo.nome}>{props.texto}</a>
-                </div>
+    }, [arquivo])
+    return <>
+        {arquivo && linkDowload && <div className='divCampoArquivo'>
+            <span>{titulo}</span>
+            <div className="campoArquivo">
+                <a
+                    className="linkDowloadArquivo"
+                    href={linkDowload}
+                    download={arquivo.nome}
+                >Dowload</a>
             </div>
-        </div>
-    );
+        </div>}
+    </>;
 }
