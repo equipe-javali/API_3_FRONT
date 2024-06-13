@@ -33,7 +33,7 @@ export default function CadastroAtivosTangiveis() {
         "Período de depreciação:",
         [ "diário", "mensal", "semestral", "anual"],
         "",
-        "Escolha um período de amortização",
+        "Escolha um período de depreciação",
         false
     )
 
