@@ -22,7 +22,7 @@ interface Ativo {
     status: "ativo" | "em uso" | "manutenção";
 }
 
-export default function RelatorioAtivos({ dataInicial, dataFim, setDadosAtivos }: { dataInicial: string; dataFim: string; setDadosAtivos: React.Dispatch<React.SetStateAction<Ativo[]>> }) {
+export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }: { dataInicio: string; dataFim: string; setDadosAtivos: React.Dispatch<React.SetStateAction<Ativo[]>> }) {
     const [relatorioAtivos, setRelatorioAtivos] = useState<RelatorioAtivo | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -57,7 +57,7 @@ export default function RelatorioAtivos({ dataInicial, dataFim, setDadosAtivos }
                             Authorization: token,
                         },
                         body: JSON.stringify({
-                            dataInicio: dataInicial || null, 
+                            dataInicio: dataInicio || null, 
                             dataFim: dataFim || null,     
                         }),
                         mode: "cors",
@@ -115,7 +115,7 @@ export default function RelatorioAtivos({ dataInicial, dataFim, setDadosAtivos }
         };
 
         fetchData();
-    }, [dataInicial, dataFim]);
+    }, [dataInicio, dataFim]);
 
     if (loading) {
         return <p>Carregando dados...</p>;
@@ -133,6 +133,10 @@ export default function RelatorioAtivos({ dataInicial, dataFim, setDadosAtivos }
     if (!relatorioAtivos) {
         return <p>Nenhum dado encontrado.</p>;
     }
+
+    if (!relatorioAtivos || Object.keys(relatorioAtivos.qtdPorLocal).length === 0) {
+        return <p>Nenhum dado encontrado para o período selecionado.</p>;
+      }
 
     return (
         <div className="relatorios-ativos">

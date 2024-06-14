@@ -18,10 +18,11 @@ interface Manutencao {
   id: number;
   tipo: string;
   custo: number;
-  dataInicio: string;
+  dataInicio: string | null; 
   dataFim: string | null;
   ativoId: number;
 }
+
 
 export default function Relatorios() {
   const dataInicial = CampoData("Data inicial:", "data", "", false);
@@ -68,13 +69,13 @@ export default function Relatorios() {
         <div className="container-relatorios">
           {changeRelatorio === "ativos" ? (
               <RelatorioAtivos
-                  dataInicial={dataInicial.dado}
+                  dataInicio={dataInicial.dado}
                   dataFim={dataFinal.dado}
                   setDadosAtivos={setDadosAtivos}
               />
           ) : (
               <RelatorioManutencoes
-                  dataInicial={dataInicial.dado}
+                  dataInicio={dataInicial.dado}
                   dataFim={dataFinal.dado}
                   setDadosManutencoes={setDadosManutencoes}
               />
