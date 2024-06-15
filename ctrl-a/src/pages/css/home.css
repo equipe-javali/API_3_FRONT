@@ -96,7 +96,6 @@
 .divHome .pergunta {
   display: flex;
   justify-content: center;
-  padding: 10px;
   color: var(--branco);
   text-align: center;
   margin: 2%;
@@ -112,6 +111,23 @@
   color: var(--cor5); /* Muda a cor do texto ao passar o mouse */
 }
 
+.linkAlterarSenha {
+  text-decoration: none; 
+  color: var(--cor2);
+}
+
+.linkAlterarSenha:hover {
+  color: var(--cor5);
+}
+
 .formLogin h1 {
   text-align: center;
+}
+
+.divHome .pergunta2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
 }

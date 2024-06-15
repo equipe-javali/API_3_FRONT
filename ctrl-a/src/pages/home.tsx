@@ -88,7 +88,11 @@ export default function Home() {
               <span>&nbsp;</span>
               <Link className='linkCadastro' to={'/CadastroUsuarioAdm'}> Cadastre-se!</Link>              
             </p>
-
+            <p className='pergunta2'>
+              Esqueceu a senha?{' '}
+              <span>&nbsp;</span>
+              <Link className='linkAlterarSenha' to={'/alterarSenha'}> Alterar Senha</Link>              
+            </p>
           </form>
         </div>
       </div>
