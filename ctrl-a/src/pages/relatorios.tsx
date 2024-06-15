@@ -32,11 +32,54 @@ export default function Relatorios() {
   const [dadosAtivos, setDadosAtivos] = useState<Ativo[]>([]);
   const [dadosManutencoes, setDadosManutencoes] = useState<Manutencao[]>([]);
 
-  const handleExport = () => {
+  const handleExport = async () => {
     const dataToExport =
         changeRelatorio === "ativos" ? dadosAtivos : dadosManutencoes;
 
-    exportDataToExcel(dataToExport);
+    const response = await fetch(
+      `http://localhost:8080/relatorio/exportRelatorio`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: (localStorage.getItem("token") || "")
+        },
+        body: JSON.stringify({
+          dataInicio: dataInicial.dado || null,
+          dataFim: dataFinal.dado || null,
+          tipoAtivo: "DadosGerais",
+          tipoManutencao: "DadosGerais",
+          idAtivo: 213
+        }),
+        mode: "cors",
+      }
+    );
+
+    const arquivo = await response.json();
+
+    function downloadLink(): string {
+      function binDecode(): Uint8Array {
+        const binaryString = window.atob(arquivo.documento);
+        const binaryLen = binaryString.length;
+        const bytes = new Uint8Array(binaryLen);
+        for (let i = 0; i < binaryLen; i++) {
+          const ascii = binaryString.charCodeAt(i);
+          bytes[i] = ascii;
+        }
+        return bytes;
+      }
+      const blob = new Blob([binDecode()], { type: "document/xlsx" });
+      return window.URL.createObjectURL(blob);
+    }
+
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = downloadLink();
+    a.download = arquivo.nome;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(downloadLink());
   };
 
   return (
