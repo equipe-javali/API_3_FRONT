@@ -12,6 +12,7 @@ import HistoricoManutencao from './pages/historicoManutencaoAtivo';
 import VisualizarHistorico from './pages/VisualizarHistorico'
 import AtualizarUsuario from './pages/atualizarUsuario';
 import ManualUsuario from './pages/manualUsuario';
+import AlterarSenha from './pages/alterarSenha';
 export default function App() {
   return (
     <BrowserRouter>
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/ListaAtivos" element={<DashboardAtivos />} />
           <Route path="/ListaUsuarios" element={<VisualizarUsuario />} />
           <Route path="/CadastroAtivo" element={<CadastroAtivos />} />
+          <Route path="/AlterarSenha" element={<AlterarSenha />} />
           <Route path="/CadastroUsuario" element={<CriarUsuario />} />
           <Route path="/HistoricoManutencao/:id_ativo" element={<HistoricoManutencao />} />
           <Route path="/AtualizarAtivo/:id" element={< AtualizarAtivo />} />
