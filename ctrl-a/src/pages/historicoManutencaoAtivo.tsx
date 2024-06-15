@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import getLocalToken from "../utils/getLocalToken";
 import { FaPencilAlt } from "react-icons/fa";
 import moment from "moment-timezone";
-import currencyFormatter from "currency-formatter";
 
 export default function HistoricoManutencao() {
   interface ManutencaoData {
@@ -83,7 +82,8 @@ export default function HistoricoManutencao() {
       }
     }
 
-    const formattedCusto = custo ? currencyFormatter.format(parseFloat(custo) , { code: 'BRL' }) : "Não definido";
+    // const formattedCusto = custo ? currencyFormatter.format(parseFloat(custo) , { code: 'BRL' }) : "Não definido";
+    const formattedCusto =  custo ? new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(parseFloat(custo)) : "Não definido"
 
     return (
         <tr

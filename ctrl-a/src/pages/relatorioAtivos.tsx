@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./css/relatorioAtivos.css";
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme, VictoryPie } from "victory";
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme, VictoryPie, VictoryLabel } from "victory";
 import getLocalToken from "../utils/getLocalToken";
 
 
@@ -36,6 +36,9 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
         { x: string; y: number }[]
     >([]);
 
+    const [selectedButton, setSelectedButton] = useState("DadosGerais")
+    let selected = (value: string) => {setSelectedButton(value)}
+
     useEffect(() => {
         const fetchData = async () => {
             const token = getLocalToken();
@@ -57,8 +60,9 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
                             Authorization: token,
                         },
                         body: JSON.stringify({
-                            dataInicio: dataInicio || null, 
-                            dataFim: dataFim || null,     
+                            dataInicio: dataInicio,
+                            dataFim: dataFim,
+                            tipo: selectedButton
                         }),
                         mode: "cors",
                     }
@@ -115,7 +119,7 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
         };
 
         fetchData();
-    }, [dataInicio, dataFim]);
+    }, [dataInicio, dataFim, selectedButton]);
 
     if (loading) {
         return <p>Carregando dados...</p>;
@@ -154,6 +158,11 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
                         })}
                     </p>
                 </div>
+                <div className="btnsTiposAtivos">
+                    <button className={selectedButton == "DadosGerais" ? "btnAtivos btnSelected" : "btnAtivos"} value={"DadosGerais"} onClick={() => selected("DadosGerais")}>Dados gerais</button>
+                    <button className={selectedButton == "Tangiveis"? "btnAtivos btnSelected" : "btnAtivos"} value={"Tangiveis"} onClick={() => selected("Tangiveis")}>Tangíveis</button>
+                    <button className={selectedButton == "Intangiveis" ? "btnAtivos btnSelected" : "btnAtivos"} value={"Intangiveis"} onClick={() => selected("Intangiveis")}>Intangíveis</button>
+                </div>
             </div>
 
             <div className="linha2Ativos">
@@ -173,7 +182,7 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
                         <VictoryChart theme={VictoryTheme.material} domainPadding={20}>
                             <VictoryAxis />
                             <VictoryAxis dependentAxis />
-                            <VictoryBar data={localChartData} />
+                            <VictoryBar data={localChartData} labels={({ datum }) => datum.y} labelComponent={<VictoryLabel dy={30}/>} />
                         </VictoryChart>
                     )}
                 </div>

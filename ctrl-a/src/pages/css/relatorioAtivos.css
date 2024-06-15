@@ -58,10 +58,10 @@
 }
 
 .linha2Ativos .statusAtivos{
-    width: 20%;
+    width: 30%;
     text-align: center;
 }
 
 .linha2Ativos .qntdLocalAtivos {
-    width: 70%;
+    width: 60%;
 }
