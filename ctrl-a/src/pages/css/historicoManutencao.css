@@ -14,6 +14,22 @@
     --opacityAtributosDashboard: 0.9
 }
 
+.divModalManutencao{
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+}
+.divModalManutencao>div:first-child>div{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.divModalManutencao .divCampoDescricao textarea{
+    min-height: 100px;
+}
+
 .dashboardMan h1{
     padding-top: 2%;
     margin-top: 5px;
