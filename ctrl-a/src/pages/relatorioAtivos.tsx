@@ -186,7 +186,8 @@ export default function RelatorioAtivos({
         </div>
         <div className="valorTotalAtivos">
           <p>VALOR TOTAL DE ATIVOS</p>
-          <p className="valorCard">            
+          <p className="valorCard">
+            R${" "}
             {new Intl.NumberFormat("pt-BR", {
               style: "currency",
               currency: "BRL",
@@ -272,30 +273,32 @@ export default function RelatorioAtivos({
 
         <div className="qntdLocalAtivos">
           {chartDataReady && (
-            <Bar
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: {
-                    position: "top" as const,
-                  },
-                  title: {
-                    display: true,
-                    text: "QUANTIDADE POR LOCAL",
-                  },
+            <Bar 
+            options={{
+              indexAxis: "x" as const,
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: "top" as const,
                 },
-              }}
-              data={{
-                labels: localChartData.map((local) => local.local),
-                datasets: [
-                  {
-                    label: "Quantidade",
-                    data: localChartData.map((qtd) => qtd.qtd),
-                    backgroundColor: ["#853F85"],
-                  },
-                ],
-              }}
-            />
+                title: {
+                  display: true,
+                  text: "QUANTIDADE POR LOCAL",
+                },
+              },
+            }}
+            data={{
+              labels: localChartData.map((local) => local.local),
+              datasets: [
+                {
+                  label: "Quantidade",
+                  data: localChartData.map((qtd) => qtd.qtd),
+                  backgroundColor: ["#853F85"],
+                  barThickness: 80
+                },
+              ],
+            }}
+          />
           )}
         </div>
       </div>

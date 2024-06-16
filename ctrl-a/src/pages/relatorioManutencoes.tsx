@@ -191,8 +191,7 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
         <div className="valorTotalManutencoes">
           <p>VALOR TOTAL DAS MANUTENÇÕES</p>
           <p className="valorCard">
-          <p className="valorCard">            
-            {new Intl.NumberFormat("pt-BR", {
+          {new Intl.NumberFormat("pt-BR", {
               style: "currency",
               currency: "BRL",
               minimumFractionDigits: 2,
@@ -233,8 +232,9 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
                 label: "Dias",
                 data: tempoPorTipoData.map((dias) => dias.y),
                 backgroundColor: [
-                  "#853F85",
-                ],
+                  "#853F85"],
+                  barThickness: 60                 
+                
               }
             ]
           }}
@@ -260,8 +260,9 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
                 label: "Envios",
                 data: enviosPorTipoData.map((qtd) => qtd.qtd),
                 backgroundColor: [
-                  "#853F85",
-                ],
+                  "#853F85"],
+                  barThickness: 80
+                
               }
             ]
           }}
