@@ -25,7 +25,6 @@ export default class SideMenu extends Component<Props> {
     };
 
     buildLinks() {
-        const { links } = this.props;
         const { isMenuHovered } = this.state;
 
         return this.props.links.map(

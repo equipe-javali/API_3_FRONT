@@ -63,7 +63,7 @@ export default function CampoArquivo(
         } else if (erroCampo) {
             setErroCampo(false);
         }
-    }, [arquivo])
+    }, [arquivo, erroCampo, tamanho, tamanhoMB, tipos])
 
     const codigo = (
         <div className='divCampoArquivo'>

@@ -128,15 +128,15 @@ export default function CriarUsuario() {
     }
     if (certo) {
       const data = {
-        "nome": campoNome.dado,
-        "cpf": campoCPF.dado.replace(/\D/g, ''),
-        "nascimento": campoNascimento.dado,
-        "departamento": campoDepartamento.dado,
-        "telefone": campoTelefone.dado.replace(/\D/g, ''),
-        "email": campoEmail.dado,
-        "status": 'ativo',
-        "tipoFoto ": campoFotoPerfil.dado.tipoArquivo,
-        "dadosFoto": campoFotoPerfil.dado.documento,
+        nome: campoNome.dado,
+        cpf: campoCPF.dado.replace(/\D/g, ''),
+        nascimento: campoNascimento.dado,
+        departamento: campoDepartamento.dado,
+        telefone: campoTelefone.dado.replace(/\D/g, ''),
+        email: campoEmail.dado,
+        status: 'ativo',
+        tipoFoto: campoFotoPerfil.dado.tipoArquivo,
+        dadosFoto: campoFotoPerfil.dado.documento,
       };
       const token = getLocalToken();
       try {

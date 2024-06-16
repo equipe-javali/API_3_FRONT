@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
 import './css/cadastrarUsuarioAdm.css';
-import getLocalToken from "../utils/getLocalToken";
 import { Link } from "react-router-dom";
 import CampoDropdown from "../components/CampoDropdown";
 import CampoData from "../components/CampoData";
@@ -142,7 +141,6 @@ export default function CriarUsuarioAdm() {
           "senha": campoSenha.dado
         }
       };
-      const token = getLocalToken();
       try {
         console.log(data);
         const userResponse = await fetch('http://localhost:8080/usuario/cadastro', {

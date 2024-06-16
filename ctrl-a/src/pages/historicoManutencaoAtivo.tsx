@@ -474,7 +474,7 @@ export default function HistoricoManutencao() {
         };
         listarManutencoes();
         console.log("Recebido", manutencoes)
-    }, [id_ativo, update, token]);
+    }, [id_ativo, update, token, manutencoes]);
 
 
     return (
