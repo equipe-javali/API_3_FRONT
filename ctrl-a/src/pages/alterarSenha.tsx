@@ -1,9 +1,9 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import './css/atualizaUsuario.css'
+import './css/alterarSenha.css'
 import RespostaSistema from '../components/respostaSistema';
 import getLocalToken from '../utils/getLocalToken';
 import CampoSenha from '../components/CampoSenha';
-import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function AlterarSenha() {
   const [textoResposta, setTextoResposta] = useState('');
@@ -23,12 +23,14 @@ export default function AlterarSenha() {
 
 
   const [avisoSenha, setAvisoSenha] = useState<string | undefined>(undefined);
+  const [avisoConfirmarSenha, setAvisoConfirmarSenha] = useState<string | undefined>(undefined);
   const campoSenha = CampoSenha(
     "Nova senha:",
     "Insira a nova senha",
     true,
     avisoSenha
   );
+  const confirmarSenha = CampoSenha("Confirmar nova senha:", "Confirme a nova senha", true, avisoConfirmarSenha)
 
   const usuario = localStorage.getItem("usuario")
 
@@ -37,6 +39,13 @@ export default function AlterarSenha() {
     if (campoSenha.dado === '') {
       setAvisoSenha("Insira a nova senha");
       return;
+    } else if (confirmarSenha.dado === '') {
+      setAvisoConfirmarSenha("Confirme a nova senha")
+      return
+    } else if (confirmarSenha.dado != campoSenha.dado) {
+      setAvisoSenha("Os dois campos devem ser preenchidos com o mesmo valor");
+      setAvisoConfirmarSenha("Os dois campos devem ser preenchidos com o mesmo valor")
+      return
     }
 
     if (usuario !== null) {
@@ -74,16 +83,15 @@ export default function AlterarSenha() {
   }
 
   return (
-    <>
+    <div className='AlterarSenha'>
       <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
-      <form className='divAtualizarUsuario' onSubmit={handleSubmit}>
-        <div>
-          {campoSenha.codigo}
-        </div>
-        <div>
-          <input type='submit' className='buttonAtualizar' value='Atualizar Senha' />
-        </div>
+      <h1 className='titulo'>Alterar Senha</h1>
+      <form className='form-alterarSenha' onSubmit={handleSubmit}>
+        <Link className="retornarLogin" to={'/'}>◀ Voltar</Link>
+        {campoSenha.codigo}
+        {confirmarSenha.codigo}
+        <input type='submit' className='buttonAtualizar' value='Enviar' />
       </form>
-    </>
+    </div>
   )
 }

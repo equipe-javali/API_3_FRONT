@@ -162,78 +162,78 @@ export default function RelatorioAtivos({ dataInicio, dataFim, onTipoAtivoChange
 
             <div className="linha2Ativos">
                 <div className="statusAtivos">
-                    {chartDataReady &&
-                        <Pie
-                            width={200}
-                            height={100}
-                            data={{
-                                labels: statusData.map((status) => status.status),
-                                datasets: [
-                                    {
-                                        label: "Quantidade %",
-                                        data: statusData.map((qtd) => qtd.qtd),
-                                        backgroundColor: [
-                                            "#853F85",
-                                            "#0178D4",
-                                            "#4152AC",
-                                        ],
-                                        borderColor: [
-                                            "#853F85",
-                                            "#0178D4",
-                                            "#4152AC",
-                                        ],
-                                        borderWidth: 1,
-                                        hoverOffset: 20
-                                    },
-                                ],
-                            }}
-                            options={{
-                                responsive: true,
-                                plugins: {
-                                    title: {
-                                        text: "STATUS DOS ATIVOS (%)",
-                                        display: true,
-                                        font: { size: 20 },
-                                    },
-                                    legend: {
-                                        position: 'bottom' as const,
-                                        labels: {
-                                            font: { size: 15 },
-                                        },
-                                    }
+
+                    <Pie
+                        width={200}
+                        height={100}
+                        data={{
+                            labels: statusData.map((status) => status.status),
+                            datasets: [
+                                {
+                                    label: "Quantidade %",
+                                    data: statusData.map((qtd) => qtd.qtd),
+                                    backgroundColor: [
+                                        "#853F85",
+                                        "#0178D4",
+                                        "#4152AC",
+                                    ],
+                                    borderColor: [
+                                        "#853F85",
+                                        "#0178D4",
+                                        "#4152AC",
+                                    ],
+                                    borderWidth: 1,
+                                    hoverOffset: 20
                                 },
-                            }}
-                        />
-                    }
+                            ],
+                        }}
+                        options={{
+                            responsive: true,
+                            plugins: {
+                                title: {
+                                    text: "STATUS DOS ATIVOS (%)",
+                                    display: true,
+                                    font: { size: 20 },
+                                },
+                                legend: {
+                                    position: 'bottom' as const,
+                                    labels: {
+                                        font: { size: 15 },
+                                    },
+                                }
+                            },
+                        }}
+                    />
+
                 </div>
 
                 <div className="qntdLocalAtivos">
-                    {chartDataReady &&
-                        <Bar options={{
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'top' as const,
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'QUANTIDADE POR LOCAL',
-                                },
-                                }
-                            }} data={{
-                                labels: localChartData.map((local) => local.local),
-                                datasets: [
-                                    {
-                                        label: "Quantidade",
-                                        data: localChartData.map((qtd) => qtd.qtd),
-                                        backgroundColor: [
-                                            "#853F85",
-                                        ],
-                                    }
-                                ]
-                            }}
-                        />
-                    }
+
+                    <Bar options={{
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top' as const,
+                            },
+                            title: {
+                                display: true,
+                                text: 'QUANTIDADE POR LOCAL',
+                            },
+                        }
+                    }} data={{
+                        labels: localChartData.map((local) => local.local),
+                        datasets: [
+                            {
+                                label: "Quantidade",
+                                data: localChartData.map((qtd) => qtd.qtd),
+                                backgroundColor: [
+                                    "#853F85",
+                                ],
+                            }
+                        ]
+                    }}
+                    />
+
                 </div>
             </div>
         </div>
