@@ -80,60 +80,12 @@ function LinhaAtivo({
 
   function emManutencao(): boolean {
     if (manutencoes.length <= 0) {
-      return false;
+        return false;
     }
-    return (
-      Date.parse(manutencoes[0].dataInicio) < Date.now() &&
-      Date.now() < Date.parse(manutencoes[0].dataFim)
-    );
-  }
+    return Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim);
+}
 
-  function localAtivo() {
-    if (emManutencao() && !isHovered) {
-      return <>{manutencoes[0].localizacao}</>;
-    } else if (idResponsavel?.departamento) {
-      return <>{idResponsavel.departamento}</>;
-    } else {
-      return (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {!idResponsavel && (
-            <button type="button" className="btnAtribuir" onClick={toggleModal}>
-              Atribuir
-            </button>
-          )}
-          {isHovered && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-around",
-                width: "50%",
-              }}
-            >
-              <button type="button" className="btnIcon" onClick={handleExcluir}>
-                <i className="bi bi-trash-fill"></i>
-              </button>
-              <Link to={`/HistoricoManutencao/${id}`}>
-                <button type="button" className="btnIcon">
-                  <i className="bi bi-wrench"></i>
-                </button>
-              </Link>
-              <Link to={`/AtualizarAtivo/${id}`}>
-                <button type="button" className="btnIcon">
-                  <i className="bi bi-pencil-fill"></i>
-                </button>
-              </Link>
-            </div>
-          )}
-        </div>
-      );
-    }
-  }
+
   const token = getLocalToken();
 
   useEffect(() => {
@@ -219,14 +171,40 @@ function LinhaAtivo({
 
   const [statusA, setStatusA] = useState<string>(status);
   useEffect(() => {
-    if (idResponsavel === null) {
+    const emManutencao = manutencoes.some(
+      (m) => new Date(m.dataInicio) <= new Date() && (!m.dataFim || new Date(m.dataFim) >= new Date())
+    ); // Verifica se há manutenção em aberto
+
+    if (idResponsavel?.departamento === null) {
       setStatusA("Não alocado");
-    } else if (emManutencao()) {
+    } else if (emManutencao) {
       setStatusA("Em manutenção");
     } else {
       setStatusA("Em uso");
     }
   }, [idResponsavel, manutencoes]);
+
+  function localAtivo() {
+    // Verifica se há manutenção em aberto e se a data atual está dentro do período de manutenção
+    const manutencaoEmAberto = manutencoes.find(
+      (m) => new Date(m.dataInicio) <= new Date() && (!m.dataFim || new Date(m.dataFim) >= new Date())
+    );
+    
+    if (manutencaoEmAberto) {
+      return manutencaoEmAberto.localizacao; // Retorna o local da manutenção em aberto
+    } else if (idResponsavel?.departamento) {
+      return idResponsavel.departamento; // Retorna o departamento do responsável
+    } else {
+      return (
+        <div>
+          <button type="button" className="btnAtribuir" onClick={toggleModal}>
+            Atribuir
+          </button>
+        </div>
+      );
+    }
+  }
+
 
   function handleUserChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const userId = Number(event.target.value);
@@ -241,8 +219,7 @@ function LinhaAtivo({
   return (
     <div
       className="linhaAtv"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      
     >
       <p className="id">{id}</p>
       <p className="nome">{nome}</p>

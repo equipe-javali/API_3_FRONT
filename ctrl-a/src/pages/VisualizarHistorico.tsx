@@ -56,11 +56,13 @@ export default function VisualizarHistorico() {
       const urls = [
         `http://localhost:8080/historicoAtivoTangivel/listagemAtivo/${id}`,
         `http://localhost:8080/historicoAtivoIntangivel/listagemAtivo/${id}`,
-        `http://localhost:8080/manutencao/listagem/${id}`
+        `http://localhost:8080/manutencao/listagem/${id}`,
       ];
 
       const responses = await Promise.all(
-        urls.map(async (url) => await fetch(url, { headers: { Authorization: token } }))
+        urls.map(
+          async (url) => await fetch(url, { headers: { Authorization: token } })
+        )
       );
 
       let historicoCompleto: EventoHistorico[] = [];
@@ -90,14 +92,17 @@ export default function VisualizarHistorico() {
           let tipo = "NENHUM";
 
           let nomeUsuarioAnterior = "Sem responsável";
-          if (item.nomeUsuario) {
-            if (jsonData[i - 1].nomeUsuario != item.nomeUsuario) {
-              nomeUsuarioAnterior = jsonData[i - 1].nomeUsuario || "Sem responsável";
+          if (item.nomeUsuario) {            
+            if (i > 0 && jsonData[i - 1].nomeUsuario !== item.nomeUsuario) {              
+              nomeUsuarioAnterior =
+                jsonData[i - 1].nomeUsuario || "Sem responsável";
               tipo = "usuario";
             }
-          } else if (item.ultimaAtualizacaoAtivo === null) { tipo = "cadastro"; }
-          else if (item.responsavel) { tipo = "responsavel"; }
-          else if (item.dataFim && new Date(item.dataFim) <= new Date()) {
+          } else if (item.ultimaAtualizacaoAtivo === null) {
+            tipo = "cadastro";
+          } else if (item.responsavel) {
+            tipo = "responsavel";
+          } else if (item.dataFim && new Date(item.dataFim) <= new Date()) {
             historicoCompleto.push({
               id: item.id,
               idAtivo: item.idAtivo || item.ativo.id,
@@ -113,12 +118,15 @@ export default function VisualizarHistorico() {
               tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
               descricaoManutencao: item.descricao,
               custoManutencao: item.custo,
-              dataCadastroAtivo: item.dataCadastroAtivo
+              dataCadastroAtivo: item.dataCadastroAtivo,
             });
 
             tipo = "retornoManutencao";
-          } else if (item.dataInicio) { tipo = "envioManutencao"; }
-          else { continue; }
+          } else if (item.dataInicio) {
+            tipo = "envioManutencao";
+          } else {
+            continue;
+          }
 
           historicoCompleto.push({
             id: item.id,
@@ -135,14 +143,16 @@ export default function VisualizarHistorico() {
             tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
             descricaoManutencao: item.descricao,
             custoManutencao: item.custo,
-            dataCadastroAtivo: item.dataCadastroAtivo
+            dataCadastroAtivo: item.dataCadastroAtivo,
           });
         }
 
         const historicoFiltrado = historicoCompleto
           .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
           .sort((a, b) => {
-            const dateComparison = b.dataAlteracao.localeCompare(a.dataAlteracao);
+            const dateComparison = b.dataAlteracao.localeCompare(
+              a.dataAlteracao
+            );
             if (dateComparison !== 0) {
               return dateComparison;
             }
@@ -151,12 +161,15 @@ export default function VisualizarHistorico() {
               a.tipo === "envioManutencao" &&
               b.tipo === "retornoManutencao" &&
               a.tipoManutencao === b.tipoManutencao
-            ) { return 1; }
-            else if (
+            ) {
+              return 1;
+            } else if (
               a.tipo === "retornoManutencao" &&
               b.tipo === "envioManutencao" &&
               a.tipoManutencao === b.tipoManutencao
-            ) { return 0; }
+            ) {
+              return 0;
+            }
 
             return (b.id ? b.id : 0) - (a.id ? a.id : 0);
           });
@@ -180,7 +193,6 @@ export default function VisualizarHistorico() {
       setHistorico([]);
     }
   }
-
 
   return (
     <div className="VisualizarHistorico">
@@ -209,26 +221,48 @@ export default function VisualizarHistorico() {
                       tituloEvento = "Envio para Manutenção";
                       descricaoEvento = (
                         <div>
-                          <p>{evento.tipoManutencao} - {evento.descricaoManutencao}</p>
-                          {evento.custoManutencao && <p>Custo: R$ {evento.custoManutencao.toFixed(2)}</p>}
-                          {evento.localizacao && <p>Local: {evento.localizacao}</p>}
+                          <p>
+                            {evento.tipoManutencao} -{" "}
+                            {evento.descricaoManutencao}
+                          </p>
+                          {evento.custoManutencao && (
+                            <p>Custo: R$ {evento.custoManutencao.toFixed(2)}</p>
+                          )}
+                          {evento.localizacao && (
+                            <p>Local: {evento.localizacao}</p>
+                          )}
                         </div>
                       );
                     } else if (evento.tipo === "retornoManutencao") {
                       tituloEvento = "Retorno da Manutenção";
                       descricaoEvento = (
                         <div>
-                          <p>{evento.tipoManutencao} - {evento.descricaoManutencao}</p>
-                          {evento.custoManutencao && <p>Custo: R$ {evento.custoManutencao.toFixed(2)}</p>}
-                          {evento.localizacao && <p>Local: {evento.localizacao}</p>}
+                          <p>
+                            {evento.tipoManutencao} -{" "}
+                            {evento.descricaoManutencao}
+                          </p>
+                          {evento.custoManutencao && (
+                            <p>Custo: R$ {evento.custoManutencao.toFixed(2)}</p>
+                          )}
+                          {evento.localizacao && (
+                            <p>Local: {evento.localizacao}</p>
+                          )}
                         </div>
                       );
                     } else if (evento.tipo === "usuario") {
                       tituloEvento = "Troca de Responsável";
                       descricaoEvento = (
                         <div>
-                          <p>Responsável: {evento.nomeUsuario} ({evento.departamentoUsuario})</p>
-                          <p>Responsável anterior: {evento.nomeUsuarioAnterior} {evento.departamentoUsuarioAnterior ? `(${evento.departamentoUsuarioAnterior})` : ""}</p>
+                          <p>
+                            Responsável: {evento.nomeUsuario} (
+                            {evento.departamentoUsuario})
+                          </p>
+                          <p>
+                            Responsável anterior: {evento.nomeUsuarioAnterior}{" "}
+                            {evento.departamentoUsuarioAnterior
+                              ? `(${evento.departamentoUsuarioAnterior})`
+                              : ""}
+                          </p>
                         </div>
                       );
                     } else if (evento.tipo === "local") {
@@ -237,7 +271,9 @@ export default function VisualizarHistorico() {
                     } else if (
                       evento.dataCadastroAtivo ||
                       (historico.length === 0 && evento.tipo === "cadastro")
-                    ) { tituloEvento = "Cadastro do Ativo"; }
+                    ) {
+                      tituloEvento = "Cadastro do Ativo";
+                    }
 
                     return (
                       <div
@@ -258,12 +294,18 @@ export default function VisualizarHistorico() {
                                 <h3 className="ra-heading">{tituloEvento}</h3>
                                 <span className="uia-card__time">
                                   <time dateTime={evento.dataAlteracao}>
-                                    {index == 0 ? <span className="uia-card__day">Atual</span> :
+                                    {index == 0 ? (
+                                      <span className="uia-card__day">
+                                        Atual
+                                      </span>
+                                    ) : (
                                       <>
-                                        <span className="uia-card__day">{dia}</span>
+                                        <span className="uia-card__day">
+                                          {dia}
+                                        </span>
                                         <span>{mes}</span>
                                       </>
-                                    }
+                                    )}
                                     {/* <span className="uia-card__day">{dia}</span>
                                     <span>{mes}</span> */}
                                   </time>
@@ -283,11 +325,12 @@ export default function VisualizarHistorico() {
                 ) : (
                   <div className="uia-timeline__event">
                     <div className="uia-timeline__event__date">
-                      {historico[0] && historico[0].dataCadastroAtivo ?
-                        format(
-                          parseISO(historico[0].dataCadastroAtivo),
-                          "dd/MM/yyyy"
-                        ) : ""}
+                      {historico[0] && historico[0].dataCadastroAtivo
+                        ? format(
+                            parseISO(historico[0].dataCadastroAtivo),
+                            "dd/MM/yyyy"
+                          )
+                        : ""}
                     </div>
                     <div className="uia-timeline__event__content">
                       <h2>Cadastro do Ativo</h2>

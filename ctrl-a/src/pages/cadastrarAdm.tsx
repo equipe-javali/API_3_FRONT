@@ -6,6 +6,7 @@ import CampoData from "../components/CampoData";
 import CampoPadrao from "../components/CampoPadrao";
 import CampoSenha from "../components/CampoSenha";
 import RespostaSistema from "../components/respostaSistema";
+import CampoImagem from "../components/CampoImagem";
 
 export default function CriarUsuarioAdm() {
   const [textoResposta, setTextoResposta] = useState('');
@@ -88,6 +89,13 @@ export default function CriarUsuarioAdm() {
     true,
     avisoSenha
   )
+  
+  const campoFotoPerfil = CampoImagem(
+    "Foto de Perfil:",
+    "Enviar Foto do Perfil",
+    10,
+    false
+  )
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -128,6 +136,9 @@ export default function CriarUsuarioAdm() {
     if (campoSenha.dado === '') {
       setAvisoSenha("Insira uma senha!")
     }
+    if (campoFotoPerfil.erroCampo) {
+      certo = false
+    }
     if (certo) {
       const data = {
         "nome": campoNome.dado,
@@ -137,6 +148,8 @@ export default function CriarUsuarioAdm() {
         "telefone": campoTelefone.dado.replace(/\D/g, ''),
         "email": campoEmail.dado,
         "status": 'ativo',
+        tipoFoto: campoFotoPerfil.dado.tipoArquivo,
+        dadosFoto: campoFotoPerfil.dado.documento,
         "usuariologin": {
           "senha": campoSenha.dado
         }
@@ -162,6 +175,7 @@ export default function CriarUsuarioAdm() {
           campoNome.limpar()
           campoTelefone.limpar()
           campoSenha.limpar()
+          campoFotoPerfil.limpar()
         } else if (userResponse.status === 400) {
           const userResponseData = await userResponse.text();
           if (userResponseData === "O CPF já existe") {
@@ -186,6 +200,10 @@ export default function CriarUsuarioAdm() {
       <form onSubmit={handleSubmit} className="form-cadastro">
         <Link className="retornarLogin" to={'/'}>◀ Voltar</Link>
         <h1 className="titulo">Cadastrar Adm</h1>
+        <div>
+                        {campoFotoPerfil.codigo}
+             
+        </div>
         {campoNome.codigo}
         {campoNascimento.codigo}
         {campoCPF.codigo}
