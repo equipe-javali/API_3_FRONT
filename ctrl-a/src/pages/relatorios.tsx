@@ -3,39 +3,29 @@ import CampoData from "../components/CampoData";
 import RelatorioAtivos from "./relatorioAtivos";
 import RelatorioManutencoes from "./relatorioManutencoes";
 import "./css/relatorios.css";
-import exportDataToExcel from "../components/exportarRelatorios";
-
-interface Ativo {
-  id: number;
-  nome: string;
-  tipo: "tangível" | "intangível";
-  valor: number;
-  local: string;
-  status: "ativo" | "em uso" | "manutenção";
-}
-
-interface Manutencao {
-  id: number;
-  tipo: string;
-  custo: number;
-  dataInicio: string | null; 
-  dataFim: string | null;
-  ativoId: number;
-}
 
 
 export default function Relatorios() {
   const dataInicial = CampoData("Data inicial:", "data", "", false);
   const dataFinal = CampoData("Data final:", "data", "", false);
+  const [tipoAtivo, setTipoAtivo] = useState("DadosGerais");
+  const [tipoManutencao, setTipoManutencao] = useState("DadosGerais");
+  const [idAtivo, setIdAtivo] = useState<number | null>(null);
 
   const [changeRelatorio, setChangeRelatorio] = useState("ativos");
-  const [dadosAtivos, setDadosAtivos] = useState<Ativo[]>([]);
-  const [dadosManutencoes, setDadosManutencoes] = useState<Manutencao[]>([]);
+
+  const handleTipoManutencaoChange = (tipo: string) => {
+    setTipoManutencao(tipo)
+  
+  }
+  const handleTipoAtivoChange = (tipo: string) => {
+    setTipoAtivo(tipo)
+  }
+  const handleidAtivoChange = (id: number | null) => {
+    setIdAtivo(id)
+  }
 
   const handleExport = async () => {
-    const dataToExport =
-        changeRelatorio === "ativos" ? dadosAtivos : dadosManutencoes;
-
     const response = await fetch(
       `http://localhost:8080/relatorio/exportRelatorio`,
       {
@@ -48,9 +38,9 @@ export default function Relatorios() {
         body: JSON.stringify({
           dataInicio: dataInicial.dado || null,
           dataFim: dataFinal.dado || null,
-          tipoAtivo: "DadosGerais",
-          tipoManutencao: "DadosGerais",
-          idAtivo: 213
+          tipoAtivo: tipoAtivo,
+          tipoManutencao: tipoManutencao,
+          idAtivo: idAtivo
         }),
         mode: "cors",
       }
@@ -114,14 +104,15 @@ export default function Relatorios() {
               <RelatorioAtivos
                   dataInicio={dataInicial.dado}
                   dataFim={dataFinal.dado}
-                  setDadosAtivos={setDadosAtivos}
+                  onTipoAtivoChange={handleTipoAtivoChange}
               />
           ) : (
-              <RelatorioManutencoes
-                  dataInicio={dataInicial.dado}
-                  dataFim={dataFinal.dado}
-                  setDadosManutencoes={setDadosManutencoes}
-              />
+            <RelatorioManutencoes
+              dataInicio={dataInicial.dado}
+              dataFim={dataFinal.dado}
+              onTipoManutencaoChange={handleTipoManutencaoChange}
+              onIdAtivoChange={handleidAtivoChange}
+            />
           )}
         </div>
       </div>

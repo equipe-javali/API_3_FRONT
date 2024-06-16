@@ -10,29 +10,81 @@ interface RelatorioManutencao {
   qtdEnvioPorTipo: Record<string, number>;
 }
 
-interface Manutencao {
-  id: number;
-  tipo: string;
-  custo: number;
-  dataInicio: string | null;
-  dataFim: string | null;
-  ativoId: number;
+interface RelatorioManutencaoProps {
+  dataInicio: string,
+  dataFim: string,
+  onTipoManutencaoChange: (tipo: string) => void,
+  onIdAtivoChange: (id: number | null) => void
 }
 
-
-export default function RelatorioManutencoes({dataInicio, dataFim, setDadosManutencoes,}: {dataInicio: string, dataFim: string, setDadosManutencoes: React.Dispatch<React.SetStateAction<Manutencao[]>>}) {
+export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManutencaoChange, onIdAtivoChange }: RelatorioManutencaoProps) {
   const [relatorioManutencoes, setRelatorioManutencoes] = useState<RelatorioManutencao | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedAtivo, setSelectedAtivo] = useState<number | null>(null);
-  const [selectedAtivoNome, setSelectedAtivoNome] = useState<string>("");
   const [enviosPorTipoData, setEnviosPorTipoData] = useState<{ x: string; y: number }[]>([]);
   
-  let ativos = ["Todos os ativos"]
-  const selectAtivos = CampoDropdown( "", ativos, "", "Selecione o ativo desejado", false);
-
   const [selectedButton, setSelectedButton] = useState("DadosGerais")
-  let selected = (value: string) => { setSelectedButton(value) }
+  let selected = (value: string) => { setSelectedButton(value); onTipoManutencaoChange(value) }
+
+  const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { value } = e.currentTarget;
+    selected(value);
+  };
+  
+  const [ativos, setAtivos] = useState<{id: number, nome: string}[]>([])
+  const opcoesAtivos = ["Todos os ativos", ...ativos.map(ativo => ativo.nome)]
+  const selectAtivos = CampoDropdown("", opcoesAtivos, "", "Selecione o ativo desejado...", false);
+  const [idAtivoSelecionado, setIdAtivoSelecionado] = useState<number | null>(null)
+  
+  let selectedAtivo = (nomeAtivo: string) => {
+      let ativo = ativos.find(a => a.nome == nomeAtivo)
+      setIdAtivoSelecionado( ativo ? ativo.id : null )
+  }
+  onIdAtivoChange(idAtivoSelecionado)
+
+  useEffect(() => {
+    selectedAtivo(selectAtivos.dado)
+  }, [selectAtivos.dado])
+
+  const tipoMap: Record<string, string> = {
+    "1" : "Preventiva",
+    "2" : "Corretiva",
+    "3" : "Preditiva"
+  }
+  
+  useEffect(() => {
+    const listagemAtivos = async () => {
+      try {
+        const reqData = await fetch("http://localhost:8080/ativo/listagemTodos",
+          {
+            method: "GET",
+            headers: {
+              Authorization: (localStorage.getItem("token") || ""),
+            }
+          }
+        )
+        if (!reqData.ok) {
+          const errorData = await reqData.json();
+          throw new Error(
+            `Erro na listagem de ativos: ${reqData.status} ${reqData.statusText} - ${errorData?.message || "Erro desconhecido"}`
+          );
+        }
+
+        const responseData = await reqData.json();
+        const getAtivos = responseData.map((ativo: any) => ({id: ativo!.id, nome: ativo!.nome}))
+
+        setAtivos(getAtivos)
+
+      } catch (err) {
+        console.log('Erro ao listar ativos', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    listagemAtivos();
+  }, [])
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,6 +110,7 @@ export default function RelatorioManutencoes({dataInicio, dataFim, setDadosManut
               dataInicio: dataInicio,
               dataFim: dataFim,
               tipo: selectedButton,
+              idAtivo: idAtivoSelecionado
             }),
             mode: "cors",
           }
@@ -72,16 +125,27 @@ export default function RelatorioManutencoes({dataInicio, dataFim, setDadosManut
         }
 
         const data: RelatorioManutencao = await response.json();
-        setRelatorioManutencoes(data);
+        
+        const mediaTempoTraduzido = Object.fromEntries(
+          Object.entries(data.mediaTempoPorTipo).map( ([key, value]) => [tipoMap[key], value] )
+        )
+        const qtdEnvioTraduzido = Object.fromEntries(
+          Object.entries(data.qtdEnvioPorTipo).map( ([key, value]) => [tipoMap[key], value] )
+        )
+
+        setRelatorioManutencoes( {
+          ...data,
+          mediaTempoPorTipo: mediaTempoTraduzido,
+          qtdEnvioPorTipo: qtdEnvioTraduzido
+        } );
+
         setLoading(false);
 
-        // Converter qtdEnvioPorTipo (objeto) para array para o gráfico
-        const enviosPorTipoArray = Object.entries(data.qtdEnvioPorTipo).map(
+        const enviosPorTipoArray = Object.entries(qtdEnvioTraduzido).map(
           ([tipo, envios]) => ({ x: tipo, y: envios })
         );
         setEnviosPorTipoData(enviosPorTipoArray);
 
-        
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
         setError((error as Error).message);
@@ -91,7 +155,9 @@ export default function RelatorioManutencoes({dataInicio, dataFim, setDadosManut
     };
 
     fetchData();
-  }, [dataInicio, dataFim, selectedAtivo, selectedButton]);
+  }, [dataInicio, dataFim, selectedButton, idAtivoSelecionado]);
+
+  
 
 
   if (loading) {
@@ -111,18 +177,12 @@ export default function RelatorioManutencoes({dataInicio, dataFim, setDadosManut
     return <p>Nenhum dado encontrado.</p>;
   }
 
-
   const tempoPorTipoData = Object.entries(relatorioManutencoes.mediaTempoPorTipo).map(
     ([tipo, tempo]) => ({ x: tipo, y: Math.round(tempo) })
   );
 
-
-
-
   return (
     <div className="relatorios-manutencoes">
-      {dataInicio}
-      {dataFim}
       <div className="linha1Manutencoes">
         <div className="valorTotalManutencoes">
           <p>VALOR TOTAL DAS MANUTENÇÕES</p>
@@ -135,12 +195,12 @@ export default function RelatorioManutencoes({dataInicio, dataFim, setDadosManut
         </div>
         <div className="btnsTipoManutencoes">
           <div className="linha1btns">
-            <button className={selectedButton == "DadosGerais" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"DadosGerais"} onClick={() => {selected("DadosGerais")}}>Dados gerais</button>
-            <button className={selectedButton == "Preventiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preventiva"} onClick={() => selected("Preventiva")}>Preventiva</button>
+            <button className={selectedButton == "DadosGerais" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"DadosGerais"} onClick={ handleBtnClick }>Dados gerais</button>
+            <button className={selectedButton == "Preventiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preventiva"} onClick={ handleBtnClick }>Preventiva</button>
           </div>
           <div className="linha2btns">
-            <button className={selectedButton == "Corretiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Corretiva"} onClick={() => selected("Corretiva")}>Corretiva</button>
-            <button className={selectedButton == "Preditiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preditiva"} onClick={() => selected("Preditiva")}>Preditiva</button>
+            <button className={selectedButton == "Corretiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Corretiva"} onClick={ handleBtnClick }>Corretiva</button>
+            <button className={selectedButton == "Preditiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preditiva"} onClick={ handleBtnClick }>Preditiva</button>
           </div>
         </div>
         {selectAtivos.codigo}
@@ -163,5 +223,5 @@ export default function RelatorioManutencoes({dataInicio, dataFim, setDadosManut
         </div>
       </div>
     </div>
-  );
+  )
 }

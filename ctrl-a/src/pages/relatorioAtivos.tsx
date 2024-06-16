@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./css/relatorioAtivos.css";
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme, VictoryPie, VictoryLabel } from "victory";
-import getLocalToken from "../utils/getLocalToken";
 
 
 interface RelatorioAtivo {
@@ -13,6 +12,13 @@ interface RelatorioAtivo {
     statusEmManutencao: number;
 }
 
+interface RelatorioAtivoProps {
+    dataInicio: string,
+    dataFim: string,
+    onTipoAtivoChange: (tipo: string) => void;
+}
+
+
 interface Ativo {
     id: number;
     nome: string;
@@ -22,28 +28,26 @@ interface Ativo {
     status: "ativo" | "em uso" | "manutenção";
 }
 
-export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }: { dataInicio: string; dataFim: string; setDadosAtivos: React.Dispatch<React.SetStateAction<Ativo[]>> }) {
+export default function RelatorioAtivos({ dataInicio, dataFim, onTipoAtivoChange }: RelatorioAtivoProps) {
     const [relatorioAtivos, setRelatorioAtivos] = useState<RelatorioAtivo | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [chartDataReady, setChartDataReady] = useState(false);
 
-   
-    const [localChartData, setLocalChartData] = useState<
-        { x: string; y: number }[]
-    >([]);
-    const [statusData, setStatusData] = useState<
-        { x: string; y: number }[]
-    >([]);
+    const [localChartData, setLocalChartData] = useState<{ x: string; y: number }[]>([]);
+    const [statusData, setStatusData] = useState<{ x: string; y: number }[]>([]);
 
     const [selectedButton, setSelectedButton] = useState("DadosGerais")
-    let selected = (value: string) => {setSelectedButton(value)}
+    let selected = (value: string) => { setSelectedButton(value); onTipoAtivoChange(value) }
+
+    const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        const { value } = e.currentTarget;
+        selected(value);
+      };
 
     useEffect(() => {
         const fetchData = async () => {
-            const token = getLocalToken();
-
-            if (!token) {
+            if (!(localStorage.getItem("token"))) {
                 setError("Token de autenticação não encontrado.");
                 setLoading(false);
                 return;
@@ -57,7 +61,7 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
                         headers: {
                             "Content-Type": "application/json",
                             Accept: "application/json",
-                            Authorization: token,
+                            Authorization: (localStorage.getItem("token") || ""),
                         },
                         body: JSON.stringify({
                             dataInicio: dataInicio,
@@ -78,7 +82,7 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
                 const data: RelatorioAtivo = await response.json();
                 setRelatorioAtivos(data);
 
-                
+
                 if (data) {
                     const localLabels = Object.keys(data.qtdPorLocal);
                     const localData = Object.values(data.qtdPorLocal);
@@ -106,9 +110,7 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
                             status: "ativo",
                         })
                     );
-
-                    setDadosAtivos(dadosAtivos);
-                    setChartDataReady(true); 
+                    setChartDataReady(true);
                 }
             } catch (error) {
                 console.error("Erro ao buscar dados:", error);
@@ -140,7 +142,7 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
 
     if (!relatorioAtivos || Object.keys(relatorioAtivos.qtdPorLocal).length === 0) {
         return <p>Nenhum dado encontrado para o período selecionado.</p>;
-      }
+    }
 
     return (
         <div className="relatorios-ativos">
@@ -159,16 +161,16 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
                     </p>
                 </div>
                 <div className="btnsTiposAtivos">
-                    <button className={selectedButton == "DadosGerais" ? "btnAtivos btnSelected" : "btnAtivos"} value={"DadosGerais"} onClick={() => selected("DadosGerais")}>Dados gerais</button>
-                    <button className={selectedButton == "Tangiveis"? "btnAtivos btnSelected" : "btnAtivos"} value={"Tangiveis"} onClick={() => selected("Tangiveis")}>Tangíveis</button>
-                    <button className={selectedButton == "Intangiveis" ? "btnAtivos btnSelected" : "btnAtivos"} value={"Intangiveis"} onClick={() => selected("Intangiveis")}>Intangíveis</button>
+                    <button className={selectedButton == "DadosGerais" ? "btnAtivos btnSelected" : "btnAtivos"} value={"DadosGerais"} onClick={ handleBtnClick }>Dados gerais</button>
+                    <button className={selectedButton == "Tangiveis" ? "btnAtivos btnSelected" : "btnAtivos"} value={"Tangiveis"} onClick={ handleBtnClick }>Tangíveis</button>
+                    <button className={selectedButton == "Intangiveis" ? "btnAtivos btnSelected" : "btnAtivos"} value={"Intangiveis"} onClick={ handleBtnClick }>Intangíveis</button>
                 </div>
             </div>
 
             <div className="linha2Ativos">
                 <div className="statusAtivos">
                     <p>STATUS DOS ATIVOS (%)</p>
-                    {chartDataReady && ( 
+                    {chartDataReady && (
                         <VictoryPie
                             data={statusData}
                             colorScale={["#FFCE56", "#36A2EB", "#FF6384"]}
@@ -178,11 +180,11 @@ export default function RelatorioAtivos({ dataInicio, dataFim, setDadosAtivos }:
 
                 <div className="qntdLocalAtivos">
                     <p>QUANTIDADE DE ATIVOS X LOCAL</p>
-                    {chartDataReady && ( 
+                    {chartDataReady && (
                         <VictoryChart theme={VictoryTheme.material} domainPadding={20}>
                             <VictoryAxis />
                             <VictoryAxis dependentAxis />
-                            <VictoryBar data={localChartData} labels={({ datum }) => datum.y} labelComponent={<VictoryLabel dy={30}/>} />
+                            <VictoryBar data={localChartData} labels={({ datum }) => datum.y} labelComponent={<VictoryLabel dy={30} />} />
                         </VictoryChart>
                     )}
                 </div>
