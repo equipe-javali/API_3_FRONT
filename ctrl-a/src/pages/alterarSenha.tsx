@@ -68,7 +68,7 @@ export default function AtualizarUsuario() {
                     {campoSenha.codigo}
                 </div>
                 <div>
-                    <input type='submit' className='buttonAtualizar' value='Atualizar Senha' />
+                    <input type='submit' className='buttonAtualizar' value='Atualizar Senha' /> as JSX.Element
                 </div>
             </form>
         </>
