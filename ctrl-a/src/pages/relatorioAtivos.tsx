@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./css/relatorioAtivos.css";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement, } from "chart.js";
+import { Pie, Bar } from "react-chartjs-2";
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme, VictoryPie, VictoryLabel } from "victory";
-
+ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
+ChartJS.defaults.color = "#DDD8D8"
 
 interface RelatorioAtivo {
     qtdAtivos: number;
@@ -34,8 +37,8 @@ export default function RelatorioAtivos({ dataInicio, dataFim, onTipoAtivoChange
     const [error, setError] = useState<string | null>(null);
     const [chartDataReady, setChartDataReady] = useState(false);
 
-    const [localChartData, setLocalChartData] = useState<{ x: string; y: number }[]>([]);
-    const [statusData, setStatusData] = useState<{ x: string; y: number }[]>([]);
+    const [localChartData, setLocalChartData] = useState<{ local: string; qtd: number }[]>([]);
+    const [statusData, setStatusData] = useState<{ status: string; qtd: number }[]>([]);
 
     const [selectedButton, setSelectedButton] = useState("DadosGerais")
     let selected = (value: string) => { setSelectedButton(value); onTipoAtivoChange(value) }
@@ -43,7 +46,7 @@ export default function RelatorioAtivos({ dataInicio, dataFim, onTipoAtivoChange
     const handleBtnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         const { value } = e.currentTarget;
         selected(value);
-      };
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -89,27 +92,17 @@ export default function RelatorioAtivos({ dataInicio, dataFim, onTipoAtivoChange
 
                     setLocalChartData(
                         localLabels.map((label, index) => ({
-                            x: label,
-                            y: localData[index],
+                            local: label,
+                            qtd: localData[index],
                         }))
                     );
 
                     setStatusData([
-                        { x: "Não Alocado", y: data.statusNaoAlocado * 100 },
-                        { x: "Em Uso", y: data.statusEmUso * 100 },
-                        { x: "Em Manutenção", y: data.statusEmManutencao * 100 },
+                        { status: "Não Alocado", qtd: data.statusNaoAlocado * 100 },
+                        { status: "Em Uso", qtd: data.statusEmUso * 100 },
+                        { status: "Em Manutenção", qtd: data.statusEmManutencao * 100 },
                     ]);
 
-                    const dadosAtivos: Ativo[] = Object.keys(data.qtdPorLocal).map(
-                        (local) => ({
-                            id: 0,
-                            nome: `Ativo em ${local}`,
-                            tipo: Math.random() < 0.5 ? "tangível" : "intangível",
-                            valor: 0,
-                            local: local,
-                            status: "ativo",
-                        })
-                    );
                     setChartDataReady(true);
                 }
             } catch (error) {
@@ -161,32 +154,86 @@ export default function RelatorioAtivos({ dataInicio, dataFim, onTipoAtivoChange
                     </p>
                 </div>
                 <div className="btnsTiposAtivos">
-                    <button className={selectedButton == "DadosGerais" ? "btnAtivos btnSelected" : "btnAtivos"} value={"DadosGerais"} onClick={ handleBtnClick }>Dados gerais</button>
-                    <button className={selectedButton == "Tangiveis" ? "btnAtivos btnSelected" : "btnAtivos"} value={"Tangiveis"} onClick={ handleBtnClick }>Tangíveis</button>
-                    <button className={selectedButton == "Intangiveis" ? "btnAtivos btnSelected" : "btnAtivos"} value={"Intangiveis"} onClick={ handleBtnClick }>Intangíveis</button>
+                    <button className={selectedButton == "DadosGerais" ? "btnAtivos btnSelected" : "btnAtivos"} value={"DadosGerais"} onClick={handleBtnClick}>Dados gerais</button>
+                    <button className={selectedButton == "Tangiveis" ? "btnAtivos btnSelected" : "btnAtivos"} value={"Tangiveis"} onClick={handleBtnClick}>Tangíveis</button>
+                    <button className={selectedButton == "Intangiveis" ? "btnAtivos btnSelected" : "btnAtivos"} value={"Intangiveis"} onClick={handleBtnClick}>Intangíveis</button>
                 </div>
             </div>
 
             <div className="linha2Ativos">
                 <div className="statusAtivos">
-                    <p>STATUS DOS ATIVOS (%)</p>
-                    {chartDataReady && (
-                        <VictoryPie
-                            data={statusData}
-                            colorScale={["#FFCE56", "#36A2EB", "#FF6384"]}
+                    {chartDataReady &&
+                        <Pie
+                            width={200}
+                            height={100}
+                            data={{
+                                labels: statusData.map((status) => status.status),
+                                datasets: [
+                                    {
+                                        label: "Quantidade %",
+                                        data: statusData.map((qtd) => qtd.qtd),
+                                        backgroundColor: [
+                                            "#853F85",
+                                            "#0178D4",
+                                            "#4152AC",
+                                        ],
+                                        borderColor: [
+                                            "#853F85",
+                                            "#0178D4",
+                                            "#4152AC",
+                                        ],
+                                        borderWidth: 1,
+                                        hoverOffset: 20
+                                    },
+                                ],
+                            }}
+                            options={{
+                                responsive: true,
+                                plugins: {
+                                    title: {
+                                        text: "STATUS DOS ATIVOS (%)",
+                                        display: true,
+                                        font: { size: 20 },
+                                    },
+                                    legend: {
+                                        position: 'bottom' as const,
+                                        labels: {
+                                            font: { size: 15 },
+                                        },
+                                    }
+                                },
+                            }}
                         />
-                    )}
+                    }
                 </div>
 
                 <div className="qntdLocalAtivos">
-                    <p>QUANTIDADE DE ATIVOS X LOCAL</p>
-                    {chartDataReady && (
-                        <VictoryChart theme={VictoryTheme.material} domainPadding={20}>
-                            <VictoryAxis />
-                            <VictoryAxis dependentAxis />
-                            <VictoryBar data={localChartData} labels={({ datum }) => datum.y} labelComponent={<VictoryLabel dy={30} />} />
-                        </VictoryChart>
-                    )}
+                    {chartDataReady &&
+                        <Bar options={{
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top' as const,
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'QUANTIDADE POR LOCAL',
+                                },
+                                }
+                            }} data={{
+                                labels: localChartData.map((local) => local.local),
+                                datasets: [
+                                    {
+                                        label: "Quantidade",
+                                        data: localChartData.map((qtd) => qtd.qtd),
+                                        backgroundColor: [
+                                            "#853F85",
+                                        ],
+                                    }
+                                ]
+                            }}
+                        />
+                    }
                 </div>
             </div>
         </div>

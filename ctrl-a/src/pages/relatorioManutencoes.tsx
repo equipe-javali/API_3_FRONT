@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./css/relatorioManutencoes.css";
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme, VictoryPie } from "victory";
+import { Chart as ChartJS, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement, } from "chart.js";
+import { Bar } from "react-chartjs-2";
 import CampoDropdown from "../components/CampoDropdown";
 import getLocalToken from "../utils/getLocalToken";
+ChartJS.register( CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
+ChartJS.defaults.color = "#DDD8D8"
 
 interface RelatorioManutencao {
   valorTotal: number;
@@ -21,8 +24,8 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
   const [relatorioManutencoes, setRelatorioManutencoes] = useState<RelatorioManutencao | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [enviosPorTipoData, setEnviosPorTipoData] = useState<{ x: string; y: number }[]>([]);
-  
+  const [enviosPorTipoData, setEnviosPorTipoData] = useState<{ tipo: string; qtd: number }[]>([]);
+
   const [selectedButton, setSelectedButton] = useState("DadosGerais")
   let selected = (value: string) => { setSelectedButton(value); onTipoManutencaoChange(value) }
 
@@ -30,15 +33,15 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
     const { value } = e.currentTarget;
     selected(value);
   };
-  
-  const [ativos, setAtivos] = useState<{id: number, nome: string}[]>([])
+
+  const [ativos, setAtivos] = useState<{ id: number, nome: string }[]>([])
   const opcoesAtivos = ["Todos os ativos", ...ativos.map(ativo => ativo.nome)]
   const selectAtivos = CampoDropdown("", opcoesAtivos, "", "Selecione o ativo desejado...", false);
   const [idAtivoSelecionado, setIdAtivoSelecionado] = useState<number | null>(null)
-  
+
   let selectedAtivo = (nomeAtivo: string) => {
-      let ativo = ativos.find(a => a.nome == nomeAtivo)
-      setIdAtivoSelecionado( ativo ? ativo.id : null )
+    let ativo = ativos.find(a => a.nome == nomeAtivo)
+    setIdAtivoSelecionado(ativo ? ativo.id : null)
   }
   onIdAtivoChange(idAtivoSelecionado)
 
@@ -47,11 +50,11 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
   }, [selectAtivos.dado])
 
   const tipoMap: Record<string, string> = {
-    "1" : "Preventiva",
-    "2" : "Corretiva",
-    "3" : "Preditiva"
+    "1": "Preventiva",
+    "2": "Corretiva",
+    "3": "Preditiva"
   }
-  
+
   useEffect(() => {
     const listagemAtivos = async () => {
       try {
@@ -71,7 +74,7 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
         }
 
         const responseData = await reqData.json();
-        const getAtivos = responseData.map((ativo: any) => ({id: ativo!.id, nome: ativo!.nome}))
+        const getAtivos = responseData.map((ativo: any) => ({ id: ativo!.id, nome: ativo!.nome }))
 
         setAtivos(getAtivos)
 
@@ -125,26 +128,27 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
         }
 
         const data: RelatorioManutencao = await response.json();
-        
+
         const mediaTempoTraduzido = Object.fromEntries(
-          Object.entries(data.mediaTempoPorTipo).map( ([key, value]) => [tipoMap[key], value] )
+          Object.entries(data.mediaTempoPorTipo).map(([key, value]) => [tipoMap[key], value])
         )
         const qtdEnvioTraduzido = Object.fromEntries(
-          Object.entries(data.qtdEnvioPorTipo).map( ([key, value]) => [tipoMap[key], value] )
+          Object.entries(data.qtdEnvioPorTipo).map(([key, value]) => [tipoMap[key], value])
         )
 
-        setRelatorioManutencoes( {
+        setRelatorioManutencoes({
           ...data,
           mediaTempoPorTipo: mediaTempoTraduzido,
           qtdEnvioPorTipo: qtdEnvioTraduzido
-        } );
+        });
 
         setLoading(false);
 
         const enviosPorTipoArray = Object.entries(qtdEnvioTraduzido).map(
-          ([tipo, envios]) => ({ x: tipo, y: envios })
+          ([tipo, envios]) => ({ tipo: tipo, qtd: envios })
         );
         setEnviosPorTipoData(enviosPorTipoArray);
+        console.log(enviosPorTipoArray)
 
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
@@ -157,7 +161,7 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
     fetchData();
   }, [dataInicio, dataFim, selectedButton, idAtivoSelecionado]);
 
-  
+
 
 
   if (loading) {
@@ -195,12 +199,12 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
         </div>
         <div className="btnsTipoManutencoes">
           <div className="linha1btns">
-            <button className={selectedButton == "DadosGerais" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"DadosGerais"} onClick={ handleBtnClick }>Dados gerais</button>
-            <button className={selectedButton == "Preventiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preventiva"} onClick={ handleBtnClick }>Preventiva</button>
+            <button className={selectedButton == "DadosGerais" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"DadosGerais"} onClick={handleBtnClick}>Dados gerais</button>
+            <button className={selectedButton == "Preventiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preventiva"} onClick={handleBtnClick}>Preventiva</button>
           </div>
           <div className="linha2btns">
-            <button className={selectedButton == "Corretiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Corretiva"} onClick={ handleBtnClick }>Corretiva</button>
-            <button className={selectedButton == "Preditiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preditiva"} onClick={ handleBtnClick }>Preditiva</button>
+            <button className={selectedButton == "Corretiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Corretiva"} onClick={handleBtnClick}>Corretiva</button>
+            <button className={selectedButton == "Preditiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preditiva"} onClick={handleBtnClick}>Preditiva</button>
           </div>
         </div>
         {selectAtivos.codigo}
@@ -208,18 +212,58 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
 
       <div className="linha2Manutencoes">
         <div className="tempoTipoManutencoes">
-          <p>TEMPO MÉDIO POR TIPO DE MANUTENÇÃO (DIAS)</p>
-          <VictoryChart domainPadding={20} theme={VictoryTheme.material}>
-            <VictoryAxis />
-            <VictoryAxis dependentAxis />
-            <VictoryBar data={tempoPorTipoData} />
-          </VictoryChart>
+        <Bar options={{
+          indexAxis: 'y' as const,
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top' as const,
+              },
+              title: {
+                display: true,
+                text: 'MÉDIA DE TEMPO POR TIPO DE MANUTENÇÃO',
+              },
+            }
+          }} data={{
+            labels: tempoPorTipoData.map((tipo) => tipo.x),
+            datasets: [
+              {
+                label: "Dias",
+                data: tempoPorTipoData.map((dias) => dias.y),
+                backgroundColor: [
+                  "#853F85",
+                ],
+              }
+            ]
+          }}
+          />
         </div>
 
-
         <div className="enviosTipoManutencao">
-          <p>ENVIOS X TIPO DE MANUTENÇÃO</p>
-          <VictoryPie data={enviosPorTipoData} />
+          <Bar options={{
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top' as const,
+              },
+              title: {
+                display: true,
+                text: 'ENVIOS POR TIPO DE MANUTENÇÃO',
+              },
+            }
+          }} data={{
+            labels: enviosPorTipoData.map((tipo) => tipo.tipo),
+            datasets: [
+              {
+                label: "Envios",
+                data: enviosPorTipoData.map((qtd) => qtd.qtd),
+                backgroundColor: [
+                  "#853F85",
+                ],
+              }
+            ]
+          }}
+          />
         </div>
       </div>
     </div>
