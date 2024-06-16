@@ -36,8 +36,6 @@ export default function VisualizarUsuario() {
   const [textoResposta, setTextoResposta] = useState('');
   const [tipoResposta, setTipoResposta] = useState('');
   const [mostrarInativos, setMostrarInativos] = useState(true);
-  const [chaveAtualizacao, setChaveAtualizacao] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
 
   const token = getLocalToken();
@@ -65,7 +63,7 @@ export default function VisualizarUsuario() {
         setTextoResposta(`Erro ao buscar usuários: ${error.message}`);
         setTipoResposta("Erro");
       });
-  }, []);
+  }, [token]);
   const usuariosExibidos = mostrarInativos ? usuarios : usuarios.filter(usuario => usuario.status.toLowerCase() === 'ativo'); 
 
   const usuariosFiltrados = usuariosExibidos.filter(usuario => {
@@ -113,7 +111,6 @@ export default function VisualizarUsuario() {
         setTextoResposta(`Erro ao inativar usuário: ${error.message}`);
         setTipoResposta("Erro");
       })
-      .finally(() => setIsLoading(false));
   };
   
 
@@ -123,7 +120,7 @@ export default function VisualizarUsuario() {
   };
 
     return (
-      <div className='VisualizarUsuario' key={chaveAtualizacao}> 
+      <div className='VisualizarUsuario'> 
             <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <div>
                 <h2>Usuários</h2>
