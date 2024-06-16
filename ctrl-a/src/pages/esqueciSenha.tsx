@@ -32,12 +32,32 @@ export default function EsqueciSenha() {
             setAvisoEmail("Insira um email válido!")
         }
         if (certo) {
-            const data = {
-                "email": campoEmail.dado
-            };
             const token = getLocalToken();
             try {
-                
+                const userResponse = await fetch('http://localhost:8080/usuario/enviarEmailUsuario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": token
+                    },
+                    body: JSON.stringify({
+                        email: campoEmail.dado
+                    })
+                });
+                if (userResponse.ok) {
+                    setAviso("Email enviado com sucesso!");
+                    setTimeout(() => {
+                        setAviso('');
+                    }, 5000);
+                    campoEmail.limpar()
+                } else {
+                    console.error('Falha ao enviar email');
+                    const userResponseData = await userResponse.json();
+                    console.log(userResponseData);
+                    setTimeout(() => {
+                        setAviso('');
+                    }, 5000);
+                }
             } catch (error) {
                 console.error(error);
             }
