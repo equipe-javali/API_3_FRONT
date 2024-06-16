@@ -29,19 +29,19 @@ export default function CadastroAtivosTangiveis() {
         false
     )
 
-    const periodoDepreciacao = CampoPadrao(
+    const periodoDepreciacao = CampoDropdown(
         "Período de depreciação:",
-        "text",
-        "Exemplo: anos, meses",
-        "Depreciação",
+        [ "diário", "mensal", "semestral", "anual"],
+        "",
+        "Escolha um período de depreciação",
         false
     )
 
     const taxaDepreciacao = CampoPadrao(
-        "Taxa de depreciação:",
+        "Vida útil",
         "text",
-        "00%",
-        "Taxa",
+        "0",
+        "Texto",
         false
     )
 

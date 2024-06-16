@@ -91,6 +91,14 @@ export default function CadastroAtivos() {
         avisoNotaFiscal
     )
 
+    const campoValorResidual = CampoPadrao(
+        "Valor Residual:",
+        "text",
+        "Insira o valor residual...",
+        "Custo",
+        true 
+      );
+
     const [proximo, setProximo] = useState(0)
 
     const [textoResposta, setTextoResposta] = useState('')
@@ -132,6 +140,7 @@ export default function CadastroAtivos() {
         }
         if (certo) {
             const custo = parseFloat(campoCustoAquisicao.dado.replace('R$', '').replace(/\./g, '').replace(',', '.'));
+            const valorResidual = parseFloat(campoValorResidual.dado.replace('R$', '').replace(/\./g, '').replace(',', '.'))
             try {
                 if (CampoTipo.dado === "Tangível") {
                     if (paginaAtivosTangiveis.dados.garantia === '') {
@@ -155,14 +164,16 @@ export default function CadastroAtivos() {
                                     "numeroIdentificacao": campoIdentificador.dado,
                                     "marca": campoMarca.dado,
                                     "dataAquisicao": campoDataAquisicao.dado,
+                                    "valorResidual": valorResidual,
                                     "idNotaFiscal": {
                                         "nome": campoNotaFiscal.dado.nome,
                                         "tipoDocumento": campoNotaFiscal.dado.tipoArquivo,
                                         "documento": campoNotaFiscal.dado.documento
+
                                     }
                                 },
                                 "garantia": paginaAtivosTangiveis.dados.garantia,
-                                "taxaDepreciacao": parseFloat(paginaAtivosTangiveis.dados.taxaDepreciacao.replace('%', '')),
+                                "taxaDepreciacao": paginaAtivosTangiveis.dados.taxaDepreciacao,
                                 "periodoDepreciacao": paginaAtivosTangiveis.dados.periodoDepreciacao
                             }),
                             headers: {
@@ -185,6 +196,7 @@ export default function CadastroAtivos() {
                                     campoDataAquisicao.limpar()
                                     campoCategoria.limpar()
                                     campoDescricao.limpar()
+                                    campoValorResidual.limpar()
                                     paginaAtivosTangiveis.limpar()
                                 }
                                 else {
@@ -219,6 +231,7 @@ export default function CadastroAtivos() {
                                     "numeroIdentificacao": campoIdentificador.dado,
                                     "marca": campoMarca.dado,
                                     "dataAquisicao": campoDataAquisicao.dado,
+                                    "valorResidual": valorResidual,
                                     "idNotaFiscal": {
                                         "nome": campoNotaFiscal.dado.nome,
                                         "tipoDocumento": campoNotaFiscal.dado.tipoArquivo,
@@ -226,7 +239,7 @@ export default function CadastroAtivos() {
                                     }
                                 },
                                 "dataExpiracao": paginaAtivosIntangiveis.dados.expiracao,
-                                "taxaAmortizacao": parseFloat(paginaAtivosIntangiveis.dados.taxaAmortizacao.replace('%', '')),
+                                "taxaAmortizacao": paginaAtivosIntangiveis.dados.taxaAmortizacao,
                                 "periodoAmortizacao": paginaAtivosIntangiveis.dados.periodoAmortizacao
                             }),
                             headers: {
@@ -243,6 +256,7 @@ export default function CadastroAtivos() {
                                     campoNome.limpar()
                                     campoCustoAquisicao.limpar()
                                     campoCustoAquisicao.limpar()
+                                    campoCustoAquisicao.limpar()
                                     campoMarca.limpar()
                                     campoIdentificador.limpar()
                                     campoNotaFiscal.limpar()
@@ -250,6 +264,7 @@ export default function CadastroAtivos() {
                                     campoCategoria.limpar()
                                     campoDescricao.limpar()
                                     paginaAtivosIntangiveis.limpar()
+                                    campoValorResidual.limpar()
                                 }
                                 else {
                                     setTextoResposta(`Não foi possível cadastrar! Erro:${response.status}`)
@@ -317,8 +332,10 @@ export default function CadastroAtivos() {
                         <div className='colunaFormsAtivo'>
                             {campoNome.codigo}
                             {campoCustoAquisicao.codigo}
+                            {campoValorResidual.codigo}
                             {campoMarca.codigo}
                         </div>
+                        
                         <div className='colunaFormsAtivo'>
                             {campoCategoria.codigo}
                             {campoIdentificador.codigo}

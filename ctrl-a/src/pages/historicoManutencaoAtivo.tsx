@@ -14,19 +14,20 @@ import CampoDesativado from '../components/CampoDesativado';
 import DowloadArquivo from '../components/DownloadArquivo';
 
 interface ManutencaoData {
-    id: number;
-    dataInicio: string;
-    dataFim: string;
-    custo: number;
-    tipo: number;
-    descricao: string;
-    localizacao: string;
-    idNotaFiscal?: {
-        nome: string,
-        tipoDocumento: string,
-        documento: string
-    }
+  id: number;
+  dataInicio: string;
+  dataFim: string;
+  custo: number;
+  tipo: number;
+  descricao: string;
+  localizacao: string;
+  idNotaFiscal?: {
+      nome: string,
+      tipoDocumento: string,
+      documento: string
+  }
 }
+
 
 interface TabelaManutencaoProps {
     manutencoes: ManutencaoData[];
@@ -390,6 +391,8 @@ export default function HistoricoManutencao() {
                 </>);
             }
         }
+
+        
         return (
             <tr className="linhaMan"
                 onMouseEnter={() => setIsHovered(true)}
@@ -416,6 +419,7 @@ export default function HistoricoManutencao() {
                     <LinhaManutencao
                         key={man.id}
                         id={man.id}
+                                             
                         tipo={man.tipo}
                         descricao={man.descricao}
                         localizacao={man.localizacao}
@@ -426,6 +430,7 @@ export default function HistoricoManutencao() {
                     />
                 );
             });
+
         return (
             <table className="tabelaMan">
                 <thead>
