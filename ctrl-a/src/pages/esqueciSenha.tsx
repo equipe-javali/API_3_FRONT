@@ -1,11 +1,9 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import './css/esqueciSenha.css';
 import getLocalToken from "../utils/getLocalToken";
 import { Link } from "react-router-dom";
-import CampoDropdown from "../components/CampoDropdown";
-import CampoData from "../components/CampoData";
 import CampoPadrao from "../components/CampoPadrao";
-import CampoSenha from "../components/CampoSenha";
+
 
 export default function EsqueciSenha() {
     const [avisoEmail, setAvisoEmail] = useState<string | undefined>(undefined);
@@ -50,10 +48,14 @@ export default function EsqueciSenha() {
                         setAviso('');
                     }, 5000);
                     campoEmail.limpar()
+
+                    const userResponseData = await userResponse.json();
+
+                    localStorage.setItem("usuario", JSON.stringify(userResponseData))
+                    
+                    
                 } else {
                     console.error('Falha ao enviar email');
-                    const userResponseData = await userResponse.json();
-                    console.log(userResponseData);
                     setTimeout(() => {
                         setAviso('');
                     }, 5000);
