@@ -92,7 +92,7 @@ export default function Home() {
             <p className='pergunta2'>
               Esqueceu a senha?{' '}
               <span>&nbsp;</span>
-              <Link className='linkAlterarSenha' to={'/alterarSenha'}> Alterar Senha</Link>              
+              <Link className='linkAlterarSenha' to={'/RedefinirSenha'}> Alterar Senha</Link>              
             </p>
           </form>
         </div>
