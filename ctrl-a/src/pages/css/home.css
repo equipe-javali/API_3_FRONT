@@ -79,6 +79,17 @@
   color: var(--cor21);
 }
 
+.divHome .pergunta-esqueci {
+  display: flex;
+  text-decoration: none;
+  color: var(--branco);
+  text-align: center;
+  font-size: 12px;
+}
+
+.divHome .pergunta-esqueci:hover{
+  color: var(--cor5);
+}
 
 .botaoLogin{
   background-color: var(--cor7);
