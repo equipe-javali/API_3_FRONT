@@ -5,16 +5,22 @@ import getLocalToken from '../utils/getLocalToken';
 import CampoSenha from '../components/CampoSenha';
 import { useParams } from 'react-router-dom';
 
-export default function AtualizarUsuario() {
-  const token = getLocalToken();
-
+export default function AlterarSenha() {
   const [textoResposta, setTextoResposta] = useState('');
   const [tipoResposta, setTipoResposta] = useState('');
-
   function fechaPopUp() {
-    setTextoResposta('');
-    setTipoResposta('');
+    setTextoResposta('')
+    setTipoResposta('')
   }
+  useEffect(() => {
+    if (tipoResposta === "Sucesso") {
+      const timer = setTimeout(() => {
+        fechaPopUp();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [tipoResposta]);
+
 
   const [avisoSenha, setAvisoSenha] = useState<string | undefined>(undefined);
   const campoSenha = CampoSenha(
@@ -24,7 +30,7 @@ export default function AtualizarUsuario() {
     avisoSenha
   );
 
-  const [usuario, setUsuario] = useState(localStorage.getItem("usuario"))
+  const usuario = localStorage.getItem("usuario")
   console.log("USUARIO", usuario)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -36,14 +42,13 @@ export default function AtualizarUsuario() {
 
     if (usuario !== null) {
       const parseUsuario = JSON.parse(usuario)
-      setUsuario(parseUsuario)
 
       try {
         const response = await fetch(`http://localhost:8080/usuario/esqueciSenha`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': token
+            'Authorization': getLocalToken()
           },
           body: JSON.stringify({
             usuario: parseUsuario,
