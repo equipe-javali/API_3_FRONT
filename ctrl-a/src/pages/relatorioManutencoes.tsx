@@ -191,10 +191,12 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
         <div className="valorTotalManutencoes">
           <p>VALOR TOTAL DAS MANUTENÇÕES</p>
           <p className="valorCard">
-            R${" "}
-            {relatorioManutencoes.valorTotal.toLocaleString("pt-BR", {
+          <p className="valorCard">            
+            {new Intl.NumberFormat("pt-BR", {
+              style: "currency",
+              currency: "BRL",
               minimumFractionDigits: 2,
-            })}
+            }).format(relatorioManutencoes.valorTotal)}
           </p>
         </div>
         <div className="btnsTipoManutencoes">
