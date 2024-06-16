@@ -78,6 +78,7 @@ export default function Home() {
                 {showPassword ? <FaEyeSlash onClick={() => setShowPassword(!showPassword)} /> : <FaEye onClick={() => setShowPassword(!showPassword)} />}
               </div>
             </div>
+            <Link className='pergunta-esqueci' to={'/RedefinirSenha'}>Esqueci minha senha</Link>
             <input
               className='botaoLogin'
               type='submit'
