@@ -233,7 +233,7 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
                 data: tempoPorTipoData.map((dias) => dias.y),
                 backgroundColor: [
                   "#853F85"],
-                  barThickness: 80                 
+                  barThickness: 60                 
                 
               }
             ]
