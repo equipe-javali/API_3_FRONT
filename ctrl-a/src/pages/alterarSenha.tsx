@@ -6,7 +6,7 @@ import CampoSenha from '../components/CampoSenha';
 import { useParams } from 'react-router-dom';
 
 export default function AtualizarUsuario() {
-    const { id } = useParams<{ id: string }>();
+    const { email: usuarioEmail } = useParams<{ email: string }>();
     const token = getLocalToken();
 
     const [textoResposta, setTextoResposta] = useState('');
@@ -33,15 +33,15 @@ export default function AtualizarUsuario() {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/usuarioLogin/atualizacao/${id}`, {
+            const response = await fetch(`http://localhost:8080/esqueciSenha`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token
                 },
                 body: JSON.stringify({
-                  senha: campoSenha.dado,
-                  usuario: { id }
+                  novaSenha: campoSenha.dado,
+                usuario: { email: usuarioEmail }
               })
             });
 
