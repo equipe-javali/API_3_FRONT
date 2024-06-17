@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./css/CampoPadrao.css";
-import lapis from "../assets/icons/lapis.svg";
 export default function CampoImagemEditavel(
     nomeBotao: string,
     placeholder: string,
