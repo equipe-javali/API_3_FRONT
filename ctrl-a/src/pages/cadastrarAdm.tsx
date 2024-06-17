@@ -89,7 +89,7 @@ export default function CriarUsuarioAdm() {
     true,
     avisoSenha
   )
-  
+
   const campoFotoPerfil = CampoImagem(
     "Foto de Perfil:",
     "Enviar Foto do Perfil",
@@ -200,17 +200,20 @@ export default function CriarUsuarioAdm() {
       <form onSubmit={handleSubmit} className="form-cadastro">
         <Link className="retornarLogin" to={'/'}>◀ Voltar</Link>
         <h1 className="titulo">Cadastrar Adm</h1>
-        <div>
-                        {campoFotoPerfil.codigo}
-             
+        <div className="divFormsCadastroAdm">
+          <div>
+            {campoNome.codigo}
+            {campoNascimento.codigo}
+            {campoCPF.codigo}
+            {campoTelefone.codigo}
+            {campoSenha.codigo}
+          </div>
+          <div>
+            {campoFotoPerfil.codigo}
+            {campoEmail.codigo}
+            {campoDepartamento.codigo}
+          </div>
         </div>
-        {campoNome.codigo}
-        {campoNascimento.codigo}
-        {campoCPF.codigo}
-        {campoTelefone.codigo}
-        {campoEmail.codigo}
-        {campoSenha.codigo}
-        {campoDepartamento.codigo}
         <input type="submit" value="Cadastrar" />
         <label className="legenda">* Campo de preenchimento obrigatório.</label>
       </form>
