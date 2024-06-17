@@ -5,6 +5,7 @@ import getLocalToken from "../utils/getLocalToken";
 import CampoPadrao from "../components/CampoPadrao";
 import CampoData from "../components/CampoData";
 import CampoDropdown from "../components/CampoDropdown";
+import CampoImagem from "../components/CampoImagem";
 
 export default function CriarUsuario() {
   const [textoResposta, setTextoResposta] = useState('')
@@ -79,6 +80,13 @@ export default function CriarUsuario() {
     avisoDepartamento
   )
 
+  const campoFotoPerfil = CampoImagem(
+    "Foto de Perfil:",
+    "Enviar Foto do Perfil",
+    10,
+    false
+  )
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     let certo = true
@@ -115,15 +123,20 @@ export default function CriarUsuario() {
       setAvisoDepartamento("Escolha um departamento!")
       certo = false
     }
+    if (campoFotoPerfil.erroCampo) {
+      certo = false
+    }
     if (certo) {
       const data = {
-        "nome": campoNome.dado,
-        "cpf": campoCPF.dado.replace(/\D/g, ''),
-        "nascimento": campoNascimento.dado,
-        "departamento": campoDepartamento.dado,
-        "telefone": campoTelefone.dado.replace(/\D/g, ''),
-        "email": campoEmail.dado,
-        "status": 'ativo',
+        nome: campoNome.dado,
+        cpf: campoCPF.dado.replace(/\D/g, ''),
+        nascimento: campoNascimento.dado,
+        departamento: campoDepartamento.dado,
+        telefone: campoTelefone.dado.replace(/\D/g, ''),
+        email: campoEmail.dado,
+        status: 'ativo',
+        tipoFoto: campoFotoPerfil.dado.tipoArquivo,
+        dadosFoto: campoFotoPerfil.dado.documento,
       };
       const token = getLocalToken();
       try {
@@ -147,6 +160,7 @@ export default function CriarUsuario() {
           campoNascimento.limpar()
           campoNome.limpar()
           campoTelefone.limpar()
+          campoFotoPerfil.limpar()
         } else if (userResponse.status === 400) {
           const userResponseData = await userResponse.text();
           if (userResponseData === "O CPF já existe") {
@@ -174,12 +188,19 @@ export default function CriarUsuario() {
         className="FormsCadastroUsuario"
       >
         <div className="primeira-parte">
-          {campoNome.codigo}
-          {campoCPF.codigo}
-          {campoTelefone.codigo}
-          {campoEmail.codigo}
-          {campoDepartamento.codigo}
-          {campoNascimento.codigo}
+          <div>
+            <div>
+              {campoNome.codigo}
+              {campoCPF.codigo}
+              {campoTelefone.codigo}
+              {campoEmail.codigo}
+              {campoDepartamento.codigo}
+            </div>
+            <div>
+              {campoFotoPerfil.codigo}
+              {campoNascimento.codigo}
+            </div>
+          </div>
           <input type="submit" value="Cadastrar" />
         </div>
       </form>

@@ -1,42 +1,59 @@
 :root {
     /* Sizemenu */
-    --widthSideMenuClosed: 100px;
-    --widthSideMenu: 125px;
+    --widthSideMenuClosed: 65px;
+    --widthSideMenuOpen: 240px;
     --minHeightSideMenu: 100vh;
     --paddingSideMenu: 0px 0px 50px 0px;
     --gapSideMenu: 15px;
 
     /* Links Sizemenu */
-    --widthSideMenuLink: 50px;
+    --widthSideMenuLink: 30px;
     --paddingSideMenuLink: 1px;
     --borderRadiusSideMenuLink: 5px;
 }
 
 .logo {
-    margin-top: -15px;
-    width: 90%;
+    margin-top: 5px;
+    width: 50px;
 }
 
 #sidemenu-component {
-    position: fixed;
-    background-color: var(--cor20);
-    width: var(--widthSideMenu);
-    /* width: var(--widthSideMenuClosed); */
+    background-color: var(--cor22);
+    width: var(--widthSideMenuClosed);
     min-height: var(--minHeightSideMenu);
     padding: var(--paddingSideMenu);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--gapSideMenu);
-    transition: 0.5s;
+    transition: width 0.5s;
+}
+
+#sidemenu-component.expanded {
+    width: var(--widthSideMenuOpen); /* Expanded width */
+  }
+
+.mainsidemenu-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 90%;
+    padding: 5px;
+    color: var(--branco1);
+    border-radius: 10px;
+}
+
+.mainsidemenu-link:hover {
+    background-color: var(--cor11); /* Hover background color */
 }
 
 .sidemenu-link {
-    background-color: var(--cor5);
     width: var(--widthSideMenuLink);
     height: var(--widthSideMenuLink);
     padding: var(--paddingSideMenuLink);
     border-radius: var(--borderRadiusSideMenuLink);
+    transition: background-color 0.3s ease-in-out;
 }
 
 .sidemenu-link-icon {
@@ -55,11 +72,8 @@
 
 .sidemenu-cap {
     width: var(--widthSideMenu);
+    font-size: smaller;
     text-align: center;
     transition: 0.5s;
 }
-#sidemenu-component:hover > .sidemenu-cap {
-    width: var(--widthSideMenu);
-    color: var(--branco);
-    transition: 0.5s;
-}
+

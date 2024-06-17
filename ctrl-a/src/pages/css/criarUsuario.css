@@ -1,6 +1,5 @@
-.cadastroUsuário form{
+.cadastroUsuário form {
   margin: 20px;
-  min-height: calc(100vh - var(--heightHeader) - var(--gapformsAtualizarAtivo) - 20px);
 }
 
 /* Usuarios */
@@ -23,6 +22,17 @@
   border-radius: 4px;
 }
 
+.cadastroUsuário h2 {
+  padding-top: 2%;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 4vh;
+  font-family: Arial, sans-serif;
+  color: var(--branco);
+  text-align: left;
+  padding-left: 2%;
+}
+
 .cadastroUsuário .primeira-parte {
   background-color: var(--cor8);
   border-radius: 10px;
@@ -32,6 +42,28 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.primeira-parte>div {
+  display: flex;
+  gap: 10px;
+}
+
+.primeira-parte>div>div {
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+
+  gap: 10px;
+  flex: 1
+}
+
+.primeira-parte>div>div:last-child {
+  align-items: center;
+  justify-content: space-between;
+}
+.primeira-parte>div>div:last-child>div:first-child{
+  min-height: 70%;
 }
 
 .cadastroUsuário .primeira-parte input[type="submit"] {

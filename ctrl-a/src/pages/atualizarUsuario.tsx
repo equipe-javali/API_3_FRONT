@@ -8,6 +8,7 @@ import CampoEditavel from '../components/CampoEditavel';
 import CampoSenha from '../components/CampoSenha';
 import CampoDropdown from '../components/CampoDropdown';
 import CampoData from '../components/CampoData';
+import CampoImagemEditavel from '../components/CampoImagemEditavel';
 
 interface UsuarioData {
     nome: string;
@@ -17,6 +18,8 @@ interface UsuarioData {
     email: string;
     perfil: string; //'Usuario' ou 'Administrador'
     departamento: string;
+    tipoFoto: string;
+    dadosFoto: string;
 }
 
 export default function AtualizarUsuario() {
@@ -45,7 +48,9 @@ export default function AtualizarUsuario() {
         telefone: '',
         email: '',
         departamento: '',
-        perfil: ''
+        perfil: '',
+        tipoFoto: '',
+        dadosFoto: ''
     });
 
     const campoPermissao = CampoDropdown(
@@ -65,6 +70,14 @@ export default function AtualizarUsuario() {
         }
     }, [campoPermissao.dado])
 
+    const campoFoto = CampoImagemEditavel(
+        "Foto de Perfil",
+        iconUser,
+        10,
+        dadosUsuario.tipoFoto,
+        dadosUsuario.dadosFoto
+    )
+
     useEffect(() => {
         const buscaDadosUsuario = async () => {
             try {
@@ -76,7 +89,7 @@ export default function AtualizarUsuario() {
                 if (response.ok) {
                     const dadosUsuario: UsuarioData = await response.json();
                     console.log(dadosUsuario)
-                    setDadosUsuario({ ...dadosUsuario });
+                    setDadosUsuario(dadosUsuario);
                 } else {
                     setTextoResposta(`Erro ao buscar dados do usuário! Erro:${response.statusText}`);
                     setTipoResposta("Erro");
@@ -258,7 +271,9 @@ export default function AtualizarUsuario() {
                         nascimento: campoNascimento.dado,
                         departamento: campoDepartamento.dado,
                         telefone: campoTelefone.dado.replace(/\D/g, ''),
-                        email: campoEmail.dado
+                        email: campoEmail.dado,
+                        tipoFoto: campoFoto.dado.tipoArquivo,
+                        dadosFoto: campoFoto.dado.documento
                     })
                 });
                 if (atualizarDados.status !== 200) {
@@ -281,8 +296,8 @@ export default function AtualizarUsuario() {
 
     return (
         <>
+            <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
             <form className='divAtualizarUsuario' onSubmit={handleSubmit}>
-                <RespostaSistema textoResposta={textoResposta} tipoResposta={tipoResposta} onClose={fechaPopUp} />
                 <div className='primeiroBlocoAtualizarUsuario'>
                     <div>
                         <div>
@@ -295,7 +310,7 @@ export default function AtualizarUsuario() {
                         </div>
                     </div>
                     <div>
-                        <img className="imgPerfilAtualizarUsuario" src={iconUser} alt="ícone usuário" />
+                        {campoFoto.codigo}
                     </div>
                 </div>
                 <div className='segundoBlocoAtualizarUsuario'>

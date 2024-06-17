@@ -1,17 +1,18 @@
 :root {
-    --fontSizeTituloCampoPadrao: 15px;
-    --fontSizeInputCampoPadrao: 13px;
+    --fontSizeTituloCampoPadrao: calc(10px + 0.7dw);
+    --fontSizeInputCampoPadrao: calc(8px + 0.7dw);
     --minHeightDivCampoPadrao: 30px;
     --gapInputTitulo: 30px;
 
     --corTituloCampo: var(--branco1);
     --corTextInput: var(--cor10);
     --corBackgroundInput: var(--cor20);
-    ---widthInputCampoRadio: var(--fontSizeInputCampoPadrao);
+    ---widthInputCampoRadio: 13px;
     ---marginTopInputCampoRadio: 2px;
     --marginLeftSpanCampoRadio: calc(var(---widthInputCampoRadio) + 5px);
 }
 
+.divCampoImagem,
 .divCampoPadrao,
 .divCampoDesativado,
 .divCampoEditavel,
@@ -58,8 +59,9 @@
     border-radius: 6px;
     width: 100%;
 }
+
 .textareaCampoEditavel textarea,
-.inputCampoEditavel input{
+.inputCampoEditavel input {
     width: calc(100% - var(--fontSizeInputCampoPadrao));
 }
 
@@ -75,9 +77,10 @@
 }
 
 .divCampoDescricao textarea,
-.textareaCampoEditavel textarea{
+.textareaCampoEditavel textarea {
     resize: none;
     min-height: 150px;
+    width: 100%;
 }
 
 .inputObrigatorio {
@@ -93,6 +96,7 @@
 .divCampoPadrao select {
     border-style: solid;
     border-width: 1.8px;
+    border-radius: 6px;
 }
 
 .divCampoPadrao input[type="date"],
@@ -159,6 +163,7 @@
     margin-left: var(--marginLeftSpanCampoRadio)
 }
 
+.campoArquivo input,
 .opcoesCampoRadio input {
     display: none;
 }
@@ -171,6 +176,54 @@
     width: var(---widthInputCampoRadio);
     border-radius: 100%;
     height: var(---widthInputCampoRadio);
+}
+
+.divCampoArquivo {
+    display: flex;
+    gap: 5px;
+}
+
+.campoArquivo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+
+.campoArquivo>div {
+    color: var(--corTituloCampo);
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.divCampoArquivo .campoArquivo>div:first-child,
+.campoArquivo>div:not(:first-child) {
+    align-items: center;
+}
+
+.controleInputArquivo {
+    padding: 5px 10px;
+    background-color: var(--cor5);
+    color: var(--branco);
+    border: none;
+    width: max-content;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.controleInputArquivo:hover {
+    background-color: var(--cor20);
+}
+
+.botaoRemoverArquivo {
+    padding: 2px 6px;
+    border-radius: 5px;
+    background-color: var(--vermelho1);
+    color: var(--branco1);
+    cursor: pointer;
+    font-size: 13px;
+    margin-left: 6px;
 }
 
 .divInputRadioFormsAtivo input {
@@ -202,7 +255,7 @@
     color: var(--corTextInputAtivo);
 }
 
-.divCampoInputSemTitulo > div {
+.divCampoInputSemTitulo>div {
     border-radius: 6px;
     padding: 2px;
     display: flex;
@@ -219,3 +272,24 @@
     width: calc(100% - var(--fontSizeInputCampoPadrao));
 }
 
+.previewImagemCampo {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.divCampoImagem .campoArquivo>div:first-child {
+    align-items: flex-start;
+}
+
+.divCampoImagem img {
+    max-height: calc(4.8 * var(--minHeightDivCampoPadrao));
+    max-width: min-content;
+}
+
+.linkDowloadArquivo{
+    font-size: var(--fontSizeInputCampoPadrao);
+    color: var(--corTextInput);
+}

@@ -14,10 +14,14 @@
   --cor20: #25293E;
   --cor21: #121212;
   --cor22: #171717;
+  --cor23: #181b2c;
+  --cor24: #b3b5c0;
   --branco: #FFFFFF;
   --branco1: #DDD8D8;
   --verde1: #19756A;
+  --verde2: #12574f;
   --vermelho1: #fe43439b;
+  --vermelho2: #db2f2f9b;
 }
 
 * {
@@ -62,3 +66,12 @@
   }
 }
 
+.tituloPaginas h2{
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 4vh;
+  font-family: Arial, sans-serif;
+  color: var(--branco);
+  text-align: left;
+  padding-left: 2%;
+}

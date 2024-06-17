@@ -1,0 +1,73 @@
+.divModal {
+    background: #00000099;
+    cursor: pointer;
+    left: 0;
+    min-height: 100%;
+    position: fixed;
+    padding: 20px;
+    top: 0;
+    width: 100%;
+    z-index: 99;
+}
+
+.divModalManutencao>div{
+    min-width: max-content;
+    display: flex;
+}
+
+
+.divModal>div {
+    align-items: center;
+    background: var(--cor8);
+    border-radius: 20px;
+    cursor: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    width: max-content;
+    margin: auto;
+    margin-top: var(--heightHeader);
+}
+.divModal>div:not(:last-child()){
+    flex: 1;
+}
+.divModal>div:last-child(){
+    flex: 2;
+}
+
+.divModal>div>* {
+    width: 100%;
+    text-align: center;
+}
+
+.botoesModal {
+    display: flex;
+    justify-content: space-between;
+}
+
+.botoesModal>button {
+    min-width: calc(max-content + 5px);
+    width: 35%;
+    min-height: max-content;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    color: var(--branco);
+}
+
+.botoesModal>button:first-child {
+    background-color: var(--verde1);
+}
+
+.botoesModal>button:first-child:hover {
+    background-color: var(--verde2)
+}
+
+.botoesModal>button:last-child {
+    background-color: var(--vermelho1);
+}
+
+.botoesModal>button:last-child:hover {
+    background-color: var(--vermelho2)
+}

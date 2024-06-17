@@ -1,0 +1,59 @@
+.AlterarSenha {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 10vw;
+    min-height: 100vh;
+}
+
+.AlterarSenha .titulo {
+    color: var(--branco);
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.AlterarSenha .form-alterarSenha {
+    align-items: center;
+    background-color: var(--cor8);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    max-width: 500px;
+    padding: 25px 50px;
+    width: 100%;
+}
+
+.AlterarSenha .retornarLogin {
+    all: unset;
+    align-self: flex-start;
+    cursor: pointer;
+    padding: 5px;
+    margin-bottom: 15px;
+}
+
+.AlterarSenha .retornarLogin:hover {
+    background-color: #ffffffae;
+    border-radius: 5px;
+}
+
+.AlterarSenha input[type="submit"] {
+    background-color: var(--cor7);
+    color: var(--branco1);
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 0 auto;
+    padding: 6px 40px;
+}
+
+.AlterarSenha input[type="submit"]:hover {
+    background-color: var(--cor4);
+    transition: background-color 0.2s ease,
+}
+
+.AlterarSenha input[type="submit"]:active {
+    transform: scale(0.95);
+}
