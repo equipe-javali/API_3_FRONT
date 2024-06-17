@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./css/relatorioManutencoes.css";
 import { Chart as ChartJS, Tooltip, Legend, Title, CategoryScale, LinearScale, BarElement, } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import CampoDropdown from "../components/CampoDropdown";
 import getLocalToken from "../utils/getLocalToken";
-ChartJS.register( CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title);
 ChartJS.defaults.color = "#DDD8D8"
 
 interface RelatorioManutencao {
@@ -39,21 +39,15 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
   const selectAtivos = CampoDropdown("", opcoesAtivos, "", "Selecione o ativo desejado...", false);
   const [idAtivoSelecionado, setIdAtivoSelecionado] = useState<number | null>(null)
 
-  let selectedAtivo = (nomeAtivo: string) => {
-    let ativo = ativos.find(a => a.nome == nomeAtivo)
+  let selectedAtivo = useCallback((nomeAtivo: string) => {
+    let ativo = ativos.find(a => a.nome === nomeAtivo)
     setIdAtivoSelecionado(ativo ? ativo.id : null)
-  }
+  }, [ativos])
   onIdAtivoChange(idAtivoSelecionado)
 
   useEffect(() => {
     selectedAtivo(selectAtivos.dado)
-  }, [selectAtivos.dado])
-
-  const tipoMap: Record<string, string> = {
-    "1": "Preventiva",
-    "2": "Corretiva",
-    "3": "Preditiva"
-  }
+  }, [selectAtivos.dado, selectedAtivo])
 
   useEffect(() => {
     const listagemAtivos = async () => {
@@ -90,6 +84,12 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
 
 
   useEffect(() => {
+    const tipoMap: { [key: string]: string } = {
+      "1": "Preventiva",
+      "2": "Corretiva",
+      "3": "Preditiva"
+    };
+
     const fetchData = async () => {
       const token = getLocalToken();
 
@@ -191,7 +191,7 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
         <div className="valorTotalManutencoes">
           <p>VALOR TOTAL DAS MANUTENÇÕES</p>
           <p className="valorCard">
-          {new Intl.NumberFormat("pt-BR", {
+            {new Intl.NumberFormat("pt-BR", {
               style: "currency",
               currency: "BRL",
               minimumFractionDigits: 2,
@@ -200,12 +200,12 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
         </div>
         <div className="btnsTipoManutencoes">
           <div className="linha1btns">
-            <button className={selectedButton == "DadosGerais" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"DadosGerais"} onClick={handleBtnClick}>Dados gerais</button>
-            <button className={selectedButton == "Preventiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preventiva"} onClick={handleBtnClick}>Preventiva</button>
+            <button className={selectedButton === "DadosGerais" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"DadosGerais"} onClick={handleBtnClick}>Dados gerais</button>
+            <button className={selectedButton === "Preventiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preventiva"} onClick={handleBtnClick}>Preventiva</button>
           </div>
           <div className="linha2btns">
-            <button className={selectedButton == "Corretiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Corretiva"} onClick={handleBtnClick}>Corretiva</button>
-            <button className={selectedButton == "Preditiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preditiva"} onClick={handleBtnClick}>Preditiva</button>
+            <button className={selectedButton === "Corretiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Corretiva"} onClick={handleBtnClick}>Corretiva</button>
+            <button className={selectedButton === "Preditiva" ? "btnManutencoes btnSelected" : "btnManutencoes"} value={"Preditiva"} onClick={handleBtnClick}>Preditiva</button>
           </div>
         </div>
         {selectAtivos.codigo}
@@ -213,8 +213,8 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
 
       <div className="linha2Manutencoes">
         <div className="tempoTipoManutencoes">
-        <Bar options={{
-          indexAxis: 'y' as const,
+          <Bar options={{
+            indexAxis: 'y' as const,
             responsive: true,
             plugins: {
               legend: {
@@ -233,8 +233,8 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
                 data: tempoPorTipoData.map((dias) => dias.y),
                 backgroundColor: [
                   "#853F85"],
-                  barThickness: 60                 
-                
+                barThickness: 60
+
               }
             ]
           }}
@@ -261,8 +261,8 @@ export default function RelatorioManutencoes({ dataInicio, dataFim, onTipoManute
                 data: enviosPorTipoData.map((qtd) => qtd.qtd),
                 backgroundColor: [
                   "#853F85"],
-                  barThickness: 80
-                
+                barThickness: 80
+
               }
             ]
           }}

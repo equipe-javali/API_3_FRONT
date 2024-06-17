@@ -67,7 +67,6 @@ function LinhaAtivo({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [manutencoes, setManutencoes] = useState<ManutencaoProps[]>([]);
   const [usuarios, setUsuarios] = useState<UsuarioProps[]>([]);
-  const [isHovered, setIsHovered] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UsuarioProps | null>(null);
 
   function handleCancel() {
@@ -77,14 +76,6 @@ function LinhaAtivo({
   function handleExcluir() {
     excluirAtivo(id);
   }
-
-  function emManutencao(): boolean {
-    if (manutencoes.length <= 0) {
-        return false;
-    }
-    return Date.parse(manutencoes[0].dataInicio) < Date.now() && Date.now() < Date.parse(manutencoes[0].dataFim);
-}
-
 
   const token = getLocalToken();
 
@@ -134,7 +125,7 @@ function LinhaAtivo({
       .catch((error) => {
         console.error(`Erro ao processar requisição! Erro: ${error}`);
       });
-  }, [id, setTextoResposta, setTipoResposta]);
+  }, [id, setTextoResposta, setTipoResposta, token]);
 
   function toggleModal() {
     if (showModal && selectedUser) {
@@ -182,7 +173,7 @@ function LinhaAtivo({
     } else {
       setStatusA("Em uso");
     }
-  }, [idResponsavel, manutencoes]);
+  }, [idResponsavel, manutencoes, token]);
 
   function localAtivo() {
     // Verifica se há manutenção em aberto e se a data atual está dentro do período de manutenção
@@ -319,26 +310,12 @@ export default function DashboardAtivos() {
   const [tipoResposta, setTipoResposta] = useState("");
   const [filtroResponsavel, setFiltroResponsavel] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [atualizarLista, setAtualizarLista] = useState(false);
-  const handleFetchResponse = async (response: Response) => {
-    if (response.status === 204) {
-      return [];
-    } else if (!response.ok) {
-      throw new Error(
-        `Erro na requisição: ${response.status} - ${response.statusText}`
-      );
-    } else {
-      return response.json();
-    }
-  };
   const handleResponsavelAtribuido = (ativoId: number) => {
-    // Find the updated ativo
     fetch(`http://localhost:8080/ativo/${ativoId}`, {
       headers: { Authorization: token },
     })
       .then((res) => res.json())
       .then((ativoAtualizado) => {
-        // Update the state with the new data for the specific ativo
         setAtivos((prevAtivos) =>
           prevAtivos.map((ativo) =>
             ativo.id === ativoId ? ativoAtualizado : ativo
@@ -374,7 +351,7 @@ export default function DashboardAtivos() {
         setTextoResposta(`Erro ao buscar dados: ${error.message}`);
         setTipoResposta("Erro");
       });
-  }, []);
+  }, [token]);
   const handleResponseTimeout = () => {
     setTextoResposta("");
     setTipoResposta("");

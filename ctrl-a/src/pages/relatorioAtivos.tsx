@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./css/relatorioAtivos.css";
 import {
   Chart as ChartJS,
@@ -11,14 +11,6 @@ import {
   BarElement,
 } from "chart.js";
 import { Pie, Bar } from "react-chartjs-2";
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryAxis,
-  VictoryTheme,
-  VictoryPie,
-  VictoryLabel,
-} from "victory";
 ChartJS.register(
   ArcElement,
   CategoryScale,
@@ -43,15 +35,6 @@ interface RelatorioAtivoProps {
   dataInicio: string;
   dataFim: string;
   onTipoAtivoChange: (tipo: string) => void;
-}
-
-interface Ativo {
-  id: number;
-  nome: string;
-  tipo: "tangível" | "intangível";
-  valor: number;
-  local: string;
-  status: "ativo" | "em uso" | "manutenção";
 }
 
 export default function RelatorioAtivos({
@@ -113,8 +96,7 @@ export default function RelatorioAtivos({
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(
-            `Erro na resposta da API: ${response.status} ${
-              response.statusText
+            `Erro na resposta da API: ${response.status} ${response.statusText
             } - ${errorData?.message || "Erro desconhecido"}`
           );
         }
@@ -196,7 +178,7 @@ export default function RelatorioAtivos({
         <div className="btnsTiposAtivos">
           <button
             className={
-              selectedButton == "DadosGerais"
+              selectedButton === "DadosGerais"
                 ? "btnAtivos btnSelected"
                 : "btnAtivos"
             }
@@ -207,7 +189,7 @@ export default function RelatorioAtivos({
           </button>
           <button
             className={
-              selectedButton == "Tangiveis"
+              selectedButton === "Tangiveis"
                 ? "btnAtivos btnSelected"
                 : "btnAtivos"
             }
@@ -218,7 +200,7 @@ export default function RelatorioAtivos({
           </button>
           <button
             className={
-              selectedButton == "Intangiveis"
+              selectedButton === "Intangiveis"
                 ? "btnAtivos btnSelected"
                 : "btnAtivos"
             }
@@ -230,82 +212,82 @@ export default function RelatorioAtivos({
         </div>
       </div>
 
-            <div className="linha2Ativos">
-                <div className="statusAtivos">
+      <div className="linha2Ativos">
+        <div className="statusAtivos">
 
-                    <Pie
-                        width={200}
-                        height={100}
-                        data={{
-                            labels: statusData.map((status) => status.status),
-                            datasets: [
-                                {
-                                    label: "Quantidade %",
-                                    data: statusData.map((qtd) => qtd.qtd),
-                                    backgroundColor: [
-                                        "#853F85",
-                                        "#0178D4",
-                                        "#4152AC",
-                                    ],
-                                    borderColor: [
-                                        "#853F85",
-                                        "#0178D4",
-                                        "#4152AC",
-                                    ],
-                                    borderWidth: 1,
-                                    hoverOffset: 20
-                                },
-                            ],
-                        }}
-                        options={{
-                            responsive: true,
-                            plugins: {
-                                title: {
-                                    text: "STATUS DOS ATIVOS (%)",
-                                    display: true,
-                                    font: { size: 20 },
-                                },
-                                legend: {
-                                    position: 'bottom' as const,
-                                    labels: {
-                                        font: { size: 15 },
-                                    },
-                                }
-                            },
-                        }}
-                    />
+          <Pie
+            width={200}
+            height={100}
+            data={{
+              labels: statusData.map((status) => status.status),
+              datasets: [
+                {
+                  label: "Quantidade %",
+                  data: statusData.map((qtd) => qtd.qtd),
+                  backgroundColor: [
+                    "#853F85",
+                    "#0178D4",
+                    "#4152AC",
+                  ],
+                  borderColor: [
+                    "#853F85",
+                    "#0178D4",
+                    "#4152AC",
+                  ],
+                  borderWidth: 1,
+                  hoverOffset: 20
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                title: {
+                  text: "STATUS DOS ATIVOS (%)",
+                  display: true,
+                  font: { size: 20 },
+                },
+                legend: {
+                  position: 'bottom' as const,
+                  labels: {
+                    font: { size: 15 },
+                  },
+                }
+              },
+            }}
+          />
 
-                </div>
-
-                <div className="qntdLocalAtivos">
-
-                    <Bar options={{
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top' as const,
-                            },
-                            title: {
-                                display: true,
-                                text: 'QUANTIDADE POR LOCAL',
-                            },
-                        }
-                    }} data={{
-                        labels: localChartData.map((local) => local.local),
-                        datasets: [
-                            {
-                                label: "Quantidade",
-                                data: localChartData.map((qtd) => qtd.qtd),
-                                backgroundColor: [
-                                    "#853F85",
-                                ],
-                            }
-                        ]
-                    }}
-                    />
-
-                </div>
-            </div>
         </div>
-    );
+
+        <div className="qntdLocalAtivos">
+
+          <Bar options={{
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top' as const,
+              },
+              title: {
+                display: true,
+                text: 'QUANTIDADE POR LOCAL',
+              },
+            }
+          }} data={{
+            labels: localChartData.map((local) => local.local),
+            datasets: [
+              {
+                label: "Quantidade",
+                data: localChartData.map((qtd) => qtd.qtd),
+                backgroundColor: [
+                  "#853F85",
+                ],
+              }
+            ]
+          }}
+          />
+
+        </div>
+      </div>
+    </div>
+  );
 }

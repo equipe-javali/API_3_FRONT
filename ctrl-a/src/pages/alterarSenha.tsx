@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import './css/alterarSenha.css'
 import RespostaSistema from '../components/respostaSistema';
 import getLocalToken from '../utils/getLocalToken';
@@ -42,7 +42,7 @@ export default function AlterarSenha() {
     } else if (confirmarSenha.dado === '') {
       setAvisoConfirmarSenha("Confirme a nova senha")
       return
-    } else if (confirmarSenha.dado != campoSenha.dado) {
+    } else if (confirmarSenha.dado !== campoSenha.dado) {
       setAvisoSenha("Os dois campos devem ser preenchidos com o mesmo valor");
       setAvisoConfirmarSenha("Os dois campos devem ser preenchidos com o mesmo valor")
       return

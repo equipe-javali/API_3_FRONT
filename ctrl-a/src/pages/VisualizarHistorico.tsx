@@ -46,153 +46,152 @@ export default function VisualizarHistorico() {
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
-    fetchHistorico();
-  }, [id]);
+    async function fetchHistorico() {
+      if (!id) return;
 
-  async function fetchHistorico() {
-    if (!id) return;
+      try {
+        const urls = [
+          `http://localhost:8080/historicoAtivoTangivel/listagemAtivo/${id}`,
+          `http://localhost:8080/historicoAtivoIntangivel/listagemAtivo/${id}`,
+          `http://localhost:8080/manutencao/listagem/${id}`,
+        ];
 
-    try {
-      const urls = [
-        `http://localhost:8080/historicoAtivoTangivel/listagemAtivo/${id}`,
-        `http://localhost:8080/historicoAtivoIntangivel/listagemAtivo/${id}`,
-        `http://localhost:8080/manutencao/listagem/${id}`,
-      ];
+        const responses = await Promise.all(
+          urls.map(
+            async (url) => await fetch(url, { headers: { Authorization: token } })
+          )
+        );
 
-      const responses = await Promise.all(
-        urls.map(
-          async (url) => await fetch(url, { headers: { Authorization: token } })
-        )
-      );
+        let historicoCompleto: EventoHistorico[] = [];
+        for (const response of responses) {
+          if (!response.ok) {
+            console.log("Resposta vazia do servidor");
+            continue;
+          }
 
-      let historicoCompleto: EventoHistorico[] = [];
-      for (const response of responses) {
-        if (!response.ok) {
-          console.log("Resposta vazia do servidor");
-          continue;
-        }
+          const data = await response.text();
+          if (!data) {
+            console.error(
+              `Erro ao buscar histórico da URL ${response.url}: ${response.status}`
+            );
+            continue;
+          }
 
-        const data = await response.text();
-        if (!data) {
-          console.error(
-            `Erro ao buscar histórico da URL ${response.url}: ${response.status}`
-          );
-          continue;
-        }
+          const jsonData = JSON.parse(data).sort((a: any, b: any) => {
+            if (!a.id) a.id = Number.MAX_SAFE_INTEGER;
+            if (!b.id) b.id = Number.MAX_SAFE_INTEGER;
+            return a.id - b.id;
+          });
+          console.log(jsonData);
+          for (let i = 0; i < jsonData.length; i++) {
+            const item = jsonData[i];
 
-        const jsonData = JSON.parse(data).sort((a: any, b: any) => {
-          if (!a.id) a.id = Number.MAX_SAFE_INTEGER;
-          if (!b.id) b.id = Number.MAX_SAFE_INTEGER;
-          return a.id - b.id;
-        });
-        console.log(jsonData);
-        for (let i = 0; i < jsonData.length; i++) {
-          const item = jsonData[i];
+            let tipo = "NENHUM";
 
-          let tipo = "NENHUM";
+            let nomeUsuarioAnterior = "Sem responsável";
+            if (item.nomeUsuario) {
+              if (i > 0 && jsonData[i - 1].nomeUsuario !== item.nomeUsuario) {
+                nomeUsuarioAnterior =
+                  jsonData[i - 1].nomeUsuario || "Sem responsável";
+                tipo = "usuario";
+              }
+            } else if (item.ultimaAtualizacaoAtivo === null) {
+              tipo = "cadastro";
+            } else if (item.responsavel) {
+              tipo = "responsavel";
+            } else if (item.dataFim && new Date(item.dataFim) <= new Date()) {
+              historicoCompleto.push({
+                id: item.id,
+                idAtivo: item.idAtivo || item.ativo.id,
+                dataAlteracao:
+                  item.dataInicio ||
+                  item.ultimaAtualizacaoAtivo ||
+                  item.dataCadastroAtivo,
+                nomeAtivo: item.nomeAtivo || item.ativo?.nome,
+                nomeUsuario: item.nomeUsuario || "",
+                nomeUsuarioAnterior,
+                departamentoUsuario: item.departamentoUsuario || "",
+                tipo: "envioManutencao",
+                tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
+                descricaoManutencao: item.descricao,
+                custoManutencao: item.custo,
+                dataCadastroAtivo: item.dataCadastroAtivo,
+              });
 
-          let nomeUsuarioAnterior = "Sem responsável";
-          if (item.nomeUsuario) {            
-            if (i > 0 && jsonData[i - 1].nomeUsuario !== item.nomeUsuario) {              
-              nomeUsuarioAnterior =
-                jsonData[i - 1].nomeUsuario || "Sem responsável";
-              tipo = "usuario";
+              tipo = "retornoManutencao";
+            } else if (item.dataInicio) {
+              tipo = "envioManutencao";
+            } else {
+              continue;
             }
-          } else if (item.ultimaAtualizacaoAtivo === null) {
-            tipo = "cadastro";
-          } else if (item.responsavel) {
-            tipo = "responsavel";
-          } else if (item.dataFim && new Date(item.dataFim) <= new Date()) {
+
             historicoCompleto.push({
               id: item.id,
               idAtivo: item.idAtivo || item.ativo.id,
               dataAlteracao:
-                item.dataInicio ||
+                (tipo === "retornoManutencao" ? item.dataFim : item.dataInicio) ||
                 item.ultimaAtualizacaoAtivo ||
                 item.dataCadastroAtivo,
               nomeAtivo: item.nomeAtivo || item.ativo?.nome,
               nomeUsuario: item.nomeUsuario || "",
               nomeUsuarioAnterior,
               departamentoUsuario: item.departamentoUsuario || "",
-              tipo: "envioManutencao",
+              tipo,
               tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
               descricaoManutencao: item.descricao,
               custoManutencao: item.custo,
               dataCadastroAtivo: item.dataCadastroAtivo,
             });
-
-            tipo = "retornoManutencao";
-          } else if (item.dataInicio) {
-            tipo = "envioManutencao";
-          } else {
-            continue;
           }
 
-          historicoCompleto.push({
-            id: item.id,
-            idAtivo: item.idAtivo || item.ativo.id,
-            dataAlteracao:
-              (tipo === "retornoManutencao" ? item.dataFim : item.dataInicio) ||
-              item.ultimaAtualizacaoAtivo ||
-              item.dataCadastroAtivo,
-            nomeAtivo: item.nomeAtivo || item.ativo?.nome,
-            nomeUsuario: item.nomeUsuario || "",
-            nomeUsuarioAnterior,
-            departamentoUsuario: item.departamentoUsuario || "",
-            tipo,
-            tipoManutencao: item.tipo === 0 ? "Preventiva" : "Corretiva",
-            descricaoManutencao: item.descricao,
-            custoManutencao: item.custo,
-            dataCadastroAtivo: item.dataCadastroAtivo,
-          });
+          const historicoFiltrado = historicoCompleto
+            .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
+            .sort((a, b) => {
+              const dateComparison = b.dataAlteracao.localeCompare(
+                a.dataAlteracao
+              );
+              if (dateComparison !== 0) {
+                return dateComparison;
+              }
+
+              if (
+                a.tipo === "envioManutencao" &&
+                b.tipo === "retornoManutencao" &&
+                a.tipoManutencao === b.tipoManutencao
+              ) {
+                return 1;
+              } else if (
+                a.tipo === "retornoManutencao" &&
+                b.tipo === "envioManutencao" &&
+                a.tipoManutencao === b.tipoManutencao
+              ) {
+                return 0;
+              }
+
+              return (b.id ? b.id : 0) - (a.id ? a.id : 0);
+            });
+
+          if (historicoFiltrado.length > 0) {
+            setHistorico(historicoFiltrado);
+            setNomeAtivo(historicoFiltrado[0].nomeAtivo);
+          } else {
+            const eventoCadastro = {
+              idAtivo: Number(id),
+              dataAlteracao: new Date().toISOString(),
+              nomeAtivo: "Ativo sem histórico",
+              tipo: "cadastro",
+            };
+            setHistorico([eventoCadastro]);
+            setNomeAtivo(eventoCadastro.nomeAtivo);
+          }
         }
-
-        const historicoFiltrado = historicoCompleto
-          .filter((e) => e.idAtivo === Number(id) || e.dataCadastroAtivo)
-          .sort((a, b) => {
-            const dateComparison = b.dataAlteracao.localeCompare(
-              a.dataAlteracao
-            );
-            if (dateComparison !== 0) {
-              return dateComparison;
-            }
-
-            if (
-              a.tipo === "envioManutencao" &&
-              b.tipo === "retornoManutencao" &&
-              a.tipoManutencao === b.tipoManutencao
-            ) {
-              return 1;
-            } else if (
-              a.tipo === "retornoManutencao" &&
-              b.tipo === "envioManutencao" &&
-              a.tipoManutencao === b.tipoManutencao
-            ) {
-              return 0;
-            }
-
-            return (b.id ? b.id : 0) - (a.id ? a.id : 0);
-          });
-
-        if (historicoFiltrado.length > 0) {
-          setHistorico(historicoFiltrado);
-          setNomeAtivo(historicoFiltrado[0].nomeAtivo);
-        } else {
-          const eventoCadastro = {
-            idAtivo: Number(id),
-            dataAlteracao: new Date().toISOString(),
-            nomeAtivo: "Ativo sem histórico",
-            tipo: "cadastro",
-          };
-          setHistorico([eventoCadastro]);
-          setNomeAtivo(eventoCadastro.nomeAtivo);
-        }
+      } catch (error) {
+        console.error("Erro ao carregar históricos:", error);
+        setHistorico([]);
       }
-    } catch (error) {
-      console.error("Erro ao carregar históricos:", error);
-      setHistorico([]);
     }
-  }
+    fetchHistorico();
+  }, [id, token]);
 
   return (
     <div className="VisualizarHistorico">
@@ -294,7 +293,7 @@ export default function VisualizarHistorico() {
                                 <h3 className="ra-heading">{tituloEvento}</h3>
                                 <span className="uia-card__time">
                                   <time dateTime={evento.dataAlteracao}>
-                                    {index == 0 ? (
+                                    {index === 0 ? (
                                       <span className="uia-card__day">
                                         Atual
                                       </span>
@@ -327,9 +326,9 @@ export default function VisualizarHistorico() {
                     <div className="uia-timeline__event__date">
                       {historico[0] && historico[0].dataCadastroAtivo
                         ? format(
-                            parseISO(historico[0].dataCadastroAtivo),
-                            "dd/MM/yyyy"
-                          )
+                          parseISO(historico[0].dataCadastroAtivo),
+                          "dd/MM/yyyy"
+                        )
                         : ""}
                     </div>
                     <div className="uia-timeline__event__content">

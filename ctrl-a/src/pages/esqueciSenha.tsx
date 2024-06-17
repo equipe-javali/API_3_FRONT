@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import './css/esqueciSenha.css';
 import getLocalToken from "../utils/getLocalToken";
 import { Link } from "react-router-dom";
