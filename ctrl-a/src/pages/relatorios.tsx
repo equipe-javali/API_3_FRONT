@@ -50,6 +50,8 @@ export default function Relatorios() {
 
     function downloadLink(): string {
       function binDecode(): Uint8Array {
+        console.log(arquivo.documento);
+        
         const binaryString = window.atob(arquivo.documento);
         const binaryLen = binaryString.length;
         const bytes = new Uint8Array(binaryLen);
